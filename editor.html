@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>墨韵轩 · 文章管理</title>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
@@ -50,6 +50,46 @@
             letter-spacing: 2px;
             font-family: 'SimSun','宋体',serif;
         }
+
+        /* 配置区域 */
+        .config-box {
+            background: #f5f0e8;
+            border: 1px solid #d5cdc0;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .config-box .form-group {
+            margin-bottom: 10px;
+        }
+        .config-box .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #4a5a6a;
+            margin-bottom: 3px;
+            font-weight: bold;
+        }
+        .config-box .form-group input {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1px solid #d5cdc0;
+            border-radius: 4px;
+            font-size: 13px;
+            outline: none;
+        }
+        .config-box .btn {
+            padding: 6px 16px;
+            border: 1px solid #8a9aad;
+            border-radius: 4px;
+            background: #4a5a6a;
+            color: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: '华文楷体','KaiTi',serif;
+            letter-spacing: 1px;
+        }
+
         .toolbar {
             display: flex;
             gap: 12px;
@@ -192,11 +232,6 @@
             border-color: #4a5a6a;
             color: #f5f0e8;
         }
-        .btn-github {
-            background: #24292e;
-            border-color: #24292e;
-            color: #fff;
-        }
 
         .toast-msg {
             position: fixed;
@@ -231,22 +266,6 @@
             margin-bottom: 16px;
             border: 1px dashed #d5cdc0;
         }
-        .config-box {
-            background: #f5f0e8;
-            border: 1px solid #d5cdc0;
-            border-radius: 6px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
-            display: none;
-        }
-        .config-box input {
-            width: 100%;
-            padding: 6px 10px;
-            border: 1px solid #d5cdc0;
-            border-radius: 4px;
-            font-size: 13px;
-            margin-bottom: 6px;
-        }
 
         @media (max-width: 600px) {
             .container { padding: 18px 14px; }
@@ -264,26 +283,28 @@
 
     <div class="container">
         <h1>📝 墨韵轩 · 文章管理</h1>
-        <div class="subtitle">— 使用 GitHub 存储，无需服务器 —</div>
+        <div class="subtitle">— 直接保存到 GitHub 仓库 —</div>
 
         <div class="info-box">
-            💡 <strong>首次使用需要配置：</strong><br />
-            1. 点击「⚙️ 配置 GitHub」输入 Token 和仓库信息<br />
-            2. 点击「📂 从 GitHub 读取」导入文章<br />
-            3. 添加/编辑文章后，点击「💾 保存到 GitHub」一键保存<br />
-            <span style="color:#8b2500;">✅ 无需下载上传，直接保存到 GitHub！</span>
+            💡 <strong>使用说明：</strong><br />
+            1. 首次使用点击「⚙️ 配置 GitHub」<br />
+            2. 填入 Token（需勾选 repo 权限）和仓库信息<br />
+            3. 点击「📂 从 GitHub 读取」加载文章<br />
+            4. 添加/编辑后点击「💾 保存到 GitHub」<br />
+            <span style="color:#8b2500;">✅ 所有文章直接保存到仓库的 posts.txt</span>
         </div>
 
-        <!-- 配置区域 -->
+        <!-- 配置 -->
         <div class="config-box" id="configBox">
+            <h3 style="font-weight:normal;font-size:16px;font-family:'华文楷体','KaiTi',serif;margin-bottom:12px;color:#2c2c2c;">⚙️ GitHub 配置</h3>
             <div class="form-group">
-                <label>🔑 GitHub Token</label>
-                <input type="password" id="githubToken" placeholder="ghp_xxxxx" />
+                <label>🔑 Personal Access Token</label>
+                <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" />
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label>👤 用户名</label>
-                    <input type="text" id="githubUser" placeholder="你的GitHub用户名" />
+                    <label>👤 GitHub 用户名</label>
+                    <input type="text" id="githubUser" placeholder="你的用户名" />
                 </div>
                 <div class="form-group">
                     <label>📁 仓库名</label>
@@ -291,10 +312,10 @@
                 </div>
             </div>
             <div class="form-group">
-                <label>📄 文件路径</label>
+                <label>📄 文件路径（默认 posts.txt）</label>
                 <input type="text" id="githubPath" value="posts.txt" />
             </div>
-            <button class="btn btn-success" onclick="saveConfig()" style="width:100%;">✅ 保存配置</button>
+            <button class="btn" onclick="saveConfig()" style="background:#4a5a6a;color:#fff;width:100%;">✅ 保存配置</button>
         </div>
 
         <div class="toolbar">
@@ -348,7 +369,7 @@
 
     <script>
         // ============================================================
-        // 数据管理
+        // 数据
         // ============================================================
         var posts = [];
         var config = {};
@@ -372,8 +393,7 @@
         // ============================================================
         function getToday() {
             var d = new Date();
-            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2,
-                '0');
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
         }
 
         function escapeHtml(str) {
@@ -391,7 +411,6 @@
                 box.style.display = 'none';
             } else {
                 box.style.display = 'block';
-                // 加载保存的配置
                 var saved = localStorage.getItem('github_config');
                 if (saved) {
                     try {
@@ -412,7 +431,7 @@
             var path = document.getElementById('githubPath').value.trim() || 'posts.txt';
 
             if (!token || !user || !repo) {
-                showToast('请填写完整配置信息', 'error');
+                showToast('请填写完整配置', 'error');
                 return;
             }
 
@@ -498,7 +517,7 @@
             var container = document.getElementById('postList');
             var countDisplay = document.getElementById('countDisplay');
             if (posts.length === 0) {
-                container.innerHTML = '<div class="empty-msg">📖 暂无文章，请添加或读取</div>';
+                container.innerHTML = '<div class="empty-msg">📖 暂无文章</div>';
                 countDisplay.textContent = '共 0 篇文章';
                 return;
             }
@@ -537,7 +556,7 @@
             posts.push({ title: title, category: category, tags: tags, content: content, date: getToday() });
             renderPosts();
             clearForm();
-            showToast('✅ 文章已添加，共有 ' + posts.length + ' 篇文章', 'success');
+            showToast('✅ 已添加，共 ' + posts.length + ' 篇', 'success');
         });
 
         function clearForm() {
@@ -547,7 +566,7 @@
         }
 
         function deletePost(index) {
-            if (!confirm('确定要删除「' + posts[index].title + '」吗？')) return;
+            if (!confirm('确定删除「' + posts[index].title + '」？')) return;
             posts.splice(index, 1);
             renderPosts();
             showToast('已删除', 'info');
@@ -561,19 +580,19 @@
             document.getElementById('postContent').value = p.content;
             posts.splice(index, 1);
             renderPosts();
-            showToast('✏️ 已加载到表单，修改后点击「添加到列表」', 'info');
+            showToast('✏️ 已加载到表单', 'info');
             document.querySelector('form').scrollIntoView({ behavior: 'smooth' });
         }
 
         function clearAll() {
-            if (!confirm('确定要清空所有文章吗？')) return;
+            if (!confirm('确定清空所有文章？')) return;
             posts = [];
             renderPosts();
             showToast('已清空', 'info');
         }
 
         // ============================================================
-        // ★ 核心功能：从 GitHub 读取
+        // 从 GitHub 读取
         // ============================================================
         function loadFromGitHub() {
             if (!loadConfig()) {
@@ -591,15 +610,13 @@
                 }
             })
             .then(function(response) {
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        showToast('文件不存在，将创建新文件', 'info');
-                        posts = [];
-                        renderPosts();
-                        return;
-                    }
-                    throw new Error('HTTP ' + response.status);
+                if (response.status === 404) {
+                    showToast('文件不存在，将创建新文件', 'info');
+                    posts = [];
+                    renderPosts();
+                    return;
                 }
+                if (!response.ok) throw new Error('HTTP ' + response.status);
                 return response.json();
             })
             .then(function(data) {
@@ -609,11 +626,11 @@
                     if (parsed.length > 0) {
                         posts = parsed;
                         renderPosts();
-                        showToast('✅ 成功导入 ' + posts.length + ' 篇文章', 'success');
+                        showToast('✅ 导入 ' + posts.length + ' 篇文章', 'success');
                     } else {
                         posts = [];
                         renderPosts();
-                        showToast('文件为空或格式错误', 'info');
+                        showToast('文件为空', 'info');
                     }
                 }
             })
@@ -623,7 +640,7 @@
         }
 
         // ============================================================
-        // ★ 核心功能：保存到 GitHub
+        // 保存到 GitHub
         // ============================================================
         function saveToGitHub() {
             if (posts.length === 0) {
@@ -640,9 +657,9 @@
             var content = generatePostsTxt(posts);
             var encoded = btoa(unescape(encodeURIComponent(content)));
 
-            // 先获取文件的 SHA（用于更新）
             var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + config.path;
 
+            // 先获取文件 SHA
             fetch(url, {
                 headers: {
                     'Authorization': 'token ' + config.token,
@@ -650,13 +667,8 @@
                 }
             })
             .then(function(response) {
-                if (response.status === 404) {
-                    // 文件不存在，直接创建
-                    return null;
-                }
-                if (!response.ok) {
-                    throw new Error('HTTP ' + response.status);
-                }
+                if (response.status === 404) return null;
+                if (!response.ok) throw new Error('HTTP ' + response.status);
                 return response.json();
             })
             .then(function(data) {
@@ -665,9 +677,7 @@
                     content: encoded,
                     branch: 'main'
                 };
-                if (data && data.sha) {
-                    body.sha = data.sha;
-                }
+                if (data && data.sha) body.sha = data.sha;
 
                 return fetch(url, {
                     method: 'PUT',
@@ -687,8 +697,8 @@
                 }
                 return response.json();
             })
-            .then(function(data) {
-                showToast('✅ 保存成功！共 ' + posts.length + ' 篇文章已同步到 GitHub', 'success');
+            .then(function() {
+                showToast('✅ 保存成功！共 ' + posts.length + ' 篇', 'success');
             })
             .catch(function(err) {
                 showToast('❌ 保存失败：' + err.message, 'error');
@@ -705,19 +715,78 @@
         });
 
         // ============================================================
-        // 初始化 - 自动加载配置
+        // 初始化
         // ============================================================
         if (loadConfig()) {
             document.getElementById('githubToken').value = config.token || '';
             document.getElementById('githubUser').value = config.user || '';
             document.getElementById('githubRepo').value = config.repo || '';
             document.getElementById('githubPath').value = config.path || 'posts.txt';
-            showToast('✅ 已加载配置，点击「从 GitHub 读取」导入文章', 'success');
+            showToast('✅ 已加载配置', 'success');
         }
 
         console.log('📝 墨韵轩 · GitHub 版已加载');
-        console.log('💡 配置后即可直接保存到 GitHub');
     </script>
 
+</body>
+</html>
+```
+
+---
+
+2. index.html（博客展示页面）
+
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>墨韵轩 · 古典博客</title>
+    <style>
+        /* 这里放您之前的博客样式，略... */
+        /* 但注意：文章数据从 GitHub 读取 */
+    </style>
+</head>
+<body>
+    <!-- 博客界面 -->
+    <div id="posts"></div>
+
+    <script>
+        // 从 GitHub 读取 posts.txt 并显示
+        var REPO = '您的用户名/仓库名';
+        var PATH = 'posts.txt';
+
+        fetch('https://raw.githubusercontent.com/' + REPO + '/main/' + PATH)
+            .then(function(r) { return r.text(); })
+            .then(function(text) {
+                // 解析并显示文章
+                var blocks = text.split(/---\s*/);
+                var html = '';
+                for (var i = 0; i < blocks.length; i++) {
+                    var block = blocks[i].trim();
+                    if (!block) continue;
+                    var lines = block.split('\n');
+                    var title = '', content = '', category = '', date = '', tags = [];
+                    for (var j = 0; j < lines.length; j++) {
+                        var line = lines[j].trim();
+                        var match = line.match(/^(\w+):\s*(.*)/);
+                        if (match) {
+                            if (match[1] === 'title') title = match[2];
+                            else if (match[1] === 'content') content = match[2];
+                            else if (match[1] === 'category') category = match[2];
+                            else if (match[1] === 'date') date = match[2];
+                            else if (match[1] === 'tags') tags = match[2].split(',');
+                        }
+                    }
+                    if (title && content) {
+                        html += '<div class="card"><h2>' + title + '</h2>';
+                        html += '<div>📅 ' + date + '  📂 ' + category + '</div>';
+                        html += '<p>' + content + '</p></div>';
+                    }
+                }
+                document.getElementById('posts').innerHTML = html;
+            });
+    </script>
 </body>
 </html>
