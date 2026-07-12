@@ -28,5 +28,10 @@ category: 其他
 tags: 
 date: 2026-07-13
 content: 文章加载失败
-
 请确认 posts.txt 文件存在于网站根目录
+---
+title: 测试文章
+category: 随笔
+tags: 测试
+date: 2026-07-13
+content: 测试文章
