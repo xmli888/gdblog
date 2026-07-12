@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>墨韵轩 · 文章管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>墨韵轩 · 文章管理 (RSA 私钥登录)</title>
     <style>
-        /* ===== 样式（沿用之前，新增密码修改面板样式） ===== */
+        /* ========== 样式（沿用之前，增加私钥登录相关样式） ========== */
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             background-color: #f5f0e8;
@@ -58,7 +58,7 @@
 
         /* 登录界面 */
         .login-box {
-            max-width: 380px;
+            max-width: 420px;
             margin: 20px auto;
             padding: 30px 24px;
             background: #f5f0e8;
@@ -93,18 +93,21 @@
             font-family: 'SimSun','宋体',serif;
             font-weight: bold;
         }
+        .login-box .form-group textarea,
         .login-box .form-group input {
             width: 100%;
             padding: 10px 14px;
             border: 1px solid #d5cdc0;
             border-radius: 6px;
             background: #fcf9f5;
-            font-size: 15px;
-            font-family: 'SimSun','宋体',serif;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
             color: #2c2c2c;
             outline: none;
             transition: border-color 0.3s;
+            resize: vertical;
         }
+        .login-box .form-group textarea:focus,
         .login-box .form-group input:focus {
             border-color: #8b2500;
             box-shadow: 0 0 0 3px rgba(139,37,0,0.10);
@@ -132,6 +135,26 @@
             display: none;
             font-family: 'SimSun','宋体',serif;
         }
+        .login-box .switch-auth {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            color: #4a5a6a;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .login-box .switch-auth:active { opacity: 0.6; }
+        .login-box .file-import-btn {
+            display: inline-block;
+            background: #e0d8cc;
+            border: 1px solid #d5cdc0;
+            border-radius: 4px;
+            padding: 4px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+        .login-box .file-import-btn:active { background: #d5cdc0; }
 
         /* 管理区域 */
         .admin-area {
@@ -454,6 +477,19 @@
             margin-left: 6px;
         }
 
+        .config-hint {
+            background: #f0e8d8;
+            border: 1px solid #c9b99a;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: #4a5a6a;
+            font-family: 'SimSun','宋体',serif;
+            display: none;
+        }
+        .config-hint strong { color: #8b2500; }
+
         @media (max-width: 600px) {
             .container { padding: 18px 14px; }
             h1 { font-size: 22px; letter-spacing: 4px; }
@@ -463,6 +499,7 @@
             .post-item .actions { width: 100%; justify-content: flex-end; }
             .password-panel .form-row { flex-direction: column; align-items: stretch; }
             .status-bar { flex-direction: column; align-items: stretch; text-align: center; }
+            .login-box { padding: 20px 16px; }
         }
     </style>
 </head>
@@ -473,40 +510,68 @@
     <div class="container">
 
         <h1>📝 墨韵轩 · 文章管理</h1>
-        <div class="subtitle">— 密码哈希存储于 config.json · 支持在线修改密码 —</div>
+        <div class="subtitle">— RSA 私钥登录 · 公钥硬编码 —</div>
 
+        <!-- ============================================================ -->
         <!-- 登录界面 -->
+        <!-- ============================================================ -->
         <div id="loginBox" class="login-box">
             <h2>🔐 后台登录</h2>
-            <div class="login-sub">— 密码已加盐哈希 · 安全验证 —</div>
-            <form id="loginForm" onsubmit="return handleLogin();">
+            <div class="login-sub">— 使用私钥验证身份 —</div>
+
+            <!-- 默认显示私钥登录 -->
+            <div id="privateKeyLogin">
                 <div class="form-group">
-                    <label>密码</label>
-                    <input type="password" id="loginPassword" placeholder="请输入管理密码" autofocus />
+                    <label>🔑 私钥 (PEM 格式)</label>
+                    <textarea id="loginPrivateKey" rows="4" placeholder="-----BEGIN PRIVATE KEY----- ... -----END PRIVATE KEY-----"></textarea>
+                    <div style="display:flex; gap:8px; margin-top:4px; flex-wrap:wrap;">
+                        <span class="file-import-btn" onclick="document.getElementById('privKeyFileInput').click()">📂 从文件导入</span>
+                        <span class="file-import-btn" onclick="pastePrivateKey()">📥 粘贴</span>
+                        <input type="file" id="privKeyFileInput" accept=".pem,.txt" style="display:none;" onchange="importPrivateKeyFile(event)" />
+                    </div>
                 </div>
-                <button type="submit" class="btn">登 录</button>
-                <div class="error-msg" id="loginError">❌ 密码错误，请重试</div>
-            </form>
+                <button class="btn" id="loginWithPrivateKeyBtn">🔓 使用私钥登录</button>
+                <div class="error-msg" id="loginError">❌ 私钥无效或错误</div>
+            </div>
+
+            <!-- 备用：密码登录（仅在已配置 GitHub 时显示） -->
+            <div id="passwordLogin" style="display:none; margin-top:16px; border-top:1px dashed #d5cdc0; padding-top:16px;">
+                <div class="form-group">
+                    <label>🔑 管理密码</label>
+                    <input type="password" id="loginPassword" placeholder="请输入密码" />
+                </div>
+                <button class="btn" id="loginWithPasswordBtn" style="background:#4a5a6a; border-color:#4a5a6a;">🔓 使用密码登录</button>
+                <div class="error-msg" id="pwdLoginError">❌ 密码错误</div>
+            </div>
+
+            <div class="switch-auth" id="switchAuthBtn">切换到密码登录</div>
             <div style="text-align:center;margin-top:12px;font-size:12px;color:#b0a8a0;font-family:'SimSun','宋体',serif;">
-                🔒 密码存储在 GitHub 仓库的 config.json 中
+                🔒 私钥验证 · 公钥硬编码 · 无明文密码
             </div>
         </div>
 
+        <!-- ============================================================ -->
         <!-- 管理界面 -->
+        <!-- ============================================================ -->
         <div id="adminArea" class="admin-area">
 
             <!-- 状态栏 -->
             <div class="status-bar">
-                <span class="user-info">👤 管理员已登录 <span class="security-badge">🔒 SHA-256 + Salt</span></span>
+                <span class="user-info">👤 管理员已登录 <span class="security-badge">🔒 RSA 私钥</span></span>
                 <span>
                     <button class="change-pwd-btn" onclick="togglePasswordPanel()">🔑 修改密码</button>
                     <button class="logout-btn" onclick="handleLogout()">退出登录</button>
                 </span>
             </div>
 
-            <!-- 密码修改面板 -->
+            <!-- 提示配置 -->
+            <div class="config-hint" id="configHint">
+                ⚠️ <strong>尚未配置 GitHub</strong>，请点击下方「⚙️ 配置 GitHub」完成设置，否则无法保存文章！
+            </div>
+
+            <!-- 密码修改面板（修改的是 config.json 中的哈希） -->
             <div class="password-panel" id="passwordPanel">
-                <h3 style="font-size:16px;font-weight:normal;font-family:'华文楷体','KaiTi',serif;margin-bottom:10px;color:#2c2c2c;">🔐 修改管理密码</h3>
+                <h3 style="font-size:16px;font-weight:normal;font-family:'华文楷体','KaiTi',serif;margin-bottom:10px;color:#2c2c2c;">🔐 修改管理密码 (备用)</h3>
                 <div class="form-row">
                     <div class="form-group">
                         <label>当前密码</label>
@@ -523,14 +588,14 @@
                     <button class="btn btn-primary" onclick="changePassword()" style="height:36px;flex:0 0 auto;min-width:80px;">确认修改</button>
                 </div>
                 <div style="font-size:12px;color:#8a9aad;margin-top:6px;font-family:'SimSun','宋体',serif;">
-                    💡 修改后密码哈希将保存到 GitHub 仓库的 config.json 中
+                    💡 仅当已配置 GitHub 时有效，密码哈希保存在 config.json
                 </div>
             </div>
 
             <div class="info-box">
                 💡 <strong>使用说明：</strong><br />
-                1. 点击「⚙️ 配置 GitHub」填入 Token 和仓库信息<br />
-                2. 点击「📂 从 GitHub 读取」加载文章<br />
+                1. 首次使用请先「⚙️ 配置 GitHub」填入 Token 和仓库信息<br />
+                2. 配置后点击「📂 从 GitHub 读取」加载文章<br />
                 3. 添加/编辑后点击「💾 保存到 GitHub」<br />
                 <span style="color:#8b2500;">📝 文章内容为明文存储，首页可正常读取展示</span>
             </div>
@@ -561,6 +626,7 @@
                     <input type="text" id="configPath" value="config.json" />
                 </div>
                 <button class="btn" onclick="saveConfig()" style="background:#4a5a6a;color:#fff;width:100%;">✅ 保存配置</button>
+                <button class="btn" onclick="syncPasswordConfig()" style="background:#8b2500;color:#fff;width:100%;margin-top:6px;">📤 同步密码到 GitHub</button>
             </div>
 
             <!-- 工具栏 -->
@@ -618,9 +684,112 @@
 
     <script>
         // ============================================================
-        // ★ 默认密码（首次使用，如果 config.json 不存在）
+        // ★ 硬编码公钥（请替换为您自己的公钥）
+        // ★ 硬编码挑战码密文（用下面的公钥加密 "OK" 得到）
         // ============================================================
-        var DEFAULT_PASSWORD = '123456';
+        var PUBLIC_KEY_PEM = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtZIqe8zG+zkQu6YubvDE
+OMGngbaPNd+PMMm52SJ9mxNWtIkYXUYdObvBlp8veoA51m8hfoUdlslf/Pp42Xsx
+HuNi33Gk77aN3sP/pEigqm7rmL6JI+EfNW84DJ4jF7cN2UxbEcTHwg+Bce8hrV1l
+hGVvlEIAY8iCEnNPzgjCDKvF6cWX7nm2dImCTqH2arqYfF69uwCEpjBV7jLRtiyl
+gKj0tj66jQE93mJiHf77yWhwM1c0nNd6eMuhKyaCAfOS9zlNl28Kw52Fgeru8clX
+mvDOdwEb1CTP6I23a7IZq6zBgx4m3x/d0CLls/6aWOrQlA8xXe+NqOEqCaQr7a9K
+rwIDAQAB
+-----END PUBLIC KEY-----`;
+
+        var CHALLENGE_CIPHER = 'nVVOzoAWHkzYqcezPczM3s7gYBwQ5QkZ1XKE9ww4gkweNdi8D8wriRFLBkzdoR0We/lVW6hcJzlVhRDVx0wSWpi5h+D9WhOKXEPN9KwIgkmhQvhQyM1YKKGcsvit7z8enluy5ro0NdCmLu37MNtXboZhEvdgIUMX7bNnt0OCV6+pQUcipLhQGlAydvOBTzSPecahH7G9DY19972WW5eRJrX2CrBV7GexvGLupfMG4tbIwj+xaiAUExCGKG55mUc9qgZ8dex/tDLlXx6MQSNO2kWqXA2X89hs7VhJsqFaLvfRo7iFVCoAOBfsxj0BCajawCiSLKtJrVXfVNUrsF6iEzIRYDRQKXdb0wpkgbw1kJhIKiwXhWgIEZM+ttew5IxP3XirO5XB';
+
+        // ============================================================
+        // 核心加解密函数（取自混合加密代码）
+        // ============================================================
+        function base64ToArrayBuffer(base64) {
+            var binary = atob(base64);
+            var bytes = new Uint8Array(binary.length);
+            for (var i = 0; i < binary.length; i++) {
+                bytes[i] = binary.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        function arrayBufferToBase64(buffer) {
+            var bytes = new Uint8Array(buffer);
+            var binary = '';
+            for (var i = 0; i < bytes.byteLength; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return btoa(binary);
+        }
+
+        function pemToArrayBuffer(pem, type) {
+            var marker = '-----BEGIN ' + type + '-----';
+            var footer = '-----END ' + type + '-----';
+            var content = pem.trim();
+            if (content.includes(marker)) {
+                content = content.substring(
+                    content.indexOf(marker) + marker.length,
+                    content.lastIndexOf(footer)
+                );
+            }
+            return base64ToArrayBuffer(content.replace(/\s/g, ''));
+        }
+
+        function importPrivateKey(pem) {
+            var buf = pemToArrayBuffer(pem, 'PRIVATE KEY');
+            return crypto.subtle.importKey(
+                'pkcs8',
+                buf,
+                { name: 'RSA-OAEP', hash: 'SHA-256' },
+                false,
+                ['decrypt']
+            );
+        }
+
+        function hybridDecrypt(base64Package, privateKeyPem) {
+            var combinedBuf = base64ToArrayBuffer(base64Package);
+            var combined = new Uint8Array(combinedBuf);
+            var iv = combined.slice(0, 12);
+            var encryptedAESKeyLen = 256;
+            if (combined.length < 12 + encryptedAESKeyLen) throw new Error('数据包长度异常');
+            var encryptedAESKey = combined.slice(12, 12 + encryptedAESKeyLen);
+            var ciphertextWithTag = combined.slice(12 + encryptedAESKeyLen);
+
+            return importPrivateKey(privateKeyPem).then(function(rsaPrivateKey) {
+                return crypto.subtle.decrypt(
+                    { name: 'RSA-OAEP' },
+                    rsaPrivateKey,
+                    encryptedAESKey
+                ).then(function(aesKeyRaw) {
+                    return crypto.subtle.importKey(
+                        'raw',
+                        aesKeyRaw,
+                        { name: 'AES-GCM' },
+                        false,
+                        ['decrypt']
+                    );
+                }).then(function(aesKey) {
+                    return crypto.subtle.decrypt(
+                        { name: 'AES-GCM', iv: iv, tagLength: 128 },
+                        aesKey,
+                        ciphertextWithTag
+                    );
+                }).then(function(plaintextBuf) {
+                    return new TextDecoder().decode(plaintextBuf);
+                });
+            });
+        }
+
+        // ============================================================
+        // 私钥验证函数
+        // ============================================================
+        function verifyPrivateKey(privateKeyPem) {
+            return hybridDecrypt(CHALLENGE_CIPHER, privateKeyPem)
+                .then(function(plain) {
+                    return plain === 'OK';
+                })
+                .catch(function() {
+                    return false;
+                });
+        }
 
         // ============================================================
         // 登录状态
@@ -643,12 +812,12 @@
         }
 
         // ============================================================
-        // SHA-256 哈希函数
+        // SHA-256 哈希（用于密码备用）
         // ============================================================
         function sha256(message) {
             var encoder = new TextEncoder();
             var data = encoder.encode(message);
-            return window.crypto.subtle.digest('SHA-256', data).then(function(hashBuffer) {
+            return crypto.subtle.digest('SHA-256', data).then(function(hashBuffer) {
                 var hashArray = Array.from(new Uint8Array(hashBuffer));
                 return hashArray.map(function(b) {
                     return b.toString(16).padStart(2, '0');
@@ -656,13 +825,12 @@
             });
         }
 
-        // 加盐哈希
         function hashWithSalt(password, salt) {
             return sha256(password + salt);
         }
 
         // ============================================================
-        // 配置管理（包括 config.json 路径）
+        // 配置管理（与之前相同）
         // ============================================================
         function getConfigPath() {
             return document.getElementById('configPath').value.trim() || 'config.json';
@@ -708,6 +876,8 @@
             localStorage.setItem('github_config', JSON.stringify(config));
             showToast('✅ 配置已保存', 'success');
             document.getElementById('configBox').style.display = 'none';
+            document.getElementById('configHint').style.display = 'none';
+            syncPasswordConfig();
         }
 
         function loadConfig() {
@@ -726,76 +896,49 @@
             return false;
         }
 
-        // ============================================================
-        // 从 GitHub 读取密码配置（config.json）
-        // ============================================================
-        function loadPasswordConfigFromGitHub() {
-            if (!loadConfig()) {
-                return Promise.reject(new Error('请先配置 GitHub'));
-            }
-
-            var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + (config.configPath || 'config.json');
-
-            return fetch(url, {
-                headers: {
-                    'Authorization': 'token ' + config.token,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            })
-            .then(function(response) {
-                if (response.status === 404) {
-                    // 文件不存在，使用默认密码并创建
-                    return null;
-                }
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                return response.json();
-            })
-            .then(function(data) {
-                if (data && data.content) {
-                    var content = decodeBase64Utf8(data.content);
-                    try {
-                        var json = JSON.parse(content);
-                        return json;
-                    } catch (e) {
-                        throw new Error('config.json 格式错误');
-                    }
-                }
-                // 不存在，返回默认
-                return { salt: 'default_salt_2024', hash: null };
-            });
+        function isConfigured() {
+            return !!(config.token && config.user && config.repo);
         }
 
         // ============================================================
-        // 保存密码配置到 GitHub
+        // 密码配置（从 GitHub 读取/保存）
         // ============================================================
-        function savePasswordConfigToGitHub(salt, hash) {
-            if (!loadConfig()) {
-                return Promise.reject(new Error('请先配置 GitHub'));
-            }
-
-            var data = JSON.stringify({ salt: salt, hash: hash }, null, 2);
-            var encoded = encodeUtf8ToBase64(data);
-            var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + (config.configPath || 'config.json');
-
+        function loadPasswordConfigFromGitHub() {
+            if (!isConfigured()) return Promise.reject(new Error('未配置 GitHub'));
+            var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + getConfigPath();
             return fetch(url, {
-                headers: {
-                    'Authorization': 'token ' + config.token,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            })
-            .then(function(response) {
+                headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+            }).then(function(response) {
                 if (response.status === 404) return null;
                 if (!response.ok) throw new Error('HTTP ' + response.status);
                 return response.json();
-            })
-            .then(function(data) {
+            }).then(function(data) {
+                if (data && data.content) {
+                    var content = decodeBase64Utf8(data.content);
+                    try { return JSON.parse(content); } catch (e) { throw new Error('config.json 格式错误'); }
+                }
+                return null;
+            });
+        }
+
+        function savePasswordConfigToGitHub(salt, hash) {
+            if (!isConfigured()) return Promise.reject(new Error('未配置 GitHub'));
+            var data = JSON.stringify({ salt: salt, hash: hash }, null, 2);
+            var encoded = encodeUtf8ToBase64(data);
+            var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + getConfigPath();
+            return fetch(url, {
+                headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+            }).then(function(response) {
+                if (response.status === 404) return null;
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            }).then(function(data) {
                 var body = {
                     message: '更新密码配置 ' + new Date().toLocaleString(),
                     content: encoded,
                     branch: 'main'
                 };
                 if (data && data.sha) body.sha = data.sha;
-
                 return fetch(url, {
                     method: 'PUT',
                     headers: {
@@ -805,8 +948,7 @@
                     },
                     body: JSON.stringify(body)
                 });
-            })
-            .then(function(response) {
+            }).then(function(response) {
                 if (!response.ok) {
                     return response.json().then(function(err) {
                         throw new Error(err.message || '保存失败');
@@ -816,66 +958,42 @@
             });
         }
 
+        function syncPasswordConfig() {
+            if (!isConfigured()) { showToast('请先配置 GitHub', 'error'); return; }
+            var newSalt = 'salt_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+            // 使用固定默认密码（但已不再用于登录，仅作为备用的哈希）
+            hashWithSalt('default_backup', newSalt).then(function(newHash) {
+                return savePasswordConfigToGitHub(newSalt, newHash);
+            }).then(function() {
+                showToast('✅ 密码配置已同步到 GitHub', 'success');
+            }).catch(function(err) {
+                showToast('❌ 同步失败：' + err.message, 'error');
+            });
+        }
+
         // ============================================================
-        // 登录处理
+        // 登录逻辑（私钥优先）
         // ============================================================
-        function handleLogin() {
-            var input = document.getElementById('loginPassword').value.trim();
+        function handlePrivateKeyLogin() {
+            var privKey = document.getElementById('loginPrivateKey').value.trim();
             var errorEl = document.getElementById('loginError');
 
-            if (!input) {
-                errorEl.textContent = '❌ 请输入密码';
+            if (!privKey) {
+                errorEl.textContent = '❌ 请粘贴或导入私钥';
                 errorEl.style.display = 'block';
-                return false;
+                return;
             }
 
-            // 先加载配置
-            if (!loadConfig()) {
-                showToast('请先配置 GitHub', 'error');
-                toggleConfig();
-                return false;
-            }
-
-            // 从 GitHub 读取密码配置
-            loadPasswordConfigFromGitHub().then(function(pwdConfig) {
-                var salt = pwdConfig.salt || 'default_salt_2024';
-                var storedHash = pwdConfig.hash;
-
-                // 如果没有存储的哈希（首次使用），用默认密码的哈希
-                if (!storedHash) {
-                    // 首次使用，用默认密码 123456 的哈希初始化
-                    return hashWithSalt(DEFAULT_PASSWORD, salt).then(function(defaultHash) {
-                        // 保存到 GitHub
-                        return savePasswordConfigToGitHub(salt, defaultHash).then(function() {
-                            // 用默认密码验证
-                            return hashWithSalt(input, salt).then(function(inputHash) {
-                                if (inputHash === defaultHash) {
-                                    return true;
-                                } else {
-                                    throw new Error('密码错误');
-                                }
-                            });
-                        });
-                    });
-                }
-
-                // 正常验证
-                return hashWithSalt(input, salt).then(function(inputHash) {
-                    if (inputHash === storedHash) {
-                        return true;
-                    } else {
-                        throw new Error('密码错误');
-                    }
-                });
-            })
-            .then(function(success) {
+            verifyPrivateKey(privKey).then(function(success) {
                 if (success) {
                     isLoggedIn = true;
                     sessionStorage.setItem('blog_admin_logged', 'true');
                     errorEl.style.display = 'none';
                     showLoginUI(true);
-                    showToast('✅ 登录成功', 'success');
-                    // 加载文章配置
+                    showToast('✅ 私钥验证通过，登录成功', 'success');
+                    // 存储私钥到 session（可选，为了本次会话）
+                    sessionStorage.setItem('private_key_pem', privKey);
+                    // 加载配置
                     if (loadConfig()) {
                         document.getElementById('githubToken').value = config.token || '';
                         document.getElementById('githubUser').value = config.user || '';
@@ -883,20 +1001,142 @@
                         document.getElementById('githubPath').value = config.path || 'posts.txt';
                         document.getElementById('configPath').value = config.configPath || 'config.json';
                     }
+                    document.getElementById('configHint').style.display = isConfigured() ? 'none' : 'block';
+                } else {
+                    errorEl.textContent = '❌ 私钥无效或错误';
+                    errorEl.style.display = 'block';
+                    document.getElementById('loginPrivateKey').value = '';
+                    document.getElementById('loginPrivateKey').focus();
                 }
-            })
-            .catch(function(err) {
+            }).catch(function(err) {
+                errorEl.textContent = '❌ 私钥验证失败: ' + err.message;
+                errorEl.style.display = 'block';
+            });
+        }
+
+        // 密码登录（备用，仅在已配置 GitHub 时可用）
+        function handlePasswordLogin() {
+            var pwd = document.getElementById('loginPassword').value.trim();
+            var errorEl = document.getElementById('pwdLoginError');
+            if (!pwd) { errorEl.textContent = '❌ 请输入密码';
+                errorEl.style.display = 'block'; return; }
+            if (!isConfigured()) {
+                errorEl.textContent = '❌ 未配置 GitHub，请使用私钥登录';
+                errorEl.style.display = 'block';
+                return;
+            }
+            loadPasswordConfigFromGitHub().then(function(pwdConfig) {
+                if (!pwdConfig) throw new Error('密码配置不存在，请先同步');
+                var salt = pwdConfig.salt || 'default_salt_2024';
+                var storedHash = pwdConfig.hash;
+                return hashWithSalt(pwd, salt).then(function(inputHash) {
+                    if (inputHash === storedHash) {
+                        isLoggedIn = true;
+                        sessionStorage.setItem('blog_admin_logged', 'true');
+                        errorEl.style.display = 'none';
+                        showLoginUI(true);
+                        showToast('✅ 密码验证通过', 'success');
+                    } else {
+                        throw new Error('密码错误');
+                    }
+                });
+            }).catch(function(err) {
                 errorEl.textContent = '❌ ' + err.message;
                 errorEl.style.display = 'block';
                 document.getElementById('loginPassword').value = '';
                 document.getElementById('loginPassword').focus();
             });
+        }
 
-            return false;
+        // 切换登录方式
+        var authMode = 'private'; // 'private' or 'password'
+        document.getElementById('switchAuthBtn').addEventListener('click', function() {
+            var privateDiv = document.getElementById('privateKeyLogin');
+            var passwordDiv = document.getElementById('passwordLogin');
+            var btn = this;
+            if (authMode === 'private') {
+                // 切换到密码登录（仅当已配置）
+                if (!isConfigured()) {
+                    showToast('⚠️ 未配置 GitHub，密码登录不可用，请先配置', 'error');
+                    return;
+                }
+                privateDiv.style.display = 'none';
+                passwordDiv.style.display = 'block';
+                btn.textContent = '切换到私钥登录';
+                authMode = 'password';
+                document.getElementById('pwdLoginError').style.display = 'none';
+            } else {
+                privateDiv.style.display = 'block';
+                passwordDiv.style.display = 'none';
+                btn.textContent = '切换到密码登录';
+                authMode = 'private';
+                document.getElementById('loginError').style.display = 'none';
+            }
+        });
+
+        // 绑定登录按钮
+        document.getElementById('loginWithPrivateKeyBtn').addEventListener('click', handlePrivateKeyLogin);
+        document.getElementById('loginWithPasswordBtn').addEventListener('click', handlePasswordLogin);
+
+        // 私钥导入辅助
+        function pastePrivateKey() {
+            navigator.clipboard.readText().then(function(text) {
+                if (text) {
+                    document.getElementById('loginPrivateKey').value = text;
+                    showToast('私钥已粘贴', 'success');
+                } else {
+                    showToast('剪贴板为空', 'error');
+                }
+            }).catch(function() {
+                showToast('无法读取剪贴板，请手动粘贴', 'error');
+            });
+        }
+
+        function importPrivateKeyFile(event) {
+            var file = event.target.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var content = e.target.result;
+                if (content.includes('BEGIN PRIVATE KEY')) {
+                    document.getElementById('loginPrivateKey').value = content;
+                    showToast('私钥文件导入成功', 'success');
+                } else {
+                    showToast('文件内容不是有效的私钥', 'error');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
         }
 
         // ============================================================
-        // 修改密码
+        // 退出登录
+        // ============================================================
+        function handleLogout() {
+            if (confirm('确定退出登录吗？')) {
+                isLoggedIn = false;
+                sessionStorage.removeItem('blog_admin_logged');
+                sessionStorage.removeItem('private_key_pem');
+                showLoginUI(false);
+                document.getElementById('passwordPanel').classList.remove('active');
+                showToast('已退出', 'info');
+            }
+        }
+
+        function showLoginUI(showAdmin) {
+            var loginBox = document.getElementById('loginBox');
+            var adminArea = document.getElementById('adminArea');
+            if (showAdmin) {
+                loginBox.style.display = 'none';
+                adminArea.classList.add('active');
+            } else {
+                loginBox.style.display = 'block';
+                adminArea.classList.remove('active');
+            }
+        }
+
+        // ============================================================
+        // 修改密码（备用）
         // ============================================================
         function togglePasswordPanel() {
             var panel = document.getElementById('passwordPanel');
@@ -910,76 +1150,35 @@
         }
 
         function changePassword() {
+            if (!isConfigured()) {
+                showToast('请先配置 GitHub 才能修改密码', 'error');
+                toggleConfig();
+                return;
+            }
             var oldPwd = document.getElementById('oldPassword').value.trim();
             var newPwd1 = document.getElementById('newPassword1').value.trim();
             var newPwd2 = document.getElementById('newPassword2').value.trim();
+            if (!oldPwd || !newPwd1 || !newPwd2) { showToast('请填写所有字段', 'error'); return; }
+            if (newPwd1 !== newPwd2) { showToast('两次输入的新密码不一致', 'error'); return; }
+            if (newPwd1.length < 6) { showToast('新密码长度至少6位', 'error'); return; }
 
-            if (!oldPwd || !newPwd1 || !newPwd2) {
-                showToast('请填写所有字段', 'error');
-                return;
-            }
-
-            if (newPwd1 !== newPwd2) {
-                showToast('两次输入的新密码不一致', 'error');
-                return;
-            }
-
-            if (newPwd1.length < 6) {
-                showToast('新密码长度至少6位', 'error');
-                return;
-            }
-
-            // 验证旧密码
             loadPasswordConfigFromGitHub().then(function(pwdConfig) {
+                if (!pwdConfig) throw new Error('密码配置不存在');
                 var salt = pwdConfig.salt || 'default_salt_2024';
                 var storedHash = pwdConfig.hash;
-
-                if (!storedHash) {
-                    throw new Error('密码配置不存在，请重新登录');
-                }
-
                 return hashWithSalt(oldPwd, salt).then(function(oldHash) {
-                    if (oldHash !== storedHash) {
-                        throw new Error('当前密码错误');
-                    }
-                    // 生成新盐值（每次修改密码更换盐，更安全）
+                    if (oldHash !== storedHash) throw new Error('当前密码错误');
                     var newSalt = 'salt_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
                     return hashWithSalt(newPwd1, newSalt).then(function(newHash) {
                         return savePasswordConfigToGitHub(newSalt, newHash);
                     });
                 });
-            })
-            .then(function() {
-                showToast('✅ 密码修改成功！请重新登录', 'success');
-                // 退出登录
-                handleLogout();
-            })
-            .catch(function(err) {
+            }).then(function() {
+                showToast('✅ 密码修改成功！', 'success');
+                document.getElementById('passwordPanel').classList.remove('active');
+            }).catch(function(err) {
                 showToast('❌ 修改失败：' + err.message, 'error');
             });
-        }
-
-        // ============================================================
-        // 登出
-        // ============================================================
-        function handleLogout() {
-            isLoggedIn = false;
-            sessionStorage.removeItem('blog_admin_logged');
-            showLoginUI(false);
-            document.getElementById('passwordPanel').classList.remove('active');
-            showToast('已退出', 'info');
-        }
-
-        function showLoginUI(showAdmin) {
-            var loginBox = document.getElementById('loginBox');
-            var adminArea = document.getElementById('adminArea');
-            if (showAdmin) {
-                loginBox.style.display = 'none';
-                adminArea.classList.add('active');
-            } else {
-                loginBox.style.display = 'block';
-                adminArea.classList.remove('active');
-            }
         }
 
         // ============================================================
@@ -1154,21 +1353,15 @@
         // GitHub 读写文章
         // ============================================================
         function loadFromGitHub() {
-            if (!loadConfig()) {
+            if (!isConfigured()) {
                 showToast('请先配置 GitHub', 'error');
                 toggleConfig();
                 return;
             }
-
             var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + getPostsPath();
-
             fetch(url, {
-                headers: {
-                    'Authorization': 'token ' + config.token,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            })
-            .then(function(response) {
+                headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+            }).then(function(response) {
                 if (response.status === 404) {
                     showToast('文件不存在，将创建新文件', 'info');
                     posts = [];
@@ -1177,8 +1370,7 @@
                 }
                 if (!response.ok) throw new Error('HTTP ' + response.status);
                 return response.json();
-            })
-            .then(function(data) {
+            }).then(function(data) {
                 if (data && data.content) {
                     var content = decodeBase64Utf8(data.content);
                     var parsed = parsePostsFromTxt(content);
@@ -1192,8 +1384,7 @@
                         showToast('文件为空或格式错误', 'info');
                     }
                 }
-            })
-            .catch(function(err) {
+            }).catch(function(err) {
                 showToast('❌ 读取失败：' + err.message, 'error');
             });
         }
@@ -1203,37 +1394,27 @@
                 showToast('没有文章可保存', 'error');
                 return;
             }
-
-            if (!loadConfig()) {
+            if (!isConfigured()) {
                 showToast('请先配置 GitHub', 'error');
                 toggleConfig();
                 return;
             }
-
             var content = generatePostsTxt(posts);
             var encoded = encodeUtf8ToBase64(content);
-
             var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + getPostsPath();
-
             fetch(url, {
-                headers: {
-                    'Authorization': 'token ' + config.token,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            })
-            .then(function(response) {
+                headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+            }).then(function(response) {
                 if (response.status === 404) return null;
                 if (!response.ok) throw new Error('HTTP ' + response.status);
                 return response.json();
-            })
-            .then(function(data) {
+            }).then(function(data) {
                 var body = {
                     message: '更新文章 ' + new Date().toLocaleString(),
                     content: encoded,
                     branch: 'main'
                 };
                 if (data && data.sha) body.sha = data.sha;
-
                 return fetch(url, {
                     method: 'PUT',
                     headers: {
@@ -1243,19 +1424,16 @@
                     },
                     body: JSON.stringify(body)
                 });
-            })
-            .then(function(response) {
+            }).then(function(response) {
                 if (!response.ok) {
                     return response.json().then(function(err) {
                         throw new Error(err.message || '保存失败');
                     });
                 }
                 return response.json();
-            })
-            .then(function() {
+            }).then(function() {
                 showToast('✅ 保存成功！共 ' + posts.length + ' 篇', 'success');
-            })
-            .catch(function(err) {
+            }).catch(function(err) {
                 showToast('❌ 保存失败：' + err.message, 'error');
             });
         }
@@ -1272,19 +1450,29 @@
         // ============================================================
         // 初始化
         // ============================================================
-        showLoginUI(isLoggedIn);
-        if (loadConfig()) {
-            document.getElementById('githubToken').value = config.token || '';
-            document.getElementById('githubUser').value = config.user || '';
-            document.getElementById('githubRepo').value = config.repo || '';
-            document.getElementById('githubPath').value = config.path || 'posts.txt';
-            document.getElementById('configPath').value = config.configPath || 'config.json';
+        // 检查是否有已登录状态
+        if (isLoggedIn) {
+            showLoginUI(true);
+            if (loadConfig()) {
+                document.getElementById('githubToken').value = config.token || '';
+                document.getElementById('githubUser').value = config.user || '';
+                document.getElementById('githubRepo').value = config.repo || '';
+                document.getElementById('githubPath').value = config.path || 'posts.txt';
+                document.getElementById('configPath').value = config.configPath || 'config.json';
+            }
+            document.getElementById('configHint').style.display = isConfigured() ? 'none' : 'block';
+        } else {
+            showLoginUI(false);
+            // 默认显示私钥登录
+            document.getElementById('privateKeyLogin').style.display = 'block';
+            document.getElementById('passwordLogin').style.display = 'none';
+            document.getElementById('switchAuthBtn').textContent = '切换到密码登录';
+            authMode = 'private';
         }
 
-        console.log('📝 墨韵轩 · 文章管理（在线修改密码版）已加载');
-        console.log('🔑 默认密码: 123456');
-        console.log('💡 登录后点击「修改密码」即可在线更改密码');
-        console.log('📄 密码哈希存储在 GitHub 仓库的 config.json 中');
+        console.log('📝 墨韵轩 · 文章管理 (RSA 私钥登录版) 已加载');
+        console.log('🔑 请使用您的私钥登录，无明文密码');
+        console.log('💡 首次使用需生成密钥对并替换公钥和挑战码');
     </script>
 
 </body>
