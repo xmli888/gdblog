@@ -50,8 +50,6 @@
             letter-spacing: 2px;
             font-family: 'SimSun','宋体',serif;
         }
-
-        /* 配置区域 */
         .config-box {
             background: #f5f0e8;
             border: 1px solid #d5cdc0;
@@ -60,9 +58,7 @@
             margin-bottom: 16px;
             display: none;
         }
-        .config-box .form-group {
-            margin-bottom: 10px;
-        }
+        .config-box .form-group { margin-bottom: 10px; }
         .config-box .form-group label {
             display: block;
             font-size: 13px;
@@ -78,18 +74,6 @@
             font-size: 13px;
             outline: none;
         }
-        .config-box .btn {
-            padding: 6px 16px;
-            border: 1px solid #8a9aad;
-            border-radius: 4px;
-            background: #4a5a6a;
-            color: #fff;
-            cursor: pointer;
-            font-size: 13px;
-            font-family: '华文楷体','KaiTi',serif;
-            letter-spacing: 1px;
-        }
-
         .toolbar {
             display: flex;
             gap: 12px;
@@ -124,7 +108,6 @@
             border-color: #24292e;
             color: #fff;
         }
-
         .post-list {
             margin: 16px 0;
             max-height: 400px;
@@ -168,7 +151,6 @@
             font-size: 16px;
             font-family: 'SimSun','宋体',serif;
         }
-
         .form-group { margin-bottom: 14px; }
         .form-group label {
             display: block;
@@ -232,7 +214,6 @@
             border-color: #4a5a6a;
             color: #f5f0e8;
         }
-
         .toast-msg {
             position: fixed;
             bottom: 40px;
@@ -254,7 +235,6 @@
             letter-spacing: 1px;
         }
         .toast-msg.show { opacity: 1; }
-
         .info-box {
             background: #efe8dd;
             border-radius: 6px;
@@ -266,7 +246,6 @@
             margin-bottom: 16px;
             border: 1px dashed #d5cdc0;
         }
-
         @media (max-width: 600px) {
             .container { padding: 18px 14px; }
             h1 { font-size: 22px; letter-spacing: 4px; }
@@ -287,14 +266,12 @@
 
         <div class="info-box">
             💡 <strong>使用说明：</strong><br />
-            1. 首次使用点击「⚙️ 配置 GitHub」<br />
+            1. 点击「⚙️ 配置 GitHub」<br />
             2. 填入 Token（需勾选 repo 权限）和仓库信息<br />
             3. 点击「📂 从 GitHub 读取」加载文章<br />
-            4. 添加/编辑后点击「💾 保存到 GitHub」<br />
-            <span style="color:#8b2500;">✅ 所有文章直接保存到仓库的 posts.txt</span>
+            4. 添加/编辑后点击「💾 保存到 GitHub」
         </div>
 
-        <!-- 配置 -->
         <div class="config-box" id="configBox">
             <h3 style="font-weight:normal;font-size:16px;font-family:'华文楷体','KaiTi',serif;margin-bottom:12px;color:#2c2c2c;">⚙️ GitHub 配置</h3>
             <div class="form-group">
@@ -312,7 +289,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label>📄 文件路径（默认 posts.txt）</label>
+                <label>📄 文件路径</label>
                 <input type="text" id="githubPath" value="posts.txt" />
             </div>
             <button class="btn" onclick="saveConfig()" style="background:#4a5a6a;color:#fff;width:100%;">✅ 保存配置</button>
@@ -368,15 +345,9 @@
     </div>
 
     <script>
-        // ============================================================
-        // 数据
-        // ============================================================
         var posts = [];
         var config = {};
 
-        // ============================================================
-        // Toast
-        // ============================================================
         var toastEl = document.getElementById('toastContainer');
         var toastTimer = null;
 
@@ -388,9 +359,6 @@
             toastTimer = setTimeout(function() { toastEl.classList.remove('show'); }, 3000);
         }
 
-        // ============================================================
-        // 工具函数
-        // ============================================================
         function getToday() {
             var d = new Date();
             return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -402,9 +370,6 @@
             return d.innerHTML;
         }
 
-        // ============================================================
-        // 配置管理
-        // ============================================================
         function toggleConfig() {
             var box = document.getElementById('configBox');
             if (box.style.display === 'block') {
@@ -452,9 +417,6 @@
             return false;
         }
 
-        // ============================================================
-        // 解析 posts.txt
-        // ============================================================
         function parsePostsFromTxt(text) {
             var blocks = text.split(/---\s*/).filter(function(block) { return block.trim().length > 0; });
             var result = [];
@@ -493,9 +455,6 @@
             return result;
         }
 
-        // ============================================================
-        // 生成 posts.txt 格式
-        // ============================================================
         function generatePostsTxt(postsArray) {
             var text = '';
             for (var i = 0; i < postsArray.length; i++) {
@@ -510,9 +469,6 @@
             return text;
         }
 
-        // ============================================================
-        // 渲染文章列表
-        // ============================================================
         function renderPosts() {
             var container = document.getElementById('postList');
             var countDisplay = document.getElementById('countDisplay');
@@ -541,9 +497,6 @@
             countDisplay.textContent = '共 ' + posts.length + ' 篇文章';
         }
 
-        // ============================================================
-        // 添加文章
-        // ============================================================
         document.getElementById('editorForm').addEventListener('submit', function(e) {
             e.preventDefault();
             var title = document.getElementById('postTitle').value.trim();
@@ -592,6 +545,28 @@
         }
 
         // ============================================================
+        // ★ 修复编码：正确解码 UTF-8
+        // ============================================================
+        function decodeBase64Utf8(base64) {
+            var binaryString = atob(base64);
+            var bytes = new Uint8Array(binaryString.length);
+            for (var i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return new TextDecoder('utf-8').decode(bytes);
+        }
+
+        function encodeUtf8ToBase64(text) {
+            var encoder = new TextEncoder();
+            var data = encoder.encode(text);
+            var binaryString = '';
+            for (var i = 0; i < data.length; i++) {
+                binaryString += String.fromCharCode(data[i]);
+            }
+            return btoa(binaryString);
+        }
+
+        // ============================================================
         // 从 GitHub 读取
         // ============================================================
         function loadFromGitHub() {
@@ -621,7 +596,7 @@
             })
             .then(function(data) {
                 if (data && data.content) {
-                    var content = atob(data.content);
+                    var content = decodeBase64Utf8(data.content);
                     var parsed = parsePostsFromTxt(content);
                     if (parsed.length > 0) {
                         posts = parsed;
@@ -630,7 +605,7 @@
                     } else {
                         posts = [];
                         renderPosts();
-                        showToast('文件为空', 'info');
+                        showToast('文件为空或格式错误', 'info');
                     }
                 }
             })
@@ -655,11 +630,10 @@
             }
 
             var content = generatePostsTxt(posts);
-            var encoded = btoa(unescape(encodeURIComponent(content)));
+            var encoded = encodeUtf8ToBase64(content);
 
             var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + config.path;
 
-            // 先获取文件 SHA
             fetch(url, {
                 headers: {
                     'Authorization': 'token ' + config.token,
@@ -705,18 +679,12 @@
             });
         }
 
-        // ============================================================
-        // 快捷键
-        // ============================================================
         document.getElementById('postContent').addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.key === 'Enter') {
                 document.getElementById('editorForm').dispatchEvent(new Event('submit'));
             }
         });
 
-        // ============================================================
-        // 初始化
-        // ============================================================
         if (loadConfig()) {
             document.getElementById('githubToken').value = config.token || '';
             document.getElementById('githubUser').value = config.user || '';
@@ -725,68 +693,8 @@
             showToast('✅ 已加载配置', 'success');
         }
 
-        console.log('📝 墨韵轩 · GitHub 版已加载');
+        console.log('📝 墨韵轩 · GitHub 版已加载（编码修复）');
     </script>
 
-</body>
-</html>
-```
-
----
-
-2. index.html（博客展示页面）
-
-```html
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>墨韵轩 · 古典博客</title>
-    <style>
-        /* 这里放您之前的博客样式，略... */
-        /* 但注意：文章数据从 GitHub 读取 */
-    </style>
-</head>
-<body>
-    <!-- 博客界面 -->
-    <div id="posts"></div>
-
-    <script>
-        // 从 GitHub 读取 posts.txt 并显示
-        var REPO = '您的用户名/仓库名';
-        var PATH = 'posts.txt';
-
-        fetch('https://raw.githubusercontent.com/' + REPO + '/main/' + PATH)
-            .then(function(r) { return r.text(); })
-            .then(function(text) {
-                // 解析并显示文章
-                var blocks = text.split(/---\s*/);
-                var html = '';
-                for (var i = 0; i < blocks.length; i++) {
-                    var block = blocks[i].trim();
-                    if (!block) continue;
-                    var lines = block.split('\n');
-                    var title = '', content = '', category = '', date = '', tags = [];
-                    for (var j = 0; j < lines.length; j++) {
-                        var line = lines[j].trim();
-                        var match = line.match(/^(\w+):\s*(.*)/);
-                        if (match) {
-                            if (match[1] === 'title') title = match[2];
-                            else if (match[1] === 'content') content = match[2];
-                            else if (match[1] === 'category') category = match[2];
-                            else if (match[1] === 'date') date = match[2];
-                            else if (match[1] === 'tags') tags = match[2].split(',');
-                        }
-                    }
-                    if (title && content) {
-                        html += '<div class="card"><h2>' + title + '</h2>';
-                        html += '<div>📅 ' + date + '  📂 ' + category + '</div>';
-                        html += '<p>' + content + '</p></div>';
-                    }
-                }
-                document.getElementById('posts').innerHTML = html;
-            });
-    </script>
 </body>
 </html>
