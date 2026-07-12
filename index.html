@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>墨韵轩 · 古典个人博客</title>
+    <style>
+        /* ---------- 完整样式 ---------- */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background-color: #f5f0e8;
+            font-family: '华文楷体','KaiTi','SimSun','宋体',serif;
+            color: #2c2c2c;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-tap-highlight-color: transparent;
+            padding: 10px;
+        }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 10px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* 提示消息 */
+        .toast-msg {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            z-index: 9999;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+            font-family: '华文楷体','KaiTi',serif;
+        }
+        .toast-msg.show { opacity: 1; }
+
+        /* 青砖屋檐 */
+        .header {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background-color: #4a5a6a;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
+            background-image:
+                repeating-linear-gradient(180deg, transparent 0px, transparent 28px, rgba(0,0,0,0.15) 28px, rgba(0,0,0,0.15) 30px),
+                repeating-linear-gradient(90deg, transparent 0px, transparent 58px, rgba(0,0,0,0.08) 58px, rgba(0,0,0,0.08) 60px),
+                linear-gradient(135deg, #4a5a6a 0%, #5a6a7a 30%, #4a5a6a 60%, #3a4a5a 100%);
+        }
+        .header .eave-left {
+            position: absolute;
+            bottom: 0; left: -10px;
+            width: 80px; height: 60px;
+            background: #2c3e4a;
+            clip-path: polygon(0% 100%, 100% 100%, 80% 0%, 0% 0%);
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .header .eave-right {
+            position: absolute;
+            bottom: 0; right: -10px;
+            width: 80px; height: 60px;
+            background: #2c3e4a;
+            clip-path: polygon(0% 100%, 100% 100%, 100% 0%, 20% 0%);
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .header .roof-tiles {
+            position: absolute;
+            bottom: 30px; left: 0;
+            width: 100%; height: 20px;
+            background: repeating-linear-gradient(90deg, transparent 0px, transparent 30px, rgba(0,0,0,0.10) 30px, rgba(0,0,0,0.10) 32px);
+            pointer-events: none;
+        }
+        .header-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 20px 30px;
+            text-align: center;
+            color: #f5f0e8;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+        .header-content h1 {
+            font-size: 38px;
+            font-weight: normal;
+            letter-spacing: 10px;
+            font-family: '华文楷体','KaiTi','STKaiti',serif;
+            margin-bottom: 4px;
+        }
+        .header-content h1::before,
+        .header-content h1::after {
+            content: '◆';
+            font-size: 16px;
+            color: #c9b99a;
+            margin: 0 12px;
+            opacity: 0.6;
+        }
+        .header-content .subtitle {
+            font-size: 14px;
+            letter-spacing: 4px;
+            color: #d5cdc0;
+            font-family: '华文楷体','KaiTi',serif;
+            margin-top: 2px;
+            opacity: 0.85;
+        }
+
+        .nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 10px;
+            background: rgba(44,62,74,0.75);
+            backdrop-filter: blur(4px);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            border-radius: 0 0 12px 12px;
+            flex-wrap: wrap;
+            gap: 4px 8px;
+            z-index: 5;
+            pointer-events: auto;
+        }
+        .nav a {
+            color: #e8e0d5;
+            text-decoration: none;
+            font-size: 14px;
+            letter-spacing: 1px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.06);
+            transition: 0.2s;
+            white-space: nowrap;
+            font-family: '华文楷体','KaiTi',serif;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            pointer-events: auto;
+        }
+        .nav a:active {
+            background: rgba(255,255,255,0.18);
+            transform: scale(0.95);
+        }
+        .nav .login-btn {
+            background: rgba(139,37,0,0.45);
+            border: 1px solid rgba(200,180,160,0.25);
+            padding: 6px 16px;
+        }
+        .nav .login-btn:active {
+            background: rgba(139,37,0,0.75);
+        }
+
+        .main {
+            display: flex;
+            gap: 24px;
+            margin: 24px 0;
+            flex: 1;
+        }
+        .blog-posts { flex: 7; display: flex; flex-direction: column; gap: 20px; }
+        .sidebar { flex: 3; display: flex; flex-direction: column; gap: 20px; }
+
+        .card {
+            background: #fcf9f5;
+            border: 1px solid #d5cdc0;
+            border-radius: 8px;
+            padding: 20px 24px;
+            box-shadow: 0 2px 12px rgba(60,70,80,0.08);
+            position: relative;
+            transition: 0.2s;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 20px;
+            width: 28px;
+            height: 3px;
+            background: #8b2500;
+            border-radius: 0 0 4px 4px;
+            opacity: 0.5;
+        }
+        .card:active { transform: scale(0.99); }
+        .post-card {
+            cursor: pointer;
+        }
+        .post-card .post-title {
+            font-size: 20px;
+            font-weight: normal;
+            font-family: '华文楷体','KaiTi',serif;
+            color: #2c2c2c;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+        .post-card .post-meta {
+            font-size: 12px;
+            color: #8a9aad;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #e0d8cc;
+            padding-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .post-card .post-excerpt {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #3a3a3a;
+            font-family: 'SimSun','宋体',serif;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .post-card .post-tags {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .post-card .post-tags .tag {
+            font-size: 11px;
+            padding: 2px 12px;
+            background: #efe8dd;
+            color: #5a5a5a;
+            border-radius: 20px;
+            border: 1px solid #d5cdc0;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar .card-title {
+            font-size: 17px;
+            font-weight: normal;
+            font-family: '华文楷体','KaiTi',serif;
+            color: #2c2c2c;
+            letter-spacing: 3px;
+            border-bottom: 2px solid #d5cdc0;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .sidebar .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 28px;
+            height: 2px;
+            background: #8b2500;
+            border-radius: 2px;
+        }
+        .profile-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #d5cdc0;
+            margin: 0 auto 12px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #6b7b8b;
+            border: 2px solid #c9b99a;
+        }
+        .profile-name {
+            text-align: center;
+            font-size: 18px;
+            font-family: '华文楷体','KaiTi',serif;
+            letter-spacing: 3px;
+        }
+        .profile-desc {
+            text-align: center;
+            font-size: 13px;
+            color: #6b7b8b;
+            margin-top: 4px;
+            font-family: 'SimSun','宋体',serif;
+            line-height: 1.6;
+        }
+        .category-list {
+            list-style: none;
+            padding: 0;
+        }
+        .category-list li {
+            padding: 5px 0;
+            border-bottom: 1px dashed #e8e0d5;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            color: #4a5a6a;
+            font-family: 'SimSun','宋体',serif;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .category-list li:active {
+            background: rgba(139,37,0,0.08);
+            transform: scale(0.97);
+        }
+        .category-list li .count {
+            color: #8a9aad;
+            font-size: 12px;
+        }
+
+        .footer {
+            width: 100%;
+            padding: 20px 16px 14px 16px;
+            text-align: center;
+            font-size: 13px;
+            color: #8a9aad;
+            border-top: 1px solid #d5cdc0;
+            margin-top: 8px;
+            font-family: 'SimSun','宋体',serif;
+            letter-spacing: 1px;
+        }
+        .footer .footer-heart { color: #8b2500; margin: 0 4px; }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(30,40,50,0.70);
+            backdrop-filter: blur(6px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: #fcf9f5;
+            border-radius: 12px;
+            padding: 30px 32px;
+            max-width: 500px;
+            width: 92%;
+            border: 1px solid #d5cdc0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+            position: relative;
+            animation: slideUp 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 30px; right: 30px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #8b2500, transparent);
+            border-radius: 0 0 4px 4px;
+            opacity: 0.5;
+        }
+        .modal h2 {
+            font-size: 24px;
+            font-weight: normal;
+            font-family: '华文楷体','KaiTi',serif;
+            text-align: center;
+            letter-spacing: 4px;
+            color: #2c2c2c;
+            margin-bottom: 4px;
+        }
+        .modal .modal-sub {
+            text-align: center;
+            font-size: 13px;
+            color: #8a9aad;
+            margin-bottom: 20px;
+            font-family: 'SimSun','宋体',serif;
+            letter-spacing: 1px;
+        }
+        .btn {
+            padding: 8px 24px;
+            border: 1px solid #8a9aad;
+            border-radius: 6px;
+            background: transparent;
+            color: #4a5a6a;
+            font-size: 15px;
+            font-family: '华文楷体','KaiTi',serif;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-block;
+            -webkit-touch-callout: none;
+            user-select: none;
+        }
+        .btn:active { transform: scale(0.94); }
+        .btn-primary {
+            background: #8b2500;
+            border-color: #8b2500;
+            color: #f5f0e8;
+        }
+        .btn-primary:active { background: #6b1a00; }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-group .btn { flex: 1; text-align: center; min-width: 70px; }
+        .modal-close {
+            position: absolute;
+            top: 12px; right: 16px;
+            font-size: 26px;
+            color: #8a9aad;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px 10px;
+        }
+        .modal-close:active { color: #8b2500; }
+
+        .about-content {
+            font-size: 15px;
+            line-height: 2;
+            color: #3a3a3a;
+            font-family: 'SimSun','宋体',serif;
+            padding: 8px 0;
+            white-space: pre-wrap;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 820px) {
+            .main { flex-direction: column; }
+            .header { height: 170px; }
+            .header-content h1 { font-size: 28px; letter-spacing: 6px; }
+            .header-content h1::before,
+            .header-content h1::after { margin: 0 8px; font-size: 12px; }
+            .nav { padding: 6px 8px; gap: 3px 6px; }
+            .nav a { font-size: 12px; padding: 4px 8px; }
+            .modal { padding: 22px 18px; }
+            .card { padding: 16px 14px; }
+            .post-card .post-title { font-size: 17px; }
+        }
+        @media (max-width: 480px) {
+            .header-content h1 { font-size: 22px; letter-spacing: 3px; }
+            .header-content .subtitle { font-size: 12px; letter-spacing: 2px; }
+            .nav a { font-size: 11px; padding: 3px 6px; }
+            .btn { padding: 6px 14px; font-size: 13px; }
+            .modal { padding: 18px 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 提示消息 -->
+    <div id="toastContainer" class="toast-msg"></div>
+
+    <div class="container">
+        <header class="header">
+            <div class="eave-left"></div>
+            <div class="eave-right"></div>
+            <div class="roof-tiles"></div>
+            <div class="header-content">
+                <h1>墨韵轩</h1>
+                <div class="subtitle">— 笔墨春秋 · 静观自得 —</div>
+            </div>
+            <nav class="nav">
+                <a href="#" onclick="return navClick('home');">首页</a>
+                <a href="#" onclick="return navClick('archive');">文章</a>
+                <a href="#" onclick="return showAbout();">关于</a>
+            </nav>
+        </header>
+
+        <div class="main">
+            <section class="blog-posts" id="postList">
+                <div class="card" style="text-align:center;padding:40px 20px;color:#8a9aad;">
+                    <div style="font-size:48px;">📖</div>
+                    <p style="font-size:18px;">文章加载中...</p>
+                </div>
+            </section>
+            <aside class="sidebar">
+                <div class="card">
+                    <div class="profile-avatar">✍</div>
+                    <div class="profile-name">墨 轩 主</div>
+                    <div class="profile-desc">闲来读书，兴至写文。<br />以文会友，以友辅仁。</div>
+                </div>
+                <div class="card">
+                    <div class="card-title">文章分类</div>
+                    <ul class="category-list" id="categoryList">
+                        <li style="color:#8a9aad;justify-content:center;">加载中...</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <div class="card-title">📝 如何发布文章</div>
+                    <div style="font-size:13px;color:#6b7b8b;line-height:1.8;font-family:'SimSun','宋体',serif;">
+                        1. 编辑 <code style="background:#efe8dd;padding:2px 8px;border-radius:4px;">posts.txt</code> 文件<br />
+                        2. 按格式添加文章（用 --- 分隔）<br />
+                        3. 上传覆盖到网站目录<br />
+                        4. 刷新页面即可看到新文章
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <footer class="footer">
+            <span>© 2026 墨韵轩 · 以古典之心，行现代之事</span>
+            <span style="margin:0 6px;">|</span>
+            <span> 本博客采用 <span class="footer-heart">♥</span> 青砖屋檐风格</span>
+        </footer>
+    </div>
+
+    <!-- 模态框 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modalContent">
+            <button class="modal-close" id="modalClose" onclick="closeModal()">✕</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // TXT 文件方案 - 从 posts.txt 读取文章数据
+        // ============================================================
+
+        var posts = [];
+        var aboutContent = '墨韵轩，一处藏于青砖屋檐下的精神角落。\n\n这里没有喧嚣，只有笔墨与时光的对话。每一篇文章，都是一次心灵的远行；每一次阅读，都是一场与古人的相逢。\n\n闲来读书，兴至写文。以文会友，以友辅仁。\n\n—— 墨轩主 谨记';
+
+        // ============================================================
+        // Toast 提示
+        // ============================================================
+        var toastEl = document.getElementById('toastContainer');
+        var toastTimer = null;
+
+        function showToast(msg, type) {
+            toastEl.textContent = msg;
+            toastEl.style.background = type === 'success' ? '#4a5a6a' : (type === 'error' ? '#8b2500' : '#333');
+            toastEl.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(function() { toastEl.classList.remove('show'); }, 2500);
+        }
+
+        // ============================================================
+        // 解析 TXT 文件
+        // ============================================================
+        function parsePostsFromTxt(text) {
+            // 按 --- 分割文章
+            var blocks = text.split(/---\s*/).filter(function(block) {
+                return block.trim().length > 0;
+            });
+
+            var result = [];
+            for (var i = 0; i < blocks.length; i++) {
+                var block = blocks[i].trim();
+                var lines = block.split('\n');
+                var post = {};
+                var contentLines = [];
+                var isContent = false;
+
+                for (var j = 0; j < lines.length; j++) {
+                    var line = lines[j].trim();
+                    if (!line) continue;
+
+                    // 检测字段
+                    var match = line.match(/^(\w+):\s*(.*)/);
+                    if (match && !isContent) {
+                        var key = match[1];
+                        var value = match[2];
+                        if (key === 'title') post.title = value;
+                        else if (key === 'category') post.category = value;
+                        else if (key === 'tags') post.tags = value.split(',').map(function(t) { return t.trim(); });
+                        else if (key === 'date') post.date = value;
+                        else if (key === 'content') {
+                            isContent = true;
+                            contentLines.push(value);
+                        }
+                    } else {
+                        // 如果已经遇到 content 字段，后面的都算内容
+                        if (isContent || line.startsWith('content:')) {
+                            if (line.startsWith('content:')) {
+                                contentLines.push(line.replace(/^content:\s*/, ''));
+                            } else {
+                                contentLines.push(line);
+                            }
+                        }
+                    }
+                }
+
+                post.content = contentLines.join('\n').trim();
+                if (post.title && post.content) {
+                    result.push(post);
+                }
+            }
+
+            return result;
+        }
+
+        // ============================================================
+        // 从服务器加载 posts.txt
+        // ============================================================
+        function loadPostsFromTxt() {
+            // 使用 fetch API 读取 txt 文件
+            // 注意：如果网站不支持 fetch，可以用 XMLHttpRequest
+            var url = 'posts.txt?' + new Date().getTime(); // 加时间戳防止缓存
+
+            fetch(url)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('无法加载 posts.txt 文件，请确认文件存在');
+                    }
+                    return response.text();
+                })
+                .then(function(text) {
+                    posts = parsePostsFromTxt(text);
+                    renderAll();
+                    showToast('加载成功，共 ' + posts.length + ' 篇文章', 'success');
+                })
+                .catch(function(err) {
+                    console.error('加载失败:', err);
+                    showToast('加载失败: ' + err.message, 'error');
+                    // 显示错误信息
+                    var container = document.getElementById('postList');
+                    container.innerHTML = '<div class="card" style="text-align:center;padding:40px 20px;color:#8a9aad;">' +
+                        '<div style="font-size:48px;">⚠️</div>' +
+                        '<p style="font-size:18px;">文章加载失败</p>' +
+                        '<p style="font-size:13px;margin-top:8px;">请确认 posts.txt 文件存在于网站根目录</p>' +
+                        '</div>';
+                });
+        }
+
+        // ============================================================
+        // 渲染函数
+        // ============================================================
+        function renderPosts() {
+            var container = document.getElementById('postList');
+            if (!container) return;
+            if (posts.length === 0) {
+                container.innerHTML = '<div class="card" style="text-align:center;padding:40px 20px;color:#8a9aad;"><div style="font-size:48px;">📜</div><p style="font-size:18px;">暂无文章，静待墨香</p></div>';
+                return;
+            }
+            var sorted = posts.slice().sort(function(a, b) {
+                return new Date(b.date) - new Date(a.date);
+            });
+            var html = '';
+            for (var i = 0; i < sorted.length; i++) {
+                var p = sorted[i];
+                html += '<div class="card post-card" data-id="' + i + '" onclick="postClick(this)">';
+                html += '<h2 class="post-title">' + escapeHtml(p.title) + '</h2>';
+                html += '<div class="post-meta"><span>📅 ' + (p.date || '未知日期') + '</span><span>📂 ' + escapeHtml(p
+                    .category || '未分类') + '</span><span>✍ 墨轩主</span></div>';
+                html += '<div class="post-excerpt">' + escapeHtml(p.content) + '</div>';
+                if (p.tags && p.tags.length > 0) {
+                    html += '<div class="post-tags">';
+                    for (var j = 0; j < p.tags.length; j++) {
+                        html += '<span class="tag"># ' + escapeHtml(p.tags[j]) + '</span>';
+                    }
+                    html += '</div>';
+                }
+                html += '</div>';
+            }
+            container.innerHTML = html;
+        }
+
+        function renderCategories() {
+            var container = document.getElementById('categoryList');
+            if (!container) return;
+            var map = {};
+            for (var i = 0; i < posts.length; i++) {
+                var cat = posts[i].category || '未分类';
+                if (map[cat]) map[cat]++; else map[cat] = 1;
+            }
+            var html = '';
+            for (var key in map) {
+                html += '<li onclick="filterByCategory(\'' + escapeHtml(key) + '\')" data-category="' + escapeHtml(key) +
+                    '"><span>' + escapeHtml(key) + '</span><span class="count">' + map[key] + ' 篇</span></li>';
+            }
+            container.innerHTML = html || '<li style="color:#8a9aad;justify-content:center;cursor:default;">暂无分类</li>';
+        }
+
+        function renderAll() {
+            renderPosts();
+            renderCategories();
+        }
+
+        // ============================================================
+        // 辅助函数
+        // ============================================================
+        function escapeHtml(str) {
+            var d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+
+        // ============================================================
+        // 模态框
+        // ============================================================
+        function openModal(html) {
+            document.getElementById('modalBody').innerHTML = html;
+            document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ============================================================
+        // 分类筛选
+        // ============================================================
+        function filterByCategory(category) {
+            var filtered = posts.filter(function(p) {
+                return (p.category || '未分类') === category;
+            });
+            var container = document.getElementById('postList');
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="card" style="text-align:center;padding:40px 20px;color:#8a9aad;"><div style="font-size:48px;">📂</div><p style="font-size:18px;">该分类暂无文章</p></div>';
+                showToast('分类「' + category + '」暂无文章', 'info');
+                return;
+            }
+            var sorted = filtered.slice().sort(function(a, b) {
+                return new Date(b.date) - new Date(a.date);
+            });
+            var html = '';
+            for (var i = 0; i < sorted.length; i++) {
+                var p = sorted[i];
+                html += '<div class="card post-card" data-id="' + i + '" onclick="postClick(this)">';
+                html += '<h2 class="post-title">' + escapeHtml(p.title) + '</h2>';
+                html += '<div class="post-meta"><span>📅 ' + (p.date || '未知日期') + '</span><span>📂 ' + escapeHtml(p
+                    .category || '未分类') + '</span><span>✍ 墨轩主</span></div>';
+                html += '<div class="post-excerpt">' + escapeHtml(p.content) + '</div>';
+                if (p.tags && p.tags.length > 0) {
+                    html += '<div class="post-tags">';
+                    for (var j = 0; j < p.tags.length; j++) {
+                        html += '<span class="tag"># ' + escapeHtml(p.tags[j]) + '</span>';
+                    }
+                    html += '</div>';
+                }
+                html += '</div>';
+            }
+            container.innerHTML = html;
+            showToast('当前分类：' + category, 'info');
+        }
+
+        // ============================================================
+        // 导航
+        // ============================================================
+        function navClick(page) {
+            if (page === 'home') {
+                renderPosts();
+                showToast('回到首页', 'info');
+            } else if (page === 'archive') {
+                showToast('文章归档（全部文章已展示）', 'info');
+            }
+            return false;
+        }
+
+        // ============================================================
+        // 关于
+        // ============================================================
+        function showAbout() {
+            var html = '<h2>关于墨韵轩</h2>';
+            html += '<div class="modal-sub">— 青砖檐下 · 笔墨春秋 —</div>';
+            html += '<div class="about-content">' + escapeHtml(aboutContent).replace(/\n/g, '<br>') + '</div>';
+            html += '<div class="btn-group"><button class="btn" onclick="closeModal()">关 闭</button></div>';
+            openModal(html);
+            return false;
+        }
+
+        // ============================================================
+        // 文章点击
+        // ============================================================
+        function postClick(el) {
+            var index = parseInt(el.dataset.id);
+            var post = posts[index];
+            if (!post) return;
+            var html = '<h2 style="font-size:20px;text-align:left;letter-spacing:2px;">' + escapeHtml(post.title) +
+            '</h2>';
+            html += '<div style="font-size:13px;color:#8a9aad;margin:6px 0 16px;display:flex;gap:12px;flex-wrap:wrap;">';
+            html += '<span>📅 ' + (post.date || '未知日期') + '</span><span>📂 ' + escapeHtml(post.category || '未分类') +
+                '</span>';
+            if (post.tags && post.tags.length > 0) {
+                html += '<span>🏷️ ';
+                for (var j = 0; j < post.tags.length; j++) {
+                    html += '#' + escapeHtml(post.tags[j]) + ' ';
+                }
+                html += '</span>';
+            }
+            html += '</div>';
+            html +=
+                '<div style="font-size:15px;line-height:2;border-top:1px dashed #ddd;padding-top:16px;font-family:\'SimSun\',\'宋体\',serif;color:#2c2c2c;">';
+            html += escapeHtml(post.content).replace(/\n/g, '<br>');
+            html += '</div><div class="btn-group"><button class="btn" onclick="closeModal()">关 闭</button></div>';
+            openModal(html);
+        }
+
+        // ============================================================
+        // 初始化
+        // ============================================================
+        // 加载文章
+        loadPostsFromTxt();
+
+        console.log('🌿 墨韵轩 · TXT 文件版已启动');
+        console.log('📝 文章数据来源: posts.txt');
+        console.log('💡 添加文章请编辑 posts.txt 文件');
+    </script>
+
+</body>
+</html>
