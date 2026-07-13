@@ -97,9 +97,9 @@
     <div class="container">
 
         <h1>📝 墨韵轩 · 文章管理</h1>
-        <div class="subtitle">— RSA 私钥登录 · 配置同步 GitHub —</div>
+        <div class="subtitle">— RSA 私钥登录 · 自动读取同目录 config.json —</div>
 
-        <!-- 登录界面 -->
+        <!-- ====== 登录界面 ====== -->
         <div id="loginBox" class="login-box">
             <h2>🔐 后台登录</h2>
             <div class="login-sub">— 使用私钥验证身份 —</div>
@@ -115,11 +115,11 @@
             <button class="btn" id="loginWithPrivateKeyBtn">🔓 使用私钥登录</button>
             <div class="error-msg" id="loginError"></div>
             <div style="text-align:center;margin-top:12px;font-size:12px;color:#b0a8a0;font-family:'SimSun','宋体',serif;">
-                🔒 私钥验证 · 配置同步 GitHub
+                🔒 登录前自动读取同目录 config.json
             </div>
         </div>
 
-        <!-- 管理界面 -->
+        <!-- ====== 管理界面 ====== -->
         <div id="adminArea" class="admin-area">
 
             <!-- 状态栏 -->
@@ -132,7 +132,7 @@
 
             <!-- 提示配置 -->
             <div class="config-hint" id="configHint">
-                ⚠️ <strong>尚未配置 GitHub</strong>，请点击下方「⚙️ 配置 GitHub」完成设置，否则无法保存文章和同步安全配置！
+                ⚠️ <strong>尚未配置 GitHub</strong>，请点击下方「⚙️ 配置 GitHub」完成设置，否则无法保存文章！
             </div>
 
             <!-- 安全设置面板 -->
@@ -151,17 +151,17 @@
                     <input type="text" id="secExpectedPlain" style="font-family:'Courier New',monospace;font-size:12px;" />
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-primary" onclick="saveSecuritySettings()">💾 保存到本地 & 同步 GitHub</button>
+                    <button class="btn btn-primary" onclick="saveSecuritySettings()">💾 保存到本地 & 同步 config.json</button>
                     <button class="btn btn-secondary" onclick="resetSecuritySettings()">↩️ 恢复默认</button>
                 </div>
                 <div style="font-size:12px;color:#8a9aad;margin-top:8px;font-family:'SimSun','宋体',serif;">
-                    💡 修改后自动保存到本地，并同步到 GitHub 的 config.json（需已配置 GitHub）。
+                    💡 修改后自动保存到本地，并尝试写入同目录的 config.json（需配置 GitHub）。
                 </div>
             </div>
 
             <!-- 配置 GitHub -->
             <div class="config-box" id="configBox">
-                <h3 style="font-weight:normal;font-size:16px;font-family:'华文楷体','KaiTi',serif;margin-bottom:12px;color:#2c2c2c;">⚙️ GitHub 配置</h3>
+                <h3 style="font-weight:normal;font-size:16px;font-family:'华文楷体','KaiTi',serif;margin-bottom:12px;color:#2c2c2c;">⚙️ GitHub 配置（用于保存文章和 config.json）</h3>
                 <div class="form-group">
                     <label>🔑 Personal Access Token</label>
                     <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" />
@@ -185,7 +185,7 @@
                     <input type="text" id="configPath" value="config.json" />
                 </div>
                 <button class="btn" onclick="saveConfig()" style="background:#4a5a6a;color:#fff;width:100%;">✅ 保存配置</button>
-                <button class="btn" onclick="syncAllConfig()" style="background:#8b2500;color:#fff;width:100%;margin-top:6px;">📤 强制同步安全配置到 GitHub</button>
+                <button class="btn" onclick="syncAllConfig()" style="background:#8b2500;color:#fff;width:100%;margin-top:6px;">📤 强制同步安全配置到 config.json</button>
             </div>
 
             <!-- 工具栏 -->
@@ -243,7 +243,7 @@
 
     <script>
         // ============================================================
-        // ★ 硬编码默认值（作为后备）
+        // ★ 硬编码默认值（作为最后的后备）
         // ============================================================
         var DEFAULT_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3GujvExMjKhKErfk8yI
@@ -257,38 +257,84 @@ HQIDAQAB
 
         var DEFAULT_CHALLENGE_CIPHER = 'zpXm+kPYtfPIDaaRCufSMrIuJ8//3LlbJEjmOyZA86W9HDJTNlU8lCO/GbOPv/+yQS4S7jlFOLbl3w+1G5EzCuvVKUl1KUzpzXRqUDSpVIZixwxqPY4C90tjlXI5XnzkrdZdpz3FR6ufZdZV9kSp9Av1K+hwOib0qdcDJkS6ETLMwG7fia6V3Enhed6Xwb7jiaR9uLGijvEQlTaUw8V3V1t2A2x7NMczCWxDLT2efgL26IDIBipP51TtqO1cQwE0NQSfrx9siKsPe0xDUkl2aIE0qx0DezZ/5qDNnckM/zIB5fVyHdUbzM+zWBNJ9DRKHNwGiYo64uIrDUXYAnADaMNPZ16AEWeHa6yGyOl1nqiY8B3GRG/NvmM3uQ9uD0itsc0=';
 
-        var DEFAULT_EXPECTED_PLAIN = '888999';
+        var DEFAULT_EXPECTED_PLAIN = '888999'; // 您已修改为 888999
 
         // ============================================================
-        // 获取当前生效的配置（优先从 localStorage）
+        // 配置有效性检查
         // ============================================================
-        var securityConfigCache = null;
+        function isValidSecurityConfig(cfg) {
+            return cfg &&
+                   typeof cfg.publicKey === 'string' && cfg.publicKey.includes('BEGIN PUBLIC KEY') &&
+                   typeof cfg.challengeCipher === 'string' && cfg.challengeCipher.length > 50 &&
+                   typeof cfg.expectedPlain === 'string' && cfg.expectedPlain.length > 0;
+        }
+
+        // ============================================================
+        // 获取当前生效的配置（优先级：远程 config.json > localStorage > 默认）
+        // ============================================================
+        var securityConfigCache = null; // 缓存，避免重复请求
 
         function getSecurityConfig() {
+            // 如果已有缓存，直接返回（但登录前会清除缓存，强制重新获取）
             if (securityConfigCache) return securityConfigCache;
+
+            // 1. 尝试从同目录的 config.json 读取（同步请求，确保登录前完成）
+            // 注意：这里使用同步 XMLHttpRequest 以保证登录前获取到配置
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'config.json', false); // 同步请求
+            xhr.send();
+            if (xhr.status === 200) {
+                try {
+                    var remote = JSON.parse(xhr.responseText);
+                    if (remote && remote.security && isValidSecurityConfig(remote.security)) {
+                        // 远程配置有效，存入缓存并返回
+                        securityConfigCache = {
+                            publicKey: remote.security.publicKey,
+                            challengeCipher: remote.security.challengeCipher,
+                            expectedPlain: remote.security.expectedPlain
+                        };
+                        console.log('✅ 从 config.json 加载配置成功');
+                        return securityConfigCache;
+                    }
+                } catch (e) {
+                    console.warn('config.json 解析失败:', e);
+                }
+            } else {
+                console.warn('config.json 不存在或无法读取 (状态码: ' + xhr.status + ')');
+            }
+
+            // 2. 远程无效，尝试 localStorage
             var stored = localStorage.getItem('security_config');
             if (stored) {
                 try {
-                    var cfg = JSON.parse(stored);
-                    securityConfigCache = {
-                        publicKey: cfg.publicKey || DEFAULT_PUBLIC_KEY,
-                        challengeCipher: cfg.challengeCipher || DEFAULT_CHALLENGE_CIPHER,
-                        expectedPlain: cfg.expectedPlain || DEFAULT_EXPECTED_PLAIN
-                    };
-                    return securityConfigCache;
-                } catch (e) {}
+                    var local = JSON.parse(stored);
+                    if (isValidSecurityConfig(local)) {
+                        securityConfigCache = {
+                            publicKey: local.publicKey,
+                            challengeCipher: local.challengeCipher,
+                            expectedPlain: local.expectedPlain
+                        };
+                        console.log('✅ 从 localStorage 加载配置成功');
+                        return securityConfigCache;
+                    }
+                } catch (e) {
+                    console.warn('localStorage 解析失败:', e);
+                }
             }
-            return {
+
+            // 3. 最后使用硬编码默认值
+            console.log('⚠️ 使用硬编码默认配置');
+            securityConfigCache = {
                 publicKey: DEFAULT_PUBLIC_KEY,
                 challengeCipher: DEFAULT_CHALLENGE_CIPHER,
                 expectedPlain: DEFAULT_EXPECTED_PLAIN
             };
+            return securityConfigCache;
         }
 
-        function setSecurityConfig(config) {
-            securityConfigCache = config;
-            localStorage.setItem('security_config', JSON.stringify(config));
-            console.log('✅ 安全配置已保存到 localStorage:', config);
+        // 清除缓存（在修改配置或需要重新加载时调用）
+        function clearSecurityCache() {
+            securityConfigCache = null;
         }
 
         // ============================================================
@@ -362,10 +408,10 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 验证函数（使用本地配置，不依赖网络）
+        // 验证函数（使用当前生效的配置）
         // ============================================================
         function verifyPrivateKey(privateKeyPem) {
-            var config = getSecurityConfig();
+            var config = getSecurityConfig(); // 会重新读取
             console.log('🔍 验证使用的配置:', config);
             return hybridDecrypt(config.challengeCipher, privateKeyPem)
                 .then(function(plain) {
@@ -385,7 +431,7 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 登录处理（关键修复：不再无条件覆盖本地配置）
+        // 登录处理
         // ============================================================
         function handlePrivateKeyLogin() {
             var privKey = document.getElementById('loginPrivateKey').value.trim();
@@ -396,6 +442,9 @@ HQIDAQAB
                 errorEl.style.display = 'block';
                 return;
             }
+
+            // 清除缓存，强制重新读取 config.json
+            clearSecurityCache();
 
             var btn = document.getElementById('loginWithPrivateKeyBtn');
             btn.disabled = true;
@@ -418,30 +467,9 @@ HQIDAQAB
                         document.getElementById('configPath').value = config.configPath || 'config.json';
                     }
                     document.getElementById('configHint').style.display = isConfigured() ? 'none' : 'block';
+                    // 加载安全设置到表单（显示当前使用的配置）
                     loadSecuritySettingsToForm();
                     document.getElementById('securityPanel').classList.add('active');
-
-                    // ★★★ 关键修复：仅当本地无配置时才从远程拉取，避免覆盖用户已保存的配置 ★★★
-                    if (isConfigured()) {
-                        var localConfig = localStorage.getItem('security_config');
-                        if (!localConfig) {
-                            // 本地没有配置，从远程拉取并写入
-                            fetchSecurityConfigFromGitHub().then(function(remoteConfig) {
-                                if (remoteConfig) {
-                                    setSecurityConfig(remoteConfig);
-                                    loadSecuritySettingsToForm();
-                                    showToast('已从GitHub同步安全配置', 'info');
-                                    console.log('✅ 从GitHub拉取远程配置并写入本地');
-                                }
-                            }).catch(function(err) {
-                                console.warn('拉取远程配置失败:', err);
-                            });
-                        } else {
-                            // 本地已有配置，直接加载显示，不拉取远程（防止覆盖）
-                            loadSecuritySettingsToForm();
-                            console.log('📋 本地已有配置，直接使用，不拉取远程');
-                        }
-                    }
                 } else {
                     document.getElementById('loginPrivateKey').value = '';
                     document.getElementById('loginPrivateKey').focus();
@@ -454,10 +482,11 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 从 GitHub 拉取安全配置
+        // 从 GitHub 拉取/同步安全配置（仅用于保存时写入）
         // ============================================================
-        function fetchSecurityConfigFromGitHub() {
-            if (!isConfigured()) return Promise.resolve(null);
+        function fetchRemoteConfigForWrite() {
+            // 此函数用于保存时获取当前远程 config.json 的内容，以便合并更新
+            if (!isConfigured()) return Promise.reject(new Error('未配置 GitHub'));
             var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + (config.configPath || 'config.json');
             return fetch(url, {
                 headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
@@ -469,64 +498,69 @@ HQIDAQAB
                 if (data && data.content) {
                     var content = decodeBase64Utf8(data.content);
                     try {
-                        var json = JSON.parse(content);
-                        if (json.security) {
-                            return {
-                                publicKey: json.security.publicKey || DEFAULT_PUBLIC_KEY,
-                                challengeCipher: json.security.challengeCipher || DEFAULT_CHALLENGE_CIPHER,
-                                expectedPlain: json.security.expectedPlain || DEFAULT_EXPECTED_PLAIN
-                            };
-                        }
-                    } catch (e) {}
+                        return JSON.parse(content);
+                    } catch (e) { throw new Error('JSON 解析失败'); }
                 }
                 return null;
-            }).catch(function() { return null; });
+            });
         }
 
-        // ============================================================
-        // 保存安全配置到 GitHub
-        // ============================================================
         function saveSecurityConfigToGitHub(securityObj) {
             if (!isConfigured()) return Promise.reject(new Error('未配置 GitHub'));
 
             var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + (config.configPath || 'config.json');
-            return fetch(url, {
-                headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
-            }).then(function(response) {
-                if (response.status === 404) {
-                    var newConfig = { security: securityObj };
-                    return { content: JSON.stringify(newConfig, null, 2), sha: null };
-                }
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                return response.json().then(function(data) {
-                    var content = decodeBase64Utf8(data.content);
-                    var json = {};
-                    try { json = JSON.parse(content); } catch (e) {}
-                    json.security = securityObj;
-                    return { content: JSON.stringify(json, null, 2), sha: data.sha };
-                });
-            }).then(function(result) {
-                var encoded = encodeUtf8ToBase64(result.content);
+            return fetchRemoteConfigForWrite().then(function(remoteData) {
+                var jsonData = remoteData || {};
+                jsonData.security = securityObj;
+                var content = JSON.stringify(jsonData, null, 2);
+                var encoded = encodeUtf8ToBase64(content);
                 var body = {
                     message: '更新安全配置 ' + new Date().toLocaleString(),
                     content: encoded,
                     branch: 'main'
                 };
-                if (result.sha) body.sha = result.sha;
-                return fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': 'token ' + config.token,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(body)
-                });
-            }).then(function(response) {
-                if (!response.ok) {
-                    return response.json().then(function(err) {
-                        throw new Error(err.message || '保存失败');
+                // 如果有 sha，则更新
+                if (remoteData && remoteData._sha) {
+                    // 实际上需要从上次请求获取 sha，但为了简单，我们重新获取一次
+                    // 这里我们使用 fetch 的另一种方式，但为了代码简洁，我们直接使用 PUT 并依赖 GitHub 的并发控制
+                    // 先获取最新 sha
+                    return fetch(url, {
+                        headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+                    }).then(function(resp) {
+                        if (resp.status === 404) return null;
+                        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                        return resp.json();
+                    }).then(function(data) {
+                        if (data && data.sha) body.sha = data.sha;
+                        return fetch(url, {
+                            method: 'PUT',
+                            headers: {
+                                'Authorization': 'token ' + config.token,
+                                'Accept': 'application/vnd.github.v3+json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(body)
+                        });
                     });
+                } else {
+                    return fetch(url, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': 'token ' + config.token,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(body)
+                    });
+                }
+            }).then(function(response) {
+                if (!response || !response.ok) {
+                    if (response) {
+                        return response.json().then(function(err) {
+                            throw new Error(err.message || '保存失败');
+                        });
+                    }
+                    throw new Error('保存失败');
                 }
                 return response.json();
             });
@@ -536,7 +570,7 @@ HQIDAQAB
         // 安全设置相关函数
         // ============================================================
         function loadSecuritySettingsToForm() {
-            var cfg = getSecurityConfig();
+            var cfg = getSecurityConfig(); // 读取当前生效的配置
             document.getElementById('secPublicKey').value = cfg.publicKey;
             document.getElementById('secChallengeCipher').value = cfg.challengeCipher;
             document.getElementById('secExpectedPlain').value = cfg.expectedPlain;
@@ -563,15 +597,20 @@ HQIDAQAB
                 expectedPlain: plain
             };
 
-            setSecurityConfig(securityObj);
-            loadSecuritySettingsToForm(); // 立即刷新显示
+            // 保存到 localStorage
+            localStorage.setItem('security_config', JSON.stringify(securityObj));
+            // 清除缓存
+            clearSecurityCache();
+            // 刷新表单
+            loadSecuritySettingsToForm();
             showToast('✅ 已保存到本地', 'success');
 
+            // 如果已配置 GitHub，同步到远程 config.json
             if (isConfigured()) {
                 saveSecurityConfigToGitHub(securityObj).then(function() {
-                    showToast('✅ 已同步到 GitHub', 'success');
+                    showToast('✅ 已同步到 config.json', 'success');
                 }).catch(function(err) {
-                    showToast('⚠️ 本地已保存，但同步 GitHub 失败：' + err.message, 'error');
+                    showToast('⚠️ 本地已保存，但同步 config.json 失败：' + err.message, 'error');
                 });
             } else {
                 showToast('ℹ️ 未配置 GitHub，仅保存在本地。配置后会自动同步。', 'info');
@@ -581,14 +620,11 @@ HQIDAQAB
         function resetSecuritySettings() {
             if (!confirm('确定要恢复默认的安全设置吗？')) return;
             localStorage.removeItem('security_config');
-            securityConfigCache = null;
+            clearSecurityCache();
             loadSecuritySettingsToForm();
             showToast('↩️ 已恢复默认设置', 'info');
         }
 
-        // ============================================================
-        // 强制同步安全配置到 GitHub
-        // ============================================================
         function syncAllConfig() {
             if (!isConfigured()) {
                 showToast('请先配置 GitHub', 'error');
@@ -605,7 +641,7 @@ HQIDAQAB
                 return;
             }
             saveSecurityConfigToGitHub(securityObj).then(function() {
-                showToast('✅ 安全配置已同步到 GitHub', 'success');
+                showToast('✅ 安全配置已同步到 config.json', 'success');
             }).catch(function(err) {
                 showToast('❌ 同步失败：' + err.message, 'error');
             });
@@ -720,6 +756,7 @@ HQIDAQAB
             showToast('✅ 配置已保存', 'success');
             document.getElementById('configBox').style.display = 'none';
             document.getElementById('configHint').style.display = 'none';
+            // 尝试同步安全配置
             syncAllConfig();
         }
 
@@ -744,7 +781,7 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 文章管理（与之前一致）
+        // 文章管理
         // ============================================================
         var posts = [];
 
@@ -1010,6 +1047,7 @@ HQIDAQAB
         // 初始化
         // ============================================================
         if (sessionStorage.getItem('blog_admin_logged') === 'true') {
+            // 已登录状态，直接显示管理界面
             document.getElementById('loginBox').style.display = 'none';
             document.getElementById('adminArea').classList.add('active');
             if (loadConfig()) {
@@ -1023,13 +1061,17 @@ HQIDAQAB
             loadSecuritySettingsToForm();
             document.getElementById('securityPanel').classList.add('active');
         } else {
+            // 未登录，显示登录界面，并预加载配置（但不显示）
             document.getElementById('securityPanel').classList.remove('active');
+            // 预读取一次 config.json 以填充缓存，但登录时才真正使用
+            getSecurityConfig();
         }
 
         document.getElementById('loginWithPrivateKeyBtn').addEventListener('click', handlePrivateKeyLogin);
 
         console.log('📝 墨韵轩 · 文章管理 (最终修复版) 已加载');
-        console.log('🔑 登录不再覆盖本地配置，安全设置持久化');
+        console.log('🔑 登录前自动读取同目录 config.json');
+        console.log('💡 如果 config.json 有效，将优先使用其 security 字段');
     </script>
 
 </body>
