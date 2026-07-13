@@ -651,7 +651,7 @@ HQIDAQAB
             return hybridDecrypt(CHALLENGE_CIPHER, privateKeyPem)
                 .then(function(plain) {
                     console.log('✅ 解密结果:', plain);
-                    if (plain === 'OK') {
+                    if (plain === '888999') {
                         return true;
                     } else {
                         throw new Error('解密结果不是 "OK"，而是: ' + plain);
