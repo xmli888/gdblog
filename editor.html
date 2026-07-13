@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
     <title>墨韵轩 · 文章管理</title>
     <style>
-        /* ========== 完整样式（与之前保持一致） ========== */
+        /* ========== 完整样式（与之前一致） ========== */
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             background-color: #f5f0e8;
@@ -686,10 +686,10 @@ HQIDAQAB
 
         var DEFAULT_CHALLENGE_CIPHER = 'zpXm+kPYtfPIDaaRCufSMrIuJ8//3LlbJEjmOyZA86W9HDJTNlU8lCO/GbOPv/+yQS4S7jlFOLbl3w+1G5EzCuvVKUl1KUzpzXRqUDSpVIZixwxqPY4C90tjlXI5XnzkrdZdpz3FR6ufZdZV9kSp9Av1K+hwOib0qdcDJkS6ETLMwG7fia6V3Enhed6Xwb7jiaR9uLGijvEQlTaUw8V3V1t2A2x7NMczCWxDLT2efgL26IDIBipP51TtqO1cQwE0NQSfrx9siKsPe0xDUkl2aIE0qx0DezZ/5qDNnckM/zIB5fVyHdUbzM+zWBNJ9DRKHNwGiYo64uIrDUXYAnADaMNPZ16AEWeHa6yGyOl1nqiY8B3GRG/NvmM3uQ9uD0itsc0=';
 
-        var DEFAULT_EXPECTED_PLAIN = 'OK';
+        var DEFAULT_EXPECTED_PLAIN = '888999';
 
         // ============================================================
-        // 获取当前生效的配置（优先从 localStorage，若没有则从 GitHub 拉取，再否则用默认）
+        // 获取当前生效的配置（优先从 localStorage）
         // ============================================================
         var securityConfigCache = null;
 
@@ -790,7 +790,7 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 验证函数（使用动态配置）
+        // 验证函数（使用本地配置，不依赖网络）
         // ============================================================
         function verifyPrivateKey(privateKeyPem) {
             var config = getSecurityConfig();
@@ -813,7 +813,7 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 登录处理
+        // 登录处理（不依赖网络，快速响应）
         // ============================================================
         function handlePrivateKeyLogin() {
             var privKey = document.getElementById('loginPrivateKey').value.trim();
@@ -829,16 +829,8 @@ HQIDAQAB
             btn.disabled = true;
             btn.textContent = '⏳ 验证中...';
 
-            // 先尝试从 GitHub 拉取最新安全配置
-            fetchSecurityConfigFromGitHub().then(function(remoteConfig) {
-                if (remoteConfig) {
-                    // 更新本地缓存
-                    setSecurityConfig(remoteConfig);
-                    console.log('✅ 从 GitHub 拉取安全配置成功');
-                }
-                // 继续验证
-                return verifyPrivateKey(privKey);
-            }).then(function(success) {
+            // 直接验证，不等待网络请求
+            verifyPrivateKey(privKey).then(function(success) {
                 btn.disabled = false;
                 btn.textContent = '🔓 使用私钥登录';
                 if (success) {
@@ -859,13 +851,27 @@ HQIDAQAB
                     document.getElementById('configHint').style.display = isConfigured() ? 'none' : 'block';
                     // 加载安全设置到表单
                     loadSecuritySettingsToForm();
-                    // 显示安全面板
                     document.getElementById('securityPanel').classList.add('active');
+
+                    // 后台异步拉取远程配置（不阻塞登录）
+                    if (isConfigured()) {
+                        fetchSecurityConfigFromGitHub().then(function(remoteConfig) {
+                            if (remoteConfig) {
+                                setSecurityConfig(remoteConfig);
+                                // 更新表单显示
+                                loadSecuritySettingsToForm();
+                                console.log('✅ 后台已同步远程安全配置');
+                            }
+                        }).catch(function(err) {
+                            console.warn('⚠️ 后台拉取远程配置失败:', err);
+                        });
+                    }
                 } else {
                     document.getElementById('loginPrivateKey').value = '';
                     document.getElementById('loginPrivateKey').focus();
                 }
             }).catch(function(err) {
+                // 捕获任何未预料的异常
                 btn.disabled = false;
                 btn.textContent = '🔓 使用私钥登录';
                 showToast('❌ 登录异常：' + err.message, 'error');
@@ -908,16 +914,12 @@ HQIDAQAB
         function saveSecurityConfigToGitHub(securityObj) {
             if (!isConfigured()) return Promise.reject(new Error('未配置 GitHub'));
 
-            // 先获取现有 config.json 内容（保持其他字段）
             var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + (config.configPath || 'config.json');
             return fetch(url, {
                 headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
             }).then(function(response) {
                 if (response.status === 404) {
-                    // 文件不存在，创建新文件
-                    var newConfig = {
-                        security: securityObj
-                    };
+                    var newConfig = { security: securityObj };
                     return { content: JSON.stringify(newConfig, null, 2), sha: null };
                 }
                 if (!response.ok) throw new Error('HTTP ' + response.status);
@@ -956,7 +958,7 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 安全设置相关函数（修改后同步到 GitHub）
+        // 安全设置相关函数
         // ============================================================
         function loadSecuritySettingsToForm() {
             var cfg = getSecurityConfig();
@@ -1011,7 +1013,7 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 强制同步安全配置到 GitHub（手动触发）
+        // 强制同步安全配置到 GitHub
         // ============================================================
         function syncAllConfig() {
             if (!isConfigured()) {
@@ -1169,7 +1171,7 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 文章管理（与之前相同）
+        // 文章管理
         // ============================================================
         var posts = [];
 
@@ -1451,8 +1453,11 @@ HQIDAQAB
             document.getElementById('securityPanel').classList.remove('active');
         }
 
-        console.log('📝 墨韵轩 · 文章管理 (配置同步版) 已加载');
-        console.log('🔑 使用私钥登录后安全配置会自动从 GitHub 同步');
+        // 绑定登录按钮
+        document.getElementById('loginWithPrivateKeyBtn').addEventListener('click', handlePrivateKeyLogin);
+
+        console.log('📝 墨韵轩 · 文章管理 (修复版) 已加载');
+        console.log('🔑 登录不再依赖网络，响应快速');
     </script>
 
 </body>
