@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
     <title>墨韵轩 · 文章管理</title>
     <style>
-        /* ========== 完整样式（与之前一致） ========== */
+        /* ========== 完整样式 ========== */
         * { margin:0; padding:0; box-sizing:border-box; }
         body { background-color:#f5f0e8; font-family:'华文楷体','KaiTi','SimSun','宋体',serif; color:#2c2c2c; min-height:100vh; padding:20px; display:flex; justify-content:center; align-items:center; }
         .container { max-width:900px; width:100%; margin:0 auto; background:#fcf9f5; border:1px solid #d5cdc0; border-radius:12px; padding:30px 36px; box-shadow:0 4px 30px rgba(0,0,0,0.10); position:relative; }
@@ -97,7 +97,7 @@
     <div class="container">
 
         <h1>📝 墨韵轩 · 文章管理</h1>
-        <div class="subtitle">— RSA 私钥登录 · 自动读取同目录 config.json —</div>
+        <div class="subtitle">— RSA 私钥登录 · 登录前强制读取同目录 config.json 三个字段 —</div>
 
         <!-- ====== 登录界面 ====== -->
         <div id="loginBox" class="login-box">
@@ -115,7 +115,7 @@
             <button class="btn" id="loginWithPrivateKeyBtn">🔓 使用私钥登录</button>
             <div class="error-msg" id="loginError"></div>
             <div style="text-align:center;margin-top:12px;font-size:12px;color:#b0a8a0;font-family:'SimSun','宋体',serif;">
-                🔒 登录前自动读取同目录 config.json
+                🔒 登录前自动读取同目录 config.json 的 publicKey / challengeCipher / expectedPlain
             </div>
         </div>
 
@@ -132,7 +132,7 @@
 
             <!-- 提示配置 -->
             <div class="config-hint" id="configHint">
-                ⚠️ <strong>尚未配置 GitHub</strong>，请点击下方「⚙️ 配置 GitHub」完成设置，否则无法保存文章！
+                ⚠️ <strong>尚未配置 GitHub</strong>，请点击下方「⚙️ 配置 GitHub」完成设置，否则无法保存文章和 config.json！
             </div>
 
             <!-- 安全设置面板 -->
@@ -243,7 +243,7 @@
 
     <script>
         // ============================================================
-        // ★ 硬编码默认值（作为最后的后备）
+        // ★ 硬编码默认值（仅作为最后的后备）
         // ============================================================
         var DEFAULT_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3GujvExMjKhKErfk8yI
@@ -257,10 +257,10 @@ HQIDAQAB
 
         var DEFAULT_CHALLENGE_CIPHER = 'zpXm+kPYtfPIDaaRCufSMrIuJ8//3LlbJEjmOyZA86W9HDJTNlU8lCO/GbOPv/+yQS4S7jlFOLbl3w+1G5EzCuvVKUl1KUzpzXRqUDSpVIZixwxqPY4C90tjlXI5XnzkrdZdpz3FR6ufZdZV9kSp9Av1K+hwOib0qdcDJkS6ETLMwG7fia6V3Enhed6Xwb7jiaR9uLGijvEQlTaUw8V3V1t2A2x7NMczCWxDLT2efgL26IDIBipP51TtqO1cQwE0NQSfrx9siKsPe0xDUkl2aIE0qx0DezZ/5qDNnckM/zIB5fVyHdUbzM+zWBNJ9DRKHNwGiYo64uIrDUXYAnADaMNPZ16AEWeHa6yGyOl1nqiY8B3GRG/NvmM3uQ9uD0itsc0=';
 
-        var DEFAULT_EXPECTED_PLAIN = '888999'; // 您已修改为 888999
+        var DEFAULT_EXPECTED_PLAIN = '888999';
 
         // ============================================================
-        // 配置有效性检查
+        // 配置有效性检查（三个字段都必须有效）
         // ============================================================
         function isValidSecurityConfig(cfg) {
             return cfg &&
@@ -270,40 +270,39 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 获取当前生效的配置（优先级：远程 config.json > localStorage > 默认）
+        // 获取当前生效的配置（强制从 config.json 读取，并替换所有本地缓存）
         // ============================================================
-        var securityConfigCache = null; // 缓存，避免重复请求
+        var securityConfigCache = null;
 
         function getSecurityConfig() {
-            // 如果已有缓存，直接返回（但登录前会清除缓存，强制重新获取）
-            if (securityConfigCache) return securityConfigCache;
-
-            // 1. 尝试从同目录的 config.json 读取（同步请求，确保登录前完成）
-            // 注意：这里使用同步 XMLHttpRequest 以保证登录前获取到配置
+            // 1. 强制从同目录的 config.json 读取（使用同步请求，带随机参数避免缓存）
+            var cacheBuster = Date.now();
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'config.json', false); // 同步请求
+            xhr.open('GET', 'config.json?_=' + cacheBuster, false);
             xhr.send();
             if (xhr.status === 200) {
                 try {
                     var remote = JSON.parse(xhr.responseText);
                     if (remote && remote.security && isValidSecurityConfig(remote.security)) {
-                        // 远程配置有效，存入缓存并返回
-                        securityConfigCache = {
+                        // 远程配置有效，覆盖所有本地缓存
+                        var remoteConfig = {
                             publicKey: remote.security.publicKey,
                             challengeCipher: remote.security.challengeCipher,
                             expectedPlain: remote.security.expectedPlain
                         };
-                        console.log('✅ 从 config.json 加载配置成功');
-                        return securityConfigCache;
+                        // 同步写入 localStorage
+                        localStorage.setItem('security_config', JSON.stringify(remoteConfig));
+                        // 更新内存缓存
+                        securityConfigCache = remoteConfig;
+                        console.log('✅ 从 config.json 加载配置成功，已替换本地和缓存');
+                        return remoteConfig;
                     }
                 } catch (e) {
                     console.warn('config.json 解析失败:', e);
                 }
-            } else {
-                console.warn('config.json 不存在或无法读取 (状态码: ' + xhr.status + ')');
             }
 
-            // 2. 远程无效，尝试 localStorage
+            // 2. 如果远程无效或不存在，尝试 localStorage
             var stored = localStorage.getItem('security_config');
             if (stored) {
                 try {
@@ -314,7 +313,7 @@ HQIDAQAB
                             challengeCipher: local.challengeCipher,
                             expectedPlain: local.expectedPlain
                         };
-                        console.log('✅ 从 localStorage 加载配置成功');
+                        console.log('✅ 从 localStorage 加载配置');
                         return securityConfigCache;
                     }
                 } catch (e) {
@@ -323,12 +322,14 @@ HQIDAQAB
             }
 
             // 3. 最后使用硬编码默认值
-            console.log('⚠️ 使用硬编码默认配置');
+            console.warn('⚠️ 使用硬编码默认配置');
             securityConfigCache = {
                 publicKey: DEFAULT_PUBLIC_KEY,
                 challengeCipher: DEFAULT_CHALLENGE_CIPHER,
                 expectedPlain: DEFAULT_EXPECTED_PLAIN
             };
+            // 同时写入 localStorage 以便下次使用
+            localStorage.setItem('security_config', JSON.stringify(securityConfigCache));
             return securityConfigCache;
         }
 
@@ -411,7 +412,7 @@ HQIDAQAB
         // 验证函数（使用当前生效的配置）
         // ============================================================
         function verifyPrivateKey(privateKeyPem) {
-            var config = getSecurityConfig(); // 会重新读取
+            var config = getSecurityConfig(); // 强制重新读取
             console.log('🔍 验证使用的配置:', config);
             return hybridDecrypt(config.challengeCipher, privateKeyPem)
                 .then(function(plain) {
@@ -482,10 +483,9 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 从 GitHub 拉取/同步安全配置（仅用于保存时写入）
+        // 从 GitHub 拉取/同步安全配置（用于保存时写入）
         // ============================================================
         function fetchRemoteConfigForWrite() {
-            // 此函数用于保存时获取当前远程 config.json 的内容，以便合并更新
             if (!isConfigured()) return Promise.reject(new Error('未配置 GitHub'));
             var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + (config.configPath || 'config.json');
             return fetch(url, {
@@ -519,30 +519,15 @@ HQIDAQAB
                     content: encoded,
                     branch: 'main'
                 };
-                // 如果有 sha，则更新
-                if (remoteData && remoteData._sha) {
-                    // 实际上需要从上次请求获取 sha，但为了简单，我们重新获取一次
-                    // 这里我们使用 fetch 的另一种方式，但为了代码简洁，我们直接使用 PUT 并依赖 GitHub 的并发控制
-                    // 先获取最新 sha
-                    return fetch(url, {
-                        headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
-                    }).then(function(resp) {
-                        if (resp.status === 404) return null;
-                        if (!resp.ok) throw new Error('HTTP ' + resp.status);
-                        return resp.json();
-                    }).then(function(data) {
-                        if (data && data.sha) body.sha = data.sha;
-                        return fetch(url, {
-                            method: 'PUT',
-                            headers: {
-                                'Authorization': 'token ' + config.token,
-                                'Accept': 'application/vnd.github.v3+json',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(body)
-                        });
-                    });
-                } else {
+                // 先获取最新 sha
+                return fetch(url, {
+                    headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+                }).then(function(resp) {
+                    if (resp.status === 404) return null;
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                    return resp.json();
+                }).then(function(data) {
+                    if (data && data.sha) body.sha = data.sha;
                     return fetch(url, {
                         method: 'PUT',
                         headers: {
@@ -552,7 +537,7 @@ HQIDAQAB
                         },
                         body: JSON.stringify(body)
                     });
-                }
+                });
             }).then(function(response) {
                 if (!response || !response.ok) {
                     if (response) {
@@ -1047,7 +1032,6 @@ HQIDAQAB
         // 初始化
         // ============================================================
         if (sessionStorage.getItem('blog_admin_logged') === 'true') {
-            // 已登录状态，直接显示管理界面
             document.getElementById('loginBox').style.display = 'none';
             document.getElementById('adminArea').classList.add('active');
             if (loadConfig()) {
@@ -1061,7 +1045,6 @@ HQIDAQAB
             loadSecuritySettingsToForm();
             document.getElementById('securityPanel').classList.add('active');
         } else {
-            // 未登录，显示登录界面，并预加载配置（但不显示）
             document.getElementById('securityPanel').classList.remove('active');
             // 预读取一次 config.json 以填充缓存，但登录时才真正使用
             getSecurityConfig();
@@ -1070,8 +1053,7 @@ HQIDAQAB
         document.getElementById('loginWithPrivateKeyBtn').addEventListener('click', handlePrivateKeyLogin);
 
         console.log('📝 墨韵轩 · 文章管理 (最终修复版) 已加载');
-        console.log('🔑 登录前自动读取同目录 config.json');
-        console.log('💡 如果 config.json 有效，将优先使用其 security 字段');
+        console.log('🔑 登录前强制读取同目录 config.json 的三个字段，并替换所有本地缓存');
     </script>
 
 </body>
