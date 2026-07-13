@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
     <title>墨韵轩 · 文章管理</title>
     <style>
-        /* ========== 完整样式（与之前一致） ========== */
+        /* ========== 完整样式（与之前保持一致） ========== */
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             background-color: #f5f0e8;
@@ -244,6 +244,90 @@
         }
         .config-box .btn:active { transform: scale(0.95); }
 
+        /* 安全设置面板 */
+        .security-panel {
+            background: #f5f0e8;
+            border: 1px solid #8b2500;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .security-panel.active {
+            display: block;
+        }
+        .security-panel .panel-title {
+            font-size: 17px;
+            font-weight: normal;
+            font-family: '华文楷体','KaiTi',serif;
+            color: #2c2c2c;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #d5cdc0;
+            padding-bottom: 6px;
+        }
+        .security-panel .form-group {
+            margin-bottom: 12px;
+        }
+        .security-panel .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #4a5a6a;
+            font-weight: bold;
+            font-family: 'SimSun','宋体',serif;
+            margin-bottom: 2px;
+        }
+        .security-panel .form-group textarea,
+        .security-panel .form-group input {
+            width: 100%;
+            padding: 6px 10px;
+            border: 1px solid #d5cdc0;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            background: #fcf9f5;
+            outline: none;
+            resize: vertical;
+        }
+        .security-panel .form-group textarea:focus,
+        .security-panel .form-group input:focus {
+            border-color: #8b2500;
+        }
+        .security-panel .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .security-panel .btn-group .btn {
+            padding: 6px 20px;
+            border: 1px solid #4a5a6a;
+            border-radius: 4px;
+            background: transparent;
+            color: #4a5a6a;
+            cursor: pointer;
+            font-family: '华文楷体','KaiTi',serif;
+            font-size: 14px;
+            letter-spacing: 1px;
+            transition: 0.2s;
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+        }
+        .security-panel .btn-group .btn-primary {
+            background: #8b2500;
+            border-color: #8b2500;
+            color: #f5f0e8;
+        }
+        .security-panel .btn-group .btn-primary:active { background: #6b1a00; }
+        .security-panel .btn-group .btn-secondary {
+            background: #4a5a6a;
+            border-color: #4a5a6a;
+            color: #f5f0e8;
+        }
+        .security-panel .btn-group .btn-secondary:active { background: #3a4a5a; }
+        .security-panel .btn-group .btn:active { transform: scale(0.95); }
+
         .toolbar {
             display: flex;
             gap: 12px;
@@ -431,6 +515,7 @@
             .post-item { flex-direction: column; align-items: flex-start; gap: 6px; }
             .post-item .actions { width: 100%; justify-content: flex-end; }
             .login-box { padding: 20px 16px; }
+            .security-panel .btn-group .btn { min-width: 60px; font-size: 13px; }
         }
     </style>
 </head>
@@ -441,7 +526,7 @@
     <div class="container">
 
         <h1>📝 墨韵轩 · 文章管理</h1>
-        <div class="subtitle">— RSA 私钥登录 · 公钥硬编码 —</div>
+        <div class="subtitle">— RSA 私钥登录 · 配置同步 GitHub —</div>
 
         <!-- ====== 登录界面 ====== -->
         <div id="loginBox" class="login-box">
@@ -459,22 +544,48 @@
             <button class="btn" id="loginWithPrivateKeyBtn">🔓 使用私钥登录</button>
             <div class="error-msg" id="loginError"></div>
             <div style="text-align:center;margin-top:12px;font-size:12px;color:#b0a8a0;font-family:'SimSun','宋体',serif;">
-                🔒 私钥验证 · 公钥硬编码 · 无明文密码
+                🔒 私钥验证 · 配置同步 GitHub
             </div>
         </div>
 
-        <!-- ====== 管理界面（登录后显示） ====== -->
+        <!-- ====== 管理界面 ====== -->
         <div id="adminArea" class="admin-area">
 
             <!-- 状态栏 -->
             <div class="status-bar">
                 <span class="user-info">👤 管理员已登录 <span class="security-badge">🔒 RSA 私钥</span></span>
-                <button class="logout-btn" onclick="handleLogout()">退出登录</button>
+                <span>
+                    <button class="logout-btn" onclick="handleLogout()">退出登录</button>
+                </span>
             </div>
 
             <!-- 提示配置 -->
             <div class="config-hint" id="configHint">
-                ⚠️ <strong>尚未配置 GitHub</strong>，请点击下方「⚙️ 配置 GitHub」完成设置，否则无法保存文章！
+                ⚠️ <strong>尚未配置 GitHub</strong>，请点击下方「⚙️ 配置 GitHub」完成设置，否则无法保存文章和同步安全配置！
+            </div>
+
+            <!-- 安全设置面板 -->
+            <div class="security-panel" id="securityPanel">
+                <div class="panel-title">🔐 安全设置（公钥/挑战码/期望明文）</div>
+                <div class="form-group">
+                    <label>公钥 (PUBLIC_KEY_PEM)</label>
+                    <textarea id="secPublicKey" rows="3" style="font-family:'Courier New',monospace;font-size:12px;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>挑战码密文 (CHALLENGE_CIPHER)</label>
+                    <textarea id="secChallengeCipher" rows="2" style="font-family:'Courier New',monospace;font-size:12px;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>期望明文 (如 OK)</label>
+                    <input type="text" id="secExpectedPlain" style="font-family:'Courier New',monospace;font-size:12px;" />
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="saveSecuritySettings()">💾 保存到本地 & 同步 GitHub</button>
+                    <button class="btn btn-secondary" onclick="resetSecuritySettings()">↩️ 恢复默认</button>
+                </div>
+                <div style="font-size:12px;color:#8a9aad;margin-top:8px;font-family:'SimSun','宋体',serif;">
+                    💡 修改后自动保存到本地，并同步到 GitHub 的 config.json（需已配置 GitHub）。
+                </div>
             </div>
 
             <!-- 配置 GitHub -->
@@ -498,15 +609,20 @@
                     <label>📄 文章文件路径</label>
                     <input type="text" id="githubPath" value="posts.txt" />
                 </div>
+                <div class="form-group">
+                    <label>📄 配置文件路径 (config.json)</label>
+                    <input type="text" id="configPath" value="config.json" />
+                </div>
                 <button class="btn" onclick="saveConfig()" style="background:#4a5a6a;color:#fff;width:100%;">✅ 保存配置</button>
+                <button class="btn" onclick="syncAllConfig()" style="background:#8b2500;color:#fff;width:100%;margin-top:6px;">📤 强制同步安全配置到 GitHub</button>
             </div>
 
             <!-- 工具栏 -->
             <div class="toolbar">
                 <button class="btn btn-github" onclick="toggleConfig()">⚙️ 配置 GitHub</button>
-                <button class="btn btn-success" onclick="loadFromGitHub()">📂 从 GitHub 读取</button>
+                <button class="btn btn-success" onclick="loadFromGitHub()">📂 从 GitHub 读取文章</button>
                 <button class="btn" onclick="clearAll()">🗑️ 清空列表</button>
-                <button class="btn btn-primary" onclick="saveToGitHub()">💾 保存到 GitHub</button>
+                <button class="btn btn-primary" onclick="saveToGitHub()">💾 保存文章到 GitHub</button>
                 <span style="flex:1;text-align:right;font-size:13px;color:#8a9aad;line-height:36px;" id="countDisplay">共 0 篇文章</span>
             </div>
 
@@ -556,9 +672,9 @@
 
     <script>
         // ============================================================
-        // ★ 硬编码公钥（您提供的）
+        // ★ 硬编码默认值（作为后备）
         // ============================================================
-        var PUBLIC_KEY_PEM = `-----BEGIN PUBLIC KEY-----
+        var DEFAULT_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3GujvExMjKhKErfk8yI
 fQIdZ5WTZ8krD4Q0m/b7cbOSaqwnwMMepsSDw2SonkAEEyOCVnKhX1NXoeX56yRJ
 7hdoe82RGDLZ3UDUGpdknUSCDeAjblsfzawbEMpNObo/e4TcSh8UKKBtKOdVXGHw
@@ -568,10 +684,40 @@ sjsd/6WGFE/kMuP1wZytb3m7vJLYuxhmOP5uKuwEFm4pa84FwosBInd5nOAtfweL
 HQIDAQAB
 -----END PUBLIC KEY-----`;
 
-        // ★ 挑战码密文（您提供的，用上面公钥加密 "OK" 得到的完整密文包）
-        // 注意：您之前解密得到 888999，说明这个密文不是加密 "OK" 的，但您说登录成功了，说明您可能已经替换为了正确的密文。
-        // 如果您还没有替换，请用工具重新生成 "OK" 的密文。
-        var CHALLENGE_CIPHER = 'zpXm+kPYtfPIDaaRCufSMrIuJ8//3LlbJEjmOyZA86W9HDJTNlU8lCO/GbOPv/+yQS4S7jlFOLbl3w+1G5EzCuvVKUl1KUzpzXRqUDSpVIZixwxqPY4C90tjlXI5XnzkrdZdpz3FR6ufZdZV9kSp9Av1K+hwOib0qdcDJkS6ETLMwG7fia6V3Enhed6Xwb7jiaR9uLGijvEQlTaUw8V3V1t2A2x7NMczCWxDLT2efgL26IDIBipP51TtqO1cQwE0NQSfrx9siKsPe0xDUkl2aIE0qx0DezZ/5qDNnckM/zIB5fVyHdUbzM+zWBNJ9DRKHNwGiYo64uIrDUXYAnADaMNPZ16AEWeHa6yGyOl1nqiY8B3GRG/NvmM3uQ9uD0itsc0=';
+        var DEFAULT_CHALLENGE_CIPHER = 'zpXm+kPYtfPIDaaRCufSMrIuJ8//3LlbJEjmOyZA86W9HDJTNlU8lCO/GbOPv/+yQS4S7jlFOLbl3w+1G5EzCuvVKUl1KUzpzXRqUDSpVIZixwxqPY4C90tjlXI5XnzkrdZdpz3FR6ufZdZV9kSp9Av1K+hwOib0qdcDJkS6ETLMwG7fia6V3Enhed6Xwb7jiaR9uLGijvEQlTaUw8V3V1t2A2x7NMczCWxDLT2efgL26IDIBipP51TtqO1cQwE0NQSfrx9siKsPe0xDUkl2aIE0qx0DezZ/5qDNnckM/zIB5fVyHdUbzM+zWBNJ9DRKHNwGiYo64uIrDUXYAnADaMNPZ16AEWeHa6yGyOl1nqiY8B3GRG/NvmM3uQ9uD0itsc0=';
+
+        var DEFAULT_EXPECTED_PLAIN = 'OK';
+
+        // ============================================================
+        // 获取当前生效的配置（优先从 localStorage，若没有则从 GitHub 拉取，再否则用默认）
+        // ============================================================
+        var securityConfigCache = null;
+
+        function getSecurityConfig() {
+            if (securityConfigCache) return securityConfigCache;
+            var stored = localStorage.getItem('security_config');
+            if (stored) {
+                try {
+                    var cfg = JSON.parse(stored);
+                    securityConfigCache = {
+                        publicKey: cfg.publicKey || DEFAULT_PUBLIC_KEY,
+                        challengeCipher: cfg.challengeCipher || DEFAULT_CHALLENGE_CIPHER,
+                        expectedPlain: cfg.expectedPlain || DEFAULT_EXPECTED_PLAIN
+                    };
+                    return securityConfigCache;
+                } catch (e) {}
+            }
+            return {
+                publicKey: DEFAULT_PUBLIC_KEY,
+                challengeCipher: DEFAULT_CHALLENGE_CIPHER,
+                expectedPlain: DEFAULT_EXPECTED_PLAIN
+            };
+        }
+
+        function setSecurityConfig(config) {
+            securityConfigCache = config;
+            localStorage.setItem('security_config', JSON.stringify(config));
+        }
 
         // ============================================================
         // 核心加解密函数
@@ -644,17 +790,18 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 验证函数
+        // 验证函数（使用动态配置）
         // ============================================================
         function verifyPrivateKey(privateKeyPem) {
+            var config = getSecurityConfig();
             console.log('🔍 开始验证私钥...');
-            return hybridDecrypt(CHALLENGE_CIPHER, privateKeyPem)
+            return hybridDecrypt(config.challengeCipher, privateKeyPem)
                 .then(function(plain) {
                     console.log('✅ 解密结果:', plain);
-                    if (plain === '888999') {
+                    if (plain === config.expectedPlain) {
                         return true;
                     } else {
-                        throw new Error('解密结果不是 "OK"，而是: ' + plain);
+                        throw new Error('解密结果不是 "' + config.expectedPlain + '"，而是: ' + plain);
                     }
                 })
                 .catch(function(err) {
@@ -682,7 +829,16 @@ HQIDAQAB
             btn.disabled = true;
             btn.textContent = '⏳ 验证中...';
 
-            verifyPrivateKey(privKey).then(function(success) {
+            // 先尝试从 GitHub 拉取最新安全配置
+            fetchSecurityConfigFromGitHub().then(function(remoteConfig) {
+                if (remoteConfig) {
+                    // 更新本地缓存
+                    setSecurityConfig(remoteConfig);
+                    console.log('✅ 从 GitHub 拉取安全配置成功');
+                }
+                // 继续验证
+                return verifyPrivateKey(privKey);
+            }).then(function(success) {
                 btn.disabled = false;
                 btn.textContent = '🔓 使用私钥登录';
                 if (success) {
@@ -698,12 +854,184 @@ HQIDAQAB
                         document.getElementById('githubUser').value = config.user || '';
                         document.getElementById('githubRepo').value = config.repo || '';
                         document.getElementById('githubPath').value = config.path || 'posts.txt';
+                        document.getElementById('configPath').value = config.configPath || 'config.json';
                     }
                     document.getElementById('configHint').style.display = isConfigured() ? 'none' : 'block';
+                    // 加载安全设置到表单
+                    loadSecuritySettingsToForm();
+                    // 显示安全面板
+                    document.getElementById('securityPanel').classList.add('active');
                 } else {
                     document.getElementById('loginPrivateKey').value = '';
                     document.getElementById('loginPrivateKey').focus();
                 }
+            }).catch(function(err) {
+                btn.disabled = false;
+                btn.textContent = '🔓 使用私钥登录';
+                showToast('❌ 登录异常：' + err.message, 'error');
+            });
+        }
+
+        // ============================================================
+        // 从 GitHub 拉取安全配置（config.json）
+        // ============================================================
+        function fetchSecurityConfigFromGitHub() {
+            if (!isConfigured()) return Promise.resolve(null);
+            var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + (config.configPath || 'config.json');
+            return fetch(url, {
+                headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+            }).then(function(response) {
+                if (response.status === 404) return null;
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            }).then(function(data) {
+                if (data && data.content) {
+                    var content = decodeBase64Utf8(data.content);
+                    try {
+                        var json = JSON.parse(content);
+                        if (json.security) {
+                            return {
+                                publicKey: json.security.publicKey || DEFAULT_PUBLIC_KEY,
+                                challengeCipher: json.security.challengeCipher || DEFAULT_CHALLENGE_CIPHER,
+                                expectedPlain: json.security.expectedPlain || DEFAULT_EXPECTED_PLAIN
+                            };
+                        }
+                    } catch (e) {}
+                }
+                return null;
+            }).catch(function() { return null; });
+        }
+
+        // ============================================================
+        // 保存安全配置到 GitHub（同步更新 config.json）
+        // ============================================================
+        function saveSecurityConfigToGitHub(securityObj) {
+            if (!isConfigured()) return Promise.reject(new Error('未配置 GitHub'));
+
+            // 先获取现有 config.json 内容（保持其他字段）
+            var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + (config.configPath || 'config.json');
+            return fetch(url, {
+                headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+            }).then(function(response) {
+                if (response.status === 404) {
+                    // 文件不存在，创建新文件
+                    var newConfig = {
+                        security: securityObj
+                    };
+                    return { content: JSON.stringify(newConfig, null, 2), sha: null };
+                }
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json().then(function(data) {
+                    var content = decodeBase64Utf8(data.content);
+                    var json = {};
+                    try { json = JSON.parse(content); } catch (e) {}
+                    json.security = securityObj;
+                    return { content: JSON.stringify(json, null, 2), sha: data.sha };
+                });
+            }).then(function(result) {
+                var encoded = encodeUtf8ToBase64(result.content);
+                var body = {
+                    message: '更新安全配置 ' + new Date().toLocaleString(),
+                    content: encoded,
+                    branch: 'main'
+                };
+                if (result.sha) body.sha = result.sha;
+                return fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': 'token ' + config.token,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+            }).then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(err) {
+                        throw new Error(err.message || '保存失败');
+                    });
+                }
+                return response.json();
+            });
+        }
+
+        // ============================================================
+        // 安全设置相关函数（修改后同步到 GitHub）
+        // ============================================================
+        function loadSecuritySettingsToForm() {
+            var cfg = getSecurityConfig();
+            document.getElementById('secPublicKey').value = cfg.publicKey;
+            document.getElementById('secChallengeCipher').value = cfg.challengeCipher;
+            document.getElementById('secExpectedPlain').value = cfg.expectedPlain;
+        }
+
+        function saveSecuritySettings() {
+            var pubKey = document.getElementById('secPublicKey').value.trim();
+            var cipher = document.getElementById('secChallengeCipher').value.trim();
+            var plain = document.getElementById('secExpectedPlain').value.trim();
+
+            if (!pubKey || !cipher || !plain) {
+                showToast('❌ 所有字段都不能为空', 'error');
+                return;
+            }
+            if (!pubKey.includes('BEGIN PUBLIC KEY')) {
+                showToast('❌ 公钥格式不正确', 'error');
+                return;
+            }
+
+            var securityObj = {
+                publicKey: pubKey,
+                challengeCipher: cipher,
+                expectedPlain: plain
+            };
+
+            // 先保存到本地
+            setSecurityConfig(securityObj);
+            showToast('✅ 已保存到本地', 'success');
+
+            // 如果已配置 GitHub，同步到远程
+            if (isConfigured()) {
+                saveSecurityConfigToGitHub(securityObj).then(function() {
+                    showToast('✅ 已同步到 GitHub', 'success');
+                }).catch(function(err) {
+                    showToast('⚠️ 本地已保存，但同步 GitHub 失败：' + err.message, 'error');
+                });
+            } else {
+                showToast('ℹ️ 未配置 GitHub，仅保存在本地。配置后会自动同步。', 'info');
+            }
+            loadSecuritySettingsToForm();
+        }
+
+        function resetSecuritySettings() {
+            if (!confirm('确定要恢复默认的安全设置吗？')) return;
+            localStorage.removeItem('security_config');
+            securityConfigCache = null;
+            loadSecuritySettingsToForm();
+            showToast('↩️ 已恢复默认设置', 'info');
+        }
+
+        // ============================================================
+        // 强制同步安全配置到 GitHub（手动触发）
+        // ============================================================
+        function syncAllConfig() {
+            if (!isConfigured()) {
+                showToast('请先配置 GitHub', 'error');
+                toggleConfig();
+                return;
+            }
+            var securityObj = {
+                publicKey: document.getElementById('secPublicKey').value.trim(),
+                challengeCipher: document.getElementById('secChallengeCipher').value.trim(),
+                expectedPlain: document.getElementById('secExpectedPlain').value.trim()
+            };
+            if (!securityObj.publicKey || !securityObj.challengeCipher || !securityObj.expectedPlain) {
+                showToast('❌ 请先填写完整的安全设置', 'error');
+                return;
+            }
+            saveSecurityConfigToGitHub(securityObj).then(function() {
+                showToast('✅ 安全配置已同步到 GitHub', 'success');
+            }).catch(function(err) {
+                showToast('❌ 同步失败：' + err.message, 'error');
             });
         }
 
@@ -715,6 +1043,7 @@ HQIDAQAB
                 sessionStorage.removeItem('blog_admin_logged');
                 document.getElementById('loginBox').style.display = 'block';
                 document.getElementById('adminArea').classList.remove('active');
+                document.getElementById('securityPanel').classList.remove('active');
                 showToast('已退出', 'info');
             }
         }
@@ -766,12 +1095,16 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 配置管理
+        // 配置管理（GitHub）
         // ============================================================
         var config = {};
 
         function getPostsPath() {
             return document.getElementById('githubPath').value.trim() || 'posts.txt';
+        }
+
+        function getConfigPath() {
+            return document.getElementById('configPath').value.trim() || 'config.json';
         }
 
         function toggleConfig() {
@@ -788,6 +1121,7 @@ HQIDAQAB
                         document.getElementById('githubUser').value = cfg.user || '';
                         document.getElementById('githubRepo').value = cfg.repo || '';
                         document.getElementById('githubPath').value = cfg.path || 'posts.txt';
+                        document.getElementById('configPath').value = cfg.configPath || 'config.json';
                     } catch (e) {}
                 }
             }
@@ -798,17 +1132,20 @@ HQIDAQAB
             var user = document.getElementById('githubUser').value.trim();
             var repo = document.getElementById('githubRepo').value.trim();
             var path = getPostsPath();
+            var configPath = getConfigPath();
 
             if (!token || !user || !repo) {
                 showToast('请填写完整配置', 'error');
                 return;
             }
 
-            config = { token: token, user: user, repo: repo, path: path };
+            config = { token: token, user: user, repo: repo, path: path, configPath: configPath };
             localStorage.setItem('github_config', JSON.stringify(config));
             showToast('✅ 配置已保存', 'success');
             document.getElementById('configBox').style.display = 'none';
             document.getElementById('configHint').style.display = 'none';
+            // 尝试同步安全配置
+            syncAllConfig();
         }
 
         function loadConfig() {
@@ -820,6 +1157,7 @@ HQIDAQAB
                     document.getElementById('githubUser').value = config.user || '';
                     document.getElementById('githubRepo').value = config.repo || '';
                     document.getElementById('githubPath').value = config.path || 'posts.txt';
+                    document.getElementById('configPath').value = config.configPath || 'config.json';
                     return true;
                 } catch (e) {}
             }
@@ -831,7 +1169,7 @@ HQIDAQAB
         }
 
         // ============================================================
-        // 文章管理
+        // 文章管理（与之前相同）
         // ============================================================
         var posts = [];
 
@@ -1094,11 +1432,8 @@ HQIDAQAB
         });
 
         // ============================================================
-        // 绑定登录按钮
+        // 初始化
         // ============================================================
-        document.getElementById('loginWithPrivateKeyBtn').addEventListener('click', handlePrivateKeyLogin);
-
-        // 检测是否已登录（页面刷新时保持）
         if (sessionStorage.getItem('blog_admin_logged') === 'true') {
             document.getElementById('loginBox').style.display = 'none';
             document.getElementById('adminArea').classList.add('active');
@@ -1107,12 +1442,17 @@ HQIDAQAB
                 document.getElementById('githubUser').value = config.user || '';
                 document.getElementById('githubRepo').value = config.repo || '';
                 document.getElementById('githubPath').value = config.path || 'posts.txt';
+                document.getElementById('configPath').value = config.configPath || 'config.json';
             }
             document.getElementById('configHint').style.display = isConfigured() ? 'none' : 'block';
+            loadSecuritySettingsToForm();
+            document.getElementById('securityPanel').classList.add('active');
+        } else {
+            document.getElementById('securityPanel').classList.remove('active');
         }
 
-        console.log('📝 墨韵轩 · 文章管理 (完整版) 已加载');
-        console.log('🔑 使用私钥登录后即可管理文章');
+        console.log('📝 墨韵轩 · 文章管理 (配置同步版) 已加载');
+        console.log('🔑 使用私钥登录后安全配置会自动从 GitHub 同步');
     </script>
 
 </body>
