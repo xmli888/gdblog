@@ -2,41 +2,532 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>墨韵轩 · 古典个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>墨韵轩 · 古宅红木博客</title>
     <style>
-        /* ---------- 完整样式 ---------- */
+        /* ============================================================
+           全局重置 & 基础
+           ============================================================ */
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            background-color: #f5f0e8;
-            font-family: '华文楷体','KaiTi','SimSun','宋体',serif;
-            color: #2c2c2c;
+            background-color: #f6efe8; /* 老宣纸色 */
+            font-family: '华文楷体','KaiTi','SimSun','宋体', serif;
+            color: #3e2723;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             -webkit-tap-highlight-color: transparent;
-            padding: 10px;
+            padding: 0;
         }
+        a { text-decoration: none; color: inherit; }
         .container {
             width: 100%;
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 10px;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            padding: 0 20px;
         }
 
-        /* 提示消息 */
+        /* ============================================================
+           顶部横幅（古宅红木氛围）
+           ============================================================ */
+        .hero {
+            position: relative;
+            width: 100%;
+            min-height: 320px;
+            background: linear-gradient(145deg, #6b3a2a 0%, #4d281b 40%, #3d1f15 80%, #2d150e 100%);
+            border-radius: 0 0 40px 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        /* 瓦片纹理 */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(90deg,
+                rgba(0,0,0,0.05) 0px,
+                rgba(0,0,0,0.05) 4px,
+                transparent 4px,
+                transparent 8px);
+            pointer-events: none;
+        }
+        /* 树枝剪影（左） */
+        .hero .branch-left {
+            position: absolute;
+            top: 20px;
+            left: 10px;
+            width: 120px;
+            height: 80px;
+            background: radial-gradient(ellipse at 20% 100%, rgba(60,40,30,0.6) 0%, transparent 70%);
+            transform: rotate(-10deg);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .hero .branch-right {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 100px;
+            height: 60px;
+            background: radial-gradient(ellipse at 80% 100%, rgba(60,40,30,0.5) 0%, transparent 70%);
+            transform: rotate(15deg);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        /* 鸟影装饰（仅桌面可见） */
+        .hero .bird {
+            position: absolute;
+            top: 40px;
+            right: 80px;
+            font-size: 28px;
+            color: rgba(255,215,140,0.15);
+            transform: rotate(-5deg);
+            pointer-events: none;
+            display: none;
+        }
+        @media (min-width: 768px) {
+            .hero .bird { display: block; }
+            .hero .bird2 { right: 160px; top: 60px; font-size: 20px; }
+        }
+
+        /* Logo + 标题 + 简介 */
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #f5e6d3;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+        }
+        .hero-logo {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #c23531;
+            color: #f5e6d3;
+            font-size: 40px;
+            line-height: 80px;
+            text-align: center;
+            font-family: '华文楷体','KaiTi',serif;
+            font-weight: bold;
+            box-shadow: 0 4px 20px rgba(194,53,49,0.4);
+            margin-bottom: 8px;
+            border: 3px solid #e8c9a0;
+            transition: transform 0.3s;
+        }
+        .hero-logo:hover { transform: scale(1.05); }
+        .hero-title {
+            font-size: 36px;
+            font-weight: normal;
+            letter-spacing: 12px;
+            color: #f5e6d3;
+            margin-bottom: 4px;
+            font-family: '华文楷体','KaiTi',serif;
+        }
+        .hero-sub {
+            font-size: 14px;
+            color: #d4c5b0;
+            letter-spacing: 4px;
+            font-family: 'SimSun','宋体',serif;
+            opacity: 0.85;
+            margin-bottom: 8px;
+        }
+        /* 导航栏（红木牌匾效果） */
+        .nav-bar {
+            position: relative;
+            z-index: 3;
+            margin-top: 12px;
+            background: linear-gradient(180deg, #7a4a34, #5a3222);
+            border-radius: 12px 12px 4px 4px;
+            padding: 6px 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,215,140,0.2);
+            border: 1px solid #4d281b;
+            border-top-color: #9a6a54;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 4px 12px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            /* 木纹效果 */
+            background-image: repeating-linear-gradient(90deg,
+                transparent 0px,
+                transparent 20px,
+                rgba(0,0,0,0.03) 20px,
+                rgba(0,0,0,0.03) 22px);
+        }
+        /* 悬挂装饰（绳子） */
+        .nav-bar::before,
+        .nav-bar::after {
+            content: '☯';
+            font-size: 14px;
+            color: #d4b08c;
+            opacity: 0.3;
+            align-self: center;
+        }
+        .nav-bar a {
+            color: #f0e0d0;
+            padding: 6px 12px;
+            font-size: 15px;
+            letter-spacing: 2px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-family: '华文楷体','KaiTi',serif;
+            position: relative;
+            white-space: nowrap;
+        }
+        .nav-bar a:hover {
+            background: rgba(255,215,140,0.15);
+            color: #ffe8c8;
+        }
+        .nav-bar a.active {
+            background: rgba(194,53,49,0.3);
+            color: #ffe8c8;
+            border-bottom: 2px solid #c23531;
+        }
+        .nav-bar .login-btn {
+            background: rgba(194,53,49,0.3);
+            border-radius: 20px;
+            padding-left: 16px;
+            padding-right: 16px;
+            border: 1px solid rgba(194,53,49,0.2);
+        }
+        .nav-bar .login-btn:hover {
+            background: rgba(194,53,49,0.5);
+        }
+
+        /* ============================================================
+           主体布局
+           ============================================================ */
+        .main {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin: 20px 0 40px;
+        }
+        @media (min-width: 820px) {
+            .main { flex-direction: row; align-items: flex-start; }
+            .main-content { flex: 7; }
+            .sidebar { flex: 3; }
+        }
+
+        /* 卡片通用样式 */
+        .card {
+            background: #fdf8f0;
+            border: 1px solid #e8d5c0;
+            border-radius: 12px;
+            padding: 24px 28px;
+            box-shadow: 0 2px 12px rgba(60,40,30,0.06);
+            margin-bottom: 20px;
+            transition: box-shadow 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 4px 24px rgba(60,40,30,0.12);
+        }
+        .card-title {
+            font-size: 18px;
+            font-weight: normal;
+            letter-spacing: 4px;
+            color: #4d281b;
+            border-bottom: 2px solid #e8d5c0;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+            font-family: '华文楷体','KaiTi',serif;
+        }
+
+        /* 文章列表 */
+        .post-item {
+            padding: 16px 0;
+            border-bottom: 1px dashed #e8d5c0;
+            cursor: pointer;
+            transition: background 0.15s;
+            border-radius: 4px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        .post-item:last-child { border-bottom: none; }
+        .post-item:hover { background: #f8f0e8; }
+        .post-item .title {
+            font-size: 20px;
+            font-weight: normal;
+            font-family: '华文楷体','KaiTi',serif;
+            color: #3e2723;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .post-item .meta {
+            font-size: 13px;
+            color: #8a7a6a;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .post-item .excerpt {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #5a4a3a;
+            font-family: 'SimSun','宋体',serif;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .post-item .tags {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .post-item .tags span {
+            background: #efe4d8;
+            color: #6b4a3a;
+            font-size: 12px;
+            padding: 2px 12px;
+            border-radius: 12px;
+            border: 1px solid #ddd0c0;
+        }
+
+        /* 侧边栏 */
+        .sidebar .profile {
+            text-align: center;
+        }
+        .sidebar .profile .avatar {
+            font-size: 48px;
+            background: #e8d5c0;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            border: 2px solid #c23531;
+        }
+        .sidebar .profile .name {
+            font-size: 20px;
+            letter-spacing: 4px;
+            font-family: '华文楷体','KaiTi',serif;
+        }
+        .sidebar .profile .desc {
+            font-size: 14px;
+            color: #6b5a4a;
+            font-family: 'SimSun','宋体',serif;
+            margin-top: 4px;
+        }
+        .category-list {
+            list-style: none;
+        }
+        .category-list li {
+            padding: 6px 0;
+            border-bottom: 1px dashed #e8d5c0;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .category-list li:hover { background: #f8f0e8; }
+        .category-list li .count {
+            color: #8a7a6a;
+            font-size: 13px;
+        }
+
+        /* 文章详情页 */
+        .post-detail .title {
+            font-size: 28px;
+            font-weight: normal;
+            font-family: '华文楷体','KaiTi',serif;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+        .post-detail .meta {
+            font-size: 14px;
+            color: #8a7a6a;
+            margin-bottom: 16px;
+            border-bottom: 1px dashed #ddd0c0;
+            padding-bottom: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .post-detail .body {
+            font-size: 16px;
+            line-height: 2;
+            font-family: 'SimSun','宋体',serif;
+            color: #3e2723;
+            white-space: pre-wrap;
+            margin-bottom: 24px;
+        }
+        .post-detail .nav-links {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #e8d5c0;
+            padding-top: 16px;
+            font-size: 14px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .post-detail .nav-links a {
+            color: #8b2500;
+            cursor: pointer;
+        }
+        .post-detail .nav-links a:hover { text-decoration: underline; }
+        .recommend {
+            margin-top: 20px;
+            border-top: 1px solid #e8d5c0;
+            padding-top: 16px;
+        }
+        .recommend h4 {
+            font-weight: normal;
+            font-family: '华文楷体','KaiTi',serif;
+            letter-spacing: 2px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .recommend .rec-item {
+            padding: 6px 0;
+            border-bottom: 1px dashed #f0e8e0;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .recommend .rec-item:hover { background: #f8f0e8; }
+
+        /* 关于页面 */
+        .about-content {
+            font-size: 15px;
+            line-height: 2;
+            font-family: 'SimSun','宋体',serif;
+            white-space: pre-wrap;
+            color: #3e2723;
+        }
+
+        /* ============================================================
+           后台管理界面（登录后）
+           ============================================================ */
+        .admin-area { display: none; }
+        .admin-area.active { display: block; }
+
+        /* 折叠面板 */
+        .panel {
+            border: 1px solid #e8d5c0;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            background: #fdf8f0;
+        }
+        .panel-header {
+            padding: 12px 18px;
+            background: #efe4d8;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: '华文楷体','KaiTi',serif;
+            font-size: 16px;
+            letter-spacing: 2px;
+            border-radius: 8px 8px 0 0;
+            user-select: none;
+        }
+        .panel-header:hover { background: #e8d5c0; }
+        .panel-header .arrow { transition: transform 0.3s; }
+        .panel-header .arrow.open { transform: rotate(180deg); }
+        .panel-body {
+            padding: 16px 18px;
+            display: none;
+            border-top: 1px solid #e8d5c0;
+        }
+        .panel-body.open { display: block; }
+
+        .admin-form .form-group {
+            margin-bottom: 14px;
+        }
+        .admin-form .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #4d281b;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .admin-form .form-group input,
+        .admin-form .form-group textarea,
+        .admin-form .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd0c0;
+            border-radius: 6px;
+            background: #fefcf8;
+            font-size: 14px;
+            font-family: 'SimSun','宋体',serif;
+            outline: none;
+            transition: border 0.2s;
+        }
+        .admin-form .form-group input:focus,
+        .admin-form .form-group textarea:focus {
+            border-color: #c23531;
+        }
+        .admin-form .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .admin-form .btn {
+            padding: 6px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #7a4a34;
+            color: #f5e6d3;
+            font-family: '华文楷体','KaiTi',serif;
+            font-size: 14px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-right: 6px;
+        }
+        .admin-form .btn:hover { background: #5a3222; }
+        .admin-form .btn-primary { background: #c23531; }
+        .admin-form .btn-primary:hover { background: #a02a26; }
+        .admin-form .btn-danger { background: #8b2500; }
+        .admin-form .btn-danger:hover { background: #6b1a00; }
+        .admin-list .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e8d5c0;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .admin-list .item .actions button {
+            margin-left: 6px;
+            padding: 2px 12px;
+            border: 1px solid #ddd0c0;
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .admin-list .item .actions .edit:hover { background: #7a4a34; color: #fff; }
+        .admin-list .item .actions .del:hover { background: #8b2500; color: #fff; }
+
+        /* ============================================================
+           Toast & 模态框
+           ============================================================ */
         .toast-msg {
             position: fixed;
-            bottom: 60px;
+            bottom: 40px;
             left: 50%;
             transform: translateX(-50%);
-            background: #333;
-            color: #fff;
-            padding: 10px 24px;
+            background: #3e2723;
+            color: #f5e6d3;
+            padding: 12px 28px;
             border-radius: 8px;
             font-size: 15px;
             z-index: 9999;
@@ -47,776 +538,1092 @@
             max-width: 90%;
             text-align: center;
             font-family: '华文楷体','KaiTi',serif;
+            letter-spacing: 1px;
         }
         .toast-msg.show { opacity: 1; }
-
-        /* 青砖屋檐 */
-        .header {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            background-color: #4a5a6a;
-            border-radius: 0 0 12px 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            overflow: hidden;
-            background-image:
-                repeating-linear-gradient(180deg, transparent 0px, transparent 28px, rgba(0,0,0,0.15) 28px, rgba(0,0,0,0.15) 30px),
-                repeating-linear-gradient(90deg, transparent 0px, transparent 58px, rgba(0,0,0,0.08) 58px, rgba(0,0,0,0.08) 60px),
-                linear-gradient(135deg, #4a5a6a 0%, #5a6a7a 30%, #4a5a6a 60%, #3a4a5a 100%);
-        }
-        .header .eave-left {
-            position: absolute;
-            bottom: 0; left: -10px;
-            width: 80px; height: 60px;
-            background: #2c3e4a;
-            clip-path: polygon(0% 100%, 100% 100%, 80% 0%, 0% 0%);
-            opacity: 0.8;
-            pointer-events: none;
-        }
-        .header .eave-right {
-            position: absolute;
-            bottom: 0; right: -10px;
-            width: 80px; height: 60px;
-            background: #2c3e4a;
-            clip-path: polygon(0% 100%, 100% 100%, 100% 0%, 20% 0%);
-            opacity: 0.8;
-            pointer-events: none;
-        }
-        .header .roof-tiles {
-            position: absolute;
-            bottom: 30px; left: 0;
-            width: 100%; height: 20px;
-            background: repeating-linear-gradient(90deg, transparent 0px, transparent 30px, rgba(0,0,0,0.10) 30px, rgba(0,0,0,0.10) 32px);
-            pointer-events: none;
-        }
-        .header-content {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            padding: 20px 30px;
-            text-align: center;
-            color: #f5f0e8;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-            pointer-events: none;
-        }
-        .header-content h1 {
-            font-size: 38px;
-            font-weight: normal;
-            letter-spacing: 10px;
-            font-family: '华文楷体','KaiTi','STKaiti',serif;
-            margin-bottom: 4px;
-        }
-        .header-content h1::before,
-        .header-content h1::after {
-            content: '◆';
-            font-size: 16px;
-            color: #c9b99a;
-            margin: 0 12px;
-            opacity: 0.6;
-        }
-        .header-content .subtitle {
-            font-size: 14px;
-            letter-spacing: 4px;
-            color: #d5cdc0;
-            font-family: '华文楷体','KaiTi',serif;
-            margin-top: 2px;
-            opacity: 0.85;
-        }
-
-        .nav {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 8px 10px;
-            background: rgba(44,62,74,0.75);
-            backdrop-filter: blur(4px);
-            border-top: 1px solid rgba(255,255,255,0.08);
-            border-radius: 0 0 12px 12px;
-            flex-wrap: wrap;
-            gap: 4px 8px;
-            z-index: 5;
-            pointer-events: auto;
-        }
-        .nav a {
-            color: #e8e0d5;
-            text-decoration: none;
-            font-size: 14px;
-            letter-spacing: 1px;
-            padding: 6px 12px;
-            border-radius: 4px;
-            background: rgba(255,255,255,0.06);
-            transition: 0.2s;
-            white-space: nowrap;
-            font-family: '华文楷体','KaiTi',serif;
-            cursor: pointer;
-            position: relative;
-            z-index: 10;
-            pointer-events: auto;
-        }
-        .nav a:active {
-            background: rgba(255,255,255,0.18);
-            transform: scale(0.95);
-        }
-        .nav .login-btn {
-            background: rgba(139,37,0,0.45);
-            border: 1px solid rgba(200,180,160,0.25);
-            padding: 6px 16px;
-        }
-        .nav .login-btn:active {
-            background: rgba(139,37,0,0.75);
-        }
-
-        .main {
-            display: flex;
-            gap: 24px;
-            margin: 24px 0;
-            flex: 1;
-        }
-        .blog-posts { flex: 7; display: flex; flex-direction: column; gap: 20px; }
-        .sidebar { flex: 3; display: flex; flex-direction: column; gap: 20px; }
-
-        .card {
-            background: #fcf9f5;
-            border: 1px solid #d5cdc0;
-            border-radius: 8px;
-            padding: 20px 24px;
-            box-shadow: 0 2px 12px rgba(60,70,80,0.08);
-            position: relative;
-            transition: 0.2s;
-        }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: 20px;
-            width: 28px;
-            height: 3px;
-            background: #8b2500;
-            border-radius: 0 0 4px 4px;
-            opacity: 0.5;
-        }
-        .card:active { transform: scale(0.99); }
-        .post-card {
-            cursor: pointer;
-        }
-        .post-card .post-title {
-            font-size: 20px;
-            font-weight: normal;
-            font-family: '华文楷体','KaiTi',serif;
-            color: #2c2c2c;
-            margin-bottom: 6px;
-            letter-spacing: 1px;
-        }
-        .post-card .post-meta {
-            font-size: 12px;
-            color: #8a9aad;
-            display: flex;
-            gap: 12px;
-            margin-bottom: 10px;
-            border-bottom: 1px dashed #e0d8cc;
-            padding-bottom: 8px;
-            flex-wrap: wrap;
-        }
-        .post-card .post-excerpt {
-            font-size: 14px;
-            line-height: 1.7;
-            color: #3a3a3a;
-            font-family: 'SimSun','宋体',serif;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .post-card .post-tags {
-            margin-top: 12px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .post-card .post-tags .tag {
-            font-size: 11px;
-            padding: 2px 12px;
-            background: #efe8dd;
-            color: #5a5a5a;
-            border-radius: 20px;
-            border: 1px solid #d5cdc0;
-            letter-spacing: 0.5px;
-        }
-
-        .sidebar .card-title {
-            font-size: 17px;
-            font-weight: normal;
-            font-family: '华文楷体','KaiTi',serif;
-            color: #2c2c2c;
-            letter-spacing: 3px;
-            border-bottom: 2px solid #d5cdc0;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
-            position: relative;
-        }
-        .sidebar .card-title::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 28px;
-            height: 2px;
-            background: #8b2500;
-            border-radius: 2px;
-        }
-        .profile-avatar {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: #d5cdc0;
-            margin: 0 auto 12px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: #6b7b8b;
-            border: 2px solid #c9b99a;
-        }
-        .profile-name {
-            text-align: center;
-            font-size: 18px;
-            font-family: '华文楷体','KaiTi',serif;
-            letter-spacing: 3px;
-        }
-        .profile-desc {
-            text-align: center;
-            font-size: 13px;
-            color: #6b7b8b;
-            margin-top: 4px;
-            font-family: 'SimSun','宋体',serif;
-            line-height: 1.6;
-        }
-        .category-list {
-            list-style: none;
-            padding: 0;
-        }
-        .category-list li {
-            padding: 5px 0;
-            border-bottom: 1px dashed #e8e0d5;
-            font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-            color: #4a5a6a;
-            font-family: 'SimSun','宋体',serif;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .category-list li:active {
-            background: rgba(139,37,0,0.08);
-            transform: scale(0.97);
-        }
-        .category-list li .count {
-            color: #8a9aad;
-            font-size: 12px;
-        }
-
-        .footer {
-            width: 100%;
-            padding: 20px 16px 14px 16px;
-            text-align: center;
-            font-size: 13px;
-            color: #8a9aad;
-            border-top: 1px solid #d5cdc0;
-            margin-top: 8px;
-            font-family: 'SimSun','宋体',serif;
-            letter-spacing: 1px;
-        }
-        .footer .footer-heart { color: #8b2500; margin: 0 4px; }
 
         .modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(30,40,50,0.70);
-            backdrop-filter: blur(6px);
+            background: rgba(30,20,15,0.7);
+            backdrop-filter: blur(4px);
             z-index: 999;
             justify-content: center;
             align-items: center;
-            animation: fadeIn 0.3s ease;
         }
         .modal-overlay.active { display: flex; }
         .modal {
-            background: #fcf9f5;
-            border-radius: 12px;
+            background: #fdf8f0;
+            border-radius: 16px;
             padding: 30px 32px;
-            max-width: 500px;
+            max-width: 600px;
             width: 92%;
-            border: 1px solid #d5cdc0;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.30);
-            position: relative;
-            animation: slideUp 0.3s ease;
             max-height: 90vh;
             overflow-y: auto;
+            border: 1px solid #e8d5c0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
         }
-        .modal::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 30px; right: 30px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #8b2500, transparent);
-            border-radius: 0 0 4px 4px;
-            opacity: 0.5;
-        }
-        .modal h2 {
-            font-size: 24px;
-            font-weight: normal;
-            font-family: '华文楷体','KaiTi',serif;
-            text-align: center;
-            letter-spacing: 4px;
-            color: #2c2c2c;
-            margin-bottom: 4px;
-        }
-        .modal .modal-sub {
-            text-align: center;
-            font-size: 13px;
-            color: #8a9aad;
-            margin-bottom: 20px;
-            font-family: 'SimSun','宋体',serif;
-            letter-spacing: 1px;
-        }
-        .btn {
-            padding: 8px 24px;
-            border: 1px solid #8a9aad;
-            border-radius: 6px;
-            background: transparent;
-            color: #4a5a6a;
-            font-size: 15px;
-            font-family: '华文楷体','KaiTi',serif;
-            letter-spacing: 3px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: inline-block;
-            -webkit-touch-callout: none;
-            user-select: none;
-        }
-        .btn:active { transform: scale(0.94); }
-        .btn-primary {
-            background: #8b2500;
-            border-color: #8b2500;
-            color: #f5f0e8;
-        }
-        .btn-primary:active { background: #6b1a00; }
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-        .btn-group .btn { flex: 1; text-align: center; min-width: 70px; }
         .modal-close {
             position: absolute;
-            top: 12px; right: 16px;
-            font-size: 26px;
-            color: #8a9aad;
-            cursor: pointer;
+            top: 12px;
+            right: 16px;
+            font-size: 28px;
             background: none;
             border: none;
-            padding: 4px 10px;
+            cursor: pointer;
+            color: #8a7a6a;
         }
-        .modal-close:active { color: #8b2500; }
+        .modal-close:hover { color: #c23531; }
 
-        .about-content {
-            font-size: 15px;
-            line-height: 2;
-            color: #3a3a3a;
-            font-family: 'SimSun','宋体',serif;
-            padding: 8px 0;
-            white-space: pre-wrap;
+        /* ============================================================
+           登录界面
+           ============================================================ */
+        .login-box {
+            max-width: 420px;
+            margin: 30px auto;
+            padding: 30px 24px;
+            background: #fdf8f0;
+            border: 1px solid #e8d5c0;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        .login-box h2 {
+            text-align: center;
+            font-weight: normal;
+            letter-spacing: 6px;
+            font-family: '华文楷体','KaiTi',serif;
+            color: #4d281b;
+            margin-bottom: 6px;
+        }
+        .login-box .login-sub {
+            text-align: center;
+            color: #8a7a6a;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+        .login-box .form-group {
+            margin-bottom: 14px;
+        }
+        .login-box .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd0c0;
+            border-radius: 6px;
+            background: #fefcf8;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            min-height: 80px;
+            outline: none;
+        }
+        .login-box .form-group textarea:focus {
+            border-color: #c23531;
+        }
+        .login-box .btn {
+            width: 100%;
+            padding: 10px;
+            background: #7a4a34;
+            color: #f5e6d3;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: '华文楷体','KaiTi',serif;
+            letter-spacing: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .login-box .btn:hover { background: #5a3222; }
+        .login-box .error-msg {
+            color: #c23531;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 820px) {
-            .main { flex-direction: column; }
-            .header { height: 170px; }
-            .header-content h1 { font-size: 28px; letter-spacing: 6px; }
-            .header-content h1::before,
-            .header-content h1::after { margin: 0 8px; font-size: 12px; }
-            .nav { padding: 6px 8px; gap: 3px 6px; }
-            .nav a { font-size: 12px; padding: 4px 8px; }
-            .modal { padding: 22px 18px; }
-            .card { padding: 16px 14px; }
-            .post-card .post-title { font-size: 17px; }
+        /* ============================================================
+           响应式
+           ============================================================ */
+        @media (max-width: 600px) {
+            .hero { min-height: 240px; padding: 20px 16px; }
+            .hero-logo { width: 60px; height: 60px; font-size: 30px; line-height: 60px; }
+            .hero-title { font-size: 24px; letter-spacing: 6px; }
+            .hero-sub { font-size: 12px; letter-spacing: 2px; }
+            .nav-bar { gap: 2px 6px; padding: 4px 10px; flex-wrap: wrap; }
+            .nav-bar a { font-size: 13px; padding: 4px 8px; }
+            .card { padding: 16px; }
+            .post-item .title { font-size: 18px; }
         }
-        @media (max-width: 480px) {
-            .header-content h1 { font-size: 22px; letter-spacing: 3px; }
-            .header-content .subtitle { font-size: 12px; letter-spacing: 2px; }
-            .nav a { font-size: 11px; padding: 3px 6px; }
-            .btn { padding: 6px 14px; font-size: 13px; }
-            .modal { padding: 18px 14px; }
+        @media (max-width: 400px) {
+            .nav-bar a { font-size: 12px; padding: 3px 6px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 提示消息 -->
+    <!-- Toast -->
     <div id="toastContainer" class="toast-msg"></div>
 
+    <!-- 模态框 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
     <div class="container">
-        <header class="header">
-            <div class="eave-left"></div>
-            <div class="eave-right"></div>
-            <div class="roof-tiles"></div>
-            <div class="header-content">
-                <h1>墨韵轩</h1>
-                <div class="subtitle">— 笔墨春秋 · 静观自得 —</div>
+
+        <!-- ============================================================
+           顶部（古宅红木风格）
+           ============================================================ -->
+        <header class="hero">
+            <!-- 树枝装饰 -->
+            <div class="branch-left"></div>
+            <div class="branch-right"></div>
+            <div class="bird">🐦</div>
+            <div class="bird bird2">🐦</div>
+
+            <div class="hero-content">
+                <div class="hero-logo">墨</div>
+                <div class="hero-title">墨韵轩</div>
+                <div class="hero-sub">— 青砖檐下 · 笔墨春秋 · 静观自得 —</div>
             </div>
-            <nav class="nav">
-                <a href="#" onclick="return navClick('home');">首页</a>
-                <a href="#" onclick="return navClick('archive');">文章</a>
-                <a href="#" onclick="return showAbout();">关于</a>
+
+            <!-- 导航栏（红木牌匾） -->
+            <nav class="nav-bar" id="mainNav">
+                <a href="#" data-page="home" class="active">首页</a>
+                <a href="#" data-page="archive">归档</a>
+                <a href="#" data-page="categories">分类</a>
+                <a href="#" data-page="about">关于</a>
+                <a href="#" class="login-btn" id="loginTrigger">后台登录</a>
             </nav>
         </header>
 
-        <div class="main">
-            <section class="blog-posts" id="postList">
-                <div class="card" style="text-align:center;padding:40px 20px;color:#8a9aad;">
-                    <div style="font-size:48px;">📖</div>
-                    <p style="font-size:18px;">文章加载中...</p>
+        <!-- ============================================================
+           主体
+           ============================================================ -->
+        <div class="main" id="app">
+
+            <!-- 左侧主内容 -->
+            <div class="main-content" id="mainContent">
+                <!-- 由 JavaScript 渲染 -->
+            </div>
+
+            <!-- 右侧边栏 -->
+            <aside class="sidebar" id="sidebar">
+                <!-- 个人信息 -->
+                <div class="card profile">
+                    <div class="avatar">✍</div>
+                    <div class="name">墨 轩 主</div>
+                    <div class="desc">闲来读书，兴至写文。<br />以文会友，以友辅仁。</div>
                 </div>
-            </section>
-            <aside class="sidebar">
-                <div class="card">
-                    <div class="profile-avatar">✍</div>
-                    <div class="profile-name">墨 轩 主</div>
-                    <div class="profile-desc">闲来读书，兴至写文。<br />以文会友，以友辅仁。</div>
-                </div>
+                <!-- 分类 -->
                 <div class="card">
                     <div class="card-title">文章分类</div>
-                    <ul class="category-list" id="categoryList">
-                        <li style="color:#8a9aad;justify-content:center;">加载中...</li>
-                    </ul>
+                    <ul class="category-list" id="categoryList"></ul>
                 </div>
-                <div class="card">
-                    <div class="card-title">📝 如何发布文章</div>
-                    <div style="font-size:13px;color:#6b7b8b;line-height:1.8;font-family:'SimSun','宋体',serif;">
-                        1. 编辑 <code style="background:#efe8dd;padding:2px 8px;border-radius:4px;">posts.txt</code> 文件<br />
-                        2. 按格式添加文章（用 --- 分隔）<br />
-                        3. 上传覆盖到网站目录<br />
-                        4. 刷新页面即可看到新文章
+                <!-- 后台管理（登录后显示） -->
+                <div id="adminPanel" style="display:none;">
+                    <div class="card">
+                        <div class="card-title">🔐 后台管理</div>
+                        <!-- 面板：文章管理 -->
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                文章管理 <span class="arrow open">▼</span>
+                            </div>
+                            <div class="panel-body open">
+                                <div class="admin-form">
+                                    <div class="form-group">
+                                        <label>标题</label>
+                                        <input type="text" id="editTitle" placeholder="文章标题" />
+                                    </div>
+                                    <div class="form-row" style="display:flex; gap:10px; flex-wrap:wrap;">
+                                        <div class="form-group" style="flex:1;">
+                                            <label>分类</label>
+                                            <select id="editCategory"></select>
+                                        </div>
+                                        <div class="form-group" style="flex:1;">
+                                            <label>标签 (逗号分隔)</label>
+                                            <input type="text" id="editTags" placeholder="如：雨,青砖" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>正文</label>
+                                        <textarea id="editContent" rows="5"></textarea>
+                                    </div>
+                                    <input type="hidden" id="editId" />
+                                    <button class="btn btn-primary" onclick="savePost()">保存文章</button>
+                                    <button class="btn" onclick="clearEditForm()">清空</button>
+                                </div>
+                                <div class="admin-list" id="adminPostList"></div>
+                            </div>
+                        </div>
+
+                        <!-- 面板：分类管理 -->
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                分类管理 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div class="form-group" style="display:flex; gap:10px; flex-wrap:wrap;">
+                                        <input type="text" id="newCategoryName" placeholder="新分类名称" style="flex:1;" />
+                                        <button class="btn btn-primary" onclick="addCategory()">添加</button>
+                                    </div>
+                                    <div class="admin-list" id="categoryAdminList"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 面板：关于编辑 -->
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                关于页面 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div class="form-group">
+                                        <textarea id="aboutEditor" rows="6"></textarea>
+                                    </div>
+                                    <button class="btn btn-primary" onclick="saveAbout()">保存关于</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 面板：安全设置（折叠） -->
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                安全设置 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div class="form-group">
+                                        <label>公钥</label>
+                                        <textarea id="secPublicKey" rows="3" style="font-family:monospace;font-size:12px;"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>挑战码密文</label>
+                                        <textarea id="secChallengeCipher" rows="2" style="font-family:monospace;font-size:12px;"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>期望明文</label>
+                                        <input type="text" id="secExpectedPlain" />
+                                    </div>
+                                    <button class="btn btn-primary" onclick="saveSecuritySettings()">保存安全设置</button>
+                                    <button class="btn" onclick="resetSecuritySettings()">恢复默认</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </aside>
         </div>
 
-        <footer class="footer">
-            <span>© 2026 墨韵轩 · 以古典之心，行现代之事</span>
-            <span style="margin:0 6px;">|</span>
-            <span> 本博客采用 <span class="footer-heart">♥</span> 青砖屋檐风格</span>
+        <!-- ============================================================
+           底部
+           ============================================================ -->
+        <footer style="text-align:center; padding:20px 0 30px; color:#8a7a6a; font-size:13px; border-top:1px solid #e8d5c0; margin-top:20px;">
+            © 2026 墨韵轩 · 以古典之心，行现代之事
         </footer>
     </div>
 
-    <!-- 模态框 -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal" id="modalContent">
-            <button class="modal-close" id="modalClose" onclick="closeModal()">✕</button>
-            <div id="modalBody"></div>
-        </div>
-    </div>
-
+    <!-- ============================================================
+       JavaScript 全部逻辑
+       ============================================================ -->
     <script>
         // ============================================================
-        // TXT 文件方案 - 从 posts.txt 读取文章数据
+        //  1. 配置 & 默认值
         // ============================================================
+        var DEFAULT_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
+... (请替换为您的公钥)
+-----END PUBLIC KEY-----`;
 
-        var posts = [];
-        var aboutContent = '墨韵轩，一处藏于青砖屋檐下的精神角落。\n\n这里没有喧嚣，只有笔墨与时光的对话。每一篇文章，都是一次心灵的远行；每一次阅读，都是一场与古人的相逢。\n\n闲来读书，兴至写文。以文会友，以友辅仁。\n\n—— 墨轩主 谨记';
+        var DEFAULT_CHALLENGE_CIPHER = '... (请替换为您的挑战码密文) ...';
+        var DEFAULT_EXPECTED_PLAIN = 'OK';
 
         // ============================================================
-        // Toast 提示
+        //  2. 工具函数
         // ============================================================
-        var toastEl = document.getElementById('toastContainer');
-        var toastTimer = null;
+        function escapeHtml(str) {
+            if (!str) return '';
+            var div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function getToday() {
+            var d = new Date();
+            return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+        }
 
         function showToast(msg, type) {
-            toastEl.textContent = msg;
-            toastEl.style.background = type === 'success' ? '#4a5a6a' : (type === 'error' ? '#8b2500' : '#333');
-            toastEl.classList.add('show');
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(function() { toastEl.classList.remove('show'); }, 2500);
+            var el = document.getElementById('toastContainer');
+            el.textContent = msg;
+            el.style.background = type === 'error' ? '#8b2500' : (type === 'success' ? '#4a5a6a' : '#3e2723');
+            el.classList.add('show');
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(function() { el.classList.remove('show'); }, 3000);
         }
 
         // ============================================================
-        // 解析 TXT 文件
+        //  3. 数据读写（通过 GitHub API）
         // ============================================================
-        function parsePostsFromTxt(text) {
-            // 按 --- 分割文章
-            var blocks = text.split(/---\s*/).filter(function(block) {
-                return block.trim().length > 0;
-            });
+        var config = { token: '', user: '', repo: '', path: 'posts.txt', configPath: 'config.json' };
+        var posts = [];
+        var categories = [];
+        var aboutContent = '';
 
+        function loadLocalConfig() {
+            var saved = localStorage.getItem('github_config');
+            if (saved) {
+                try { config = JSON.parse(saved); } catch(e) {}
+            }
+        }
+        loadLocalConfig();
+
+        function isConfigured() {
+            return config.token && config.user && config.repo;
+        }
+
+        function decodeBase64Utf8(base64) {
+            var binary = atob(base64);
+            var bytes = new Uint8Array(binary.length);
+            for (var i=0; i<bytes.length; i++) bytes[i] = binary.charCodeAt(i);
+            return new TextDecoder('utf-8').decode(bytes);
+        }
+
+        function encodeUtf8ToBase64(text) {
+            var data = new TextEncoder().encode(text);
+            var binary = '';
+            for (var i=0; i<data.length; i++) binary += String.fromCharCode(data[i]);
+            return btoa(binary);
+        }
+
+        function fetchFile(path) {
+            if (!isConfigured()) return Promise.reject('未配置GitHub');
+            var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + path;
+            return fetch(url, {
+                headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+            }).then(function(res) {
+                if (res.status === 404) return null;
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            }).then(function(data) {
+                if (data && data.content) {
+                    return decodeBase64Utf8(data.content);
+                }
+                return null;
+            });
+        }
+
+        function saveFile(path, content, message) {
+            if (!isConfigured()) return Promise.reject('未配置GitHub');
+            var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + path;
+            var encoded = encodeUtf8ToBase64(content);
+            return fetch(url, {
+                headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+            }).then(function(res) {
+                if (res.status === 404) return null;
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            }).then(function(data) {
+                var body = { message: message || '更新文件', content: encoded, branch: 'main' };
+                if (data && data.sha) body.sha = data.sha;
+                return fetch(url, {
+                    method: 'PUT',
+                    headers: { 'Authorization': 'token ' + config.token, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+            }).then(function(res) {
+                if (!res.ok) return res.json().then(function(err) { throw new Error(err.message || '保存失败'); });
+                return res.json();
+            });
+        }
+
+        // ============================================================
+        //  4. 加载所有数据
+        // ============================================================
+        function loadAllData() {
+            if (!isConfigured()) {
+                showToast('请先配置GitHub (Token/用户名/仓库名)', 'error');
+                return Promise.resolve();
+            }
+            return Promise.all([
+                fetchFile(config.path).then(function(text) {
+                    if (text) posts = parsePosts(text);
+                    else posts = [];
+                }),
+                fetchFile(config.configPath).then(function(text) {
+                    if (text) {
+                        try {
+                            var json = JSON.parse(text);
+                            categories = json.categories || [];
+                            aboutContent = json.about || '关于墨韵轩...';
+                            // 安全配置存入 localStorage 供登录使用
+                            if (json.security) {
+                                localStorage.setItem('security_config', JSON.stringify(json.security));
+                            }
+                        } catch(e) { console.warn('config.json 解析失败', e); }
+                    }
+                })
+            ]).catch(function(err) {
+                showToast('加载数据失败: ' + err.message, 'error');
+            });
+        }
+
+        function parsePosts(text) {
+            var blocks = text.split(/---\s*/).filter(function(b) { return b.trim().length > 0; });
             var result = [];
-            for (var i = 0; i < blocks.length; i++) {
+            for (var i=0; i<blocks.length; i++) {
                 var block = blocks[i].trim();
                 var lines = block.split('\n');
-                var post = {};
-                var contentLines = [];
-                var isContent = false;
-
-                for (var j = 0; j < lines.length; j++) {
+                var post = { title:'', category:'', tags:[], date:'', content:'', id: i+1 };
+                var contentLines = [], isContent = false;
+                for (var j=0; j<lines.length; j++) {
                     var line = lines[j].trim();
                     if (!line) continue;
-
-                    // 检测字段
                     var match = line.match(/^(\w+):\s*(.*)/);
                     if (match && !isContent) {
-                        var key = match[1];
-                        var value = match[2];
-                        if (key === 'title') post.title = value;
-                        else if (key === 'category') post.category = value;
-                        else if (key === 'tags') post.tags = value.split(',').map(function(t) { return t.trim(); });
-                        else if (key === 'date') post.date = value;
-                        else if (key === 'content') {
-                            isContent = true;
-                            contentLines.push(value);
-                        }
+                        var key = match[1], val = match[2];
+                        if (key === 'title') post.title = val;
+                        else if (key === 'category') post.category = val;
+                        else if (key === 'tags') post.tags = val.split(',').map(function(t){return t.trim();});
+                        else if (key === 'date') post.date = val;
+                        else if (key === 'content') { isContent = true; contentLines.push(val); }
                     } else {
-                        // 如果已经遇到 content 字段，后面的都算内容
                         if (isContent || line.startsWith('content:')) {
-                            if (line.startsWith('content:')) {
-                                contentLines.push(line.replace(/^content:\s*/, ''));
-                            } else {
-                                contentLines.push(line);
-                            }
+                            if (line.startsWith('content:')) contentLines.push(line.replace(/^content:\s*/, ''));
+                            else contentLines.push(line);
                         }
                     }
                 }
-
                 post.content = contentLines.join('\n').trim();
-                if (post.title && post.content) {
-                    result.push(post);
-                }
+                if (post.title && post.content) result.push(post);
             }
-
+            // 重新分配 id 确保唯一
+            result.forEach(function(p, idx) { p.id = idx + 1; });
             return result;
         }
 
-        // ============================================================
-        // 从服务器加载 posts.txt
-        // ============================================================
-        function loadPostsFromTxt() {
-            // 使用 fetch API 读取 txt 文件
-            // 注意：如果网站不支持 fetch，可以用 XMLHttpRequest
-            var url = 'posts.txt?' + new Date().getTime(); // 加时间戳防止缓存
-
-            fetch(url)
-                .then(function(response) {
-                    if (!response.ok) {
-                        throw new Error('无法加载 posts.txt 文件，请确认文件存在');
-                    }
-                    return response.text();
-                })
-                .then(function(text) {
-                    posts = parsePostsFromTxt(text);
-                    renderAll();
-                    showToast('加载成功，共 ' + posts.length + ' 篇文章', 'success');
-                })
-                .catch(function(err) {
-                    console.error('加载失败:', err);
-                    showToast('加载失败: ' + err.message, 'error');
-                    // 显示错误信息
-                    var container = document.getElementById('postList');
-                    container.innerHTML = '<div class="card" style="text-align:center;padding:40px 20px;color:#8a9aad;">' +
-                        '<div style="font-size:48px;">⚠️</div>' +
-                        '<p style="font-size:18px;">文章加载失败</p>' +
-                        '<p style="font-size:13px;margin-top:8px;">请确认 posts.txt 文件存在于网站根目录</p>' +
-                        '</div>';
-                });
+        function generatePostsTxt(postsArray) {
+            var text = '';
+            for (var i=0; i<postsArray.length; i++) {
+                var p = postsArray[i];
+                text += '---\n';
+                text += 'title: ' + p.title + '\n';
+                text += 'category: ' + (p.category || '随笔') + '\n';
+                text += 'tags: ' + (p.tags ? p.tags.join(',') : '') + '\n';
+                text += 'date: ' + (p.date || getToday()) + '\n';
+                text += 'content: ' + p.content + '\n';
+            }
+            return text;
         }
 
         // ============================================================
-        // 渲染函数
+        //  5. 渲染引擎
         // ============================================================
-        function renderPosts() {
-            var container = document.getElementById('postList');
-            if (!container) return;
-            if (posts.length === 0) {
-                container.innerHTML = '<div class="card" style="text-align:center;padding:40px 20px;color:#8a9aad;"><div style="font-size:48px;">📜</div><p style="font-size:18px;">暂无文章，静待墨香</p></div>';
-                return;
+        var currentPage = 'home';
+        var currentPostId = null;
+
+        function renderPage(page, data) {
+            var container = document.getElementById('mainContent');
+            if (page === 'home') {
+                renderHome(container);
+            } else if (page === 'archive') {
+                renderArchive(container);
+            } else if (page === 'categories') {
+                renderCategoriesPage(container);
+            } else if (page === 'about') {
+                renderAbout(container);
+            } else if (page === 'post') {
+                renderPostDetail(container, data);
+            } else {
+                renderHome(container);
             }
-            var sorted = posts.slice().sort(function(a, b) {
-                return new Date(b.date) - new Date(a.date);
+            // 高亮导航
+            document.querySelectorAll('#mainNav a').forEach(function(a) {
+                a.classList.remove('active');
+                if (a.dataset.page === page) a.classList.add('active');
             });
-            var html = '';
-            for (var i = 0; i < sorted.length; i++) {
-                var p = sorted[i];
-                html += '<div class="card post-card" data-id="' + i + '" onclick="postClick(this)">';
-                html += '<h2 class="post-title">' + escapeHtml(p.title) + '</h2>';
-                html += '<div class="post-meta"><span>📅 ' + (p.date || '未知日期') + '</span><span>📂 ' + escapeHtml(p
-                    .category || '未分类') + '</span><span>✍ 墨轩主</span></div>';
-                html += '<div class="post-excerpt">' + escapeHtml(p.content) + '</div>';
-                if (p.tags && p.tags.length > 0) {
-                    html += '<div class="post-tags">';
-                    for (var j = 0; j < p.tags.length; j++) {
-                        html += '<span class="tag"># ' + escapeHtml(p.tags[j]) + '</span>';
+            // 更新侧边栏分类
+            renderSidebarCategories();
+        }
+
+        function renderHome(container) {
+            var sorted = posts.slice().sort(function(a,b) { return new Date(b.date) - new Date(a.date); });
+            var html = '<div class="card"><div class="card-title">📖 最新文章</div>';
+            if (sorted.length === 0) {
+                html += '<p style="color:#8a7a6a;">暂无文章，请后台添加。</p>';
+            } else {
+                sorted.forEach(function(p) {
+                    var excerpt = p.content.length > 120 ? p.content.substring(0,120)+'...' : p.content;
+                    html += '<div class="post-item" onclick="navigateToPost('+p.id+')">';
+                    html += '<div class="title">' + escapeHtml(p.title) + '</div>';
+                    html += '<div class="meta"><span>📅 '+p.date+'</span><span>📂 '+escapeHtml(p.category)+'</span></div>';
+                    html += '<div class="excerpt">'+escapeHtml(excerpt)+'</div>';
+                    if (p.tags && p.tags.length) {
+                        html += '<div class="tags">'+p.tags.map(function(t){return '<span>#'+escapeHtml(t)+'</span>';}).join('')+'</div>';
                     }
                     html += '</div>';
-                }
-                html += '</div>';
+                });
             }
+            html += '</div>';
             container.innerHTML = html;
         }
 
-        function renderCategories() {
-            var container = document.getElementById('categoryList');
-            if (!container) return;
+        function renderArchive(container) {
+            var sorted = posts.slice().sort(function(a,b) { return new Date(b.date) - new Date(a.date); });
+            var html = '<div class="card"><div class="card-title">📚 全部文章</div>';
+            if (sorted.length === 0) {
+                html += '<p style="color:#8a7a6a;">暂无文章。</p>';
+            } else {
+                sorted.forEach(function(p) {
+                    html += '<div class="post-item" onclick="navigateToPost('+p.id+')">';
+                    html += '<div class="title">' + escapeHtml(p.title) + '</div>';
+                    html += '<div class="meta"><span>📅 '+p.date+'</span><span>📂 '+escapeHtml(p.category)+'</span></div>';
+                    html += '</div>';
+                });
+            }
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function renderCategoriesPage(container) {
             var map = {};
-            for (var i = 0; i < posts.length; i++) {
-                var cat = posts[i].category || '未分类';
-                if (map[cat]) map[cat]++; else map[cat] = 1;
+            posts.forEach(function(p) {
+                if (map[p.category]) map[p.category]++; else map[p.category]=1;
+            });
+            var html = '<div class="card"><div class="card-title">📂 全部分类</div>';
+            if (Object.keys(map).length === 0) {
+                html += '<p style="color:#8a7a6a;">暂无分类。</p>';
+            } else {
+                for (var cat in map) {
+                    html += '<div style="padding:6px 0; border-bottom:1px dashed #e8d5c0; cursor:pointer;" onclick="filterByCategory(\''+cat+'\')">';
+                    html += '<span>'+escapeHtml(cat)+'</span> <span style="color:#8a7a6a;float:right;">'+map[cat]+' 篇</span>';
+                    html += '</div>';
+                }
             }
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function renderAbout(container) {
+            var html = '<div class="card"><div class="card-title">📜 关于墨韵轩</div>';
+            html += '<div class="about-content">' + escapeHtml(aboutContent).replace(/\n/g, '<br>') + '</div>';
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function renderPostDetail(container, postId) {
+            var post = posts.find(function(p) { return p.id === postId; });
+            if (!post) {
+                container.innerHTML = '<div class="card"><div class="card-title">文章未找到</div><p>请返回首页。</p></div>';
+                return;
+            }
+            var idx = posts.indexOf(post);
+            var prev = idx > 0 ? posts[idx-1] : null;
+            var next = idx < posts.length-1 ? posts[idx+1] : null;
+
+            var html = '<div class="card post-detail">';
+            html += '<div class="title">' + escapeHtml(post.title) + '</div>';
+            html += '<div class="meta">';
+            html += '<span>📅 '+post.date+'</span>';
+            html += '<span>📂 '+escapeHtml(post.category)+'</span>';
+            if (post.tags && post.tags.length) html += '<span>🏷️ '+post.tags.map(function(t){return '#'+escapeHtml(t);}).join(' ')+'</span>';
+            html += '</div>';
+            html += '<div class="body">' + escapeHtml(post.content).replace(/\n/g, '<br>') + '</div>';
+
+            // 上一篇/下一篇
+            html += '<div class="nav-links">';
+            if (prev) html += '<a onclick="navigateToPost('+prev.id+')">← '+escapeHtml(prev.title)+'</a>';
+            else html += '<span></span>';
+            if (next) html += '<a onclick="navigateToPost('+next.id+')">'+escapeHtml(next.title)+' →</a>';
+            else html += '<span></span>';
+            html += '</div>';
+
+            // 推荐阅读（同分类）
+            var recommend = posts.filter(function(p) { return p.id !== post.id && p.category === post.category; });
+            if (recommend.length > 0) {
+                html += '<div class="recommend"><h4>📌 推荐阅读</h4>';
+                recommend.slice(0, 5).forEach(function(p) {
+                    html += '<div class="rec-item" onclick="navigateToPost('+p.id+')">'+escapeHtml(p.title)+' <span style="color:#8a7a6a;font-size:12px;">('+p.date+')</span></div>';
+                });
+                html += '</div>';
+            }
+            html += '</div>';
+            container.innerHTML = html;
+            // 更新浏览器地址栏
+            if (window.history && window.history.pushState) {
+                window.history.pushState({}, '', '#post-'+post.id);
+            }
+        }
+
+        // 分类筛选（通过修改当前页面，直接筛选文章列表）
+        function filterByCategory(cat) {
+            var filtered = posts.filter(function(p) { return p.category === cat; });
+            var container = document.getElementById('mainContent');
+            var html = '<div class="card"><div class="card-title">📂 分类：'+escapeHtml(cat)+'</div>';
+            if (filtered.length === 0) {
+                html += '<p style="color:#8a7a6a;">该分类暂无文章。</p>';
+            } else {
+                filtered.forEach(function(p) {
+                    html += '<div class="post-item" onclick="navigateToPost('+p.id+')">';
+                    html += '<div class="title">'+escapeHtml(p.title)+'</div>';
+                    html += '<div class="meta"><span>📅 '+p.date+'</span></div>';
+                    html += '</div>';
+                });
+            }
+            html += '</div>';
+            container.innerHTML = html;
+            // 高亮分类导航（临时）
+            document.querySelectorAll('#mainNav a').forEach(function(a){ a.classList.remove('active'); });
+            var navHome = document.querySelector('#mainNav a[data-page="home"]');
+            if (navHome) navHome.classList.add('active');
+        }
+
+        function navigateToPost(id) {
+            currentPage = 'post';
+            renderPage('post', id);
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ============================================================
+        //  6. 侧边栏分类
+        // ============================================================
+        function renderSidebarCategories() {
+            var container = document.getElementById('categoryList');
+            var map = {};
+            posts.forEach(function(p) {
+                if (map[p.category]) map[p.category]++; else map[p.category]=1;
+            });
             var html = '';
-            for (var key in map) {
-                html += '<li onclick="filterByCategory(\'' + escapeHtml(key) + '\')" data-category="' + escapeHtml(key) +
-                    '"><span>' + escapeHtml(key) + '</span><span class="count">' + map[key] + ' 篇</span></li>';
+            for (var cat in map) {
+                html += '<li onclick="filterByCategory(\''+cat+'\')"><span>'+escapeHtml(cat)+'</span><span class="count">'+map[cat]+' 篇</span></li>';
             }
-            container.innerHTML = html || '<li style="color:#8a9aad;justify-content:center;cursor:default;">暂无分类</li>';
-        }
-
-        function renderAll() {
-            renderPosts();
-            renderCategories();
+            container.innerHTML = html || '<li style="color:#8a7a6a;cursor:default;">暂无分类</li>';
         }
 
         // ============================================================
-        // 辅助函数
+        //  7. 导航事件
         // ============================================================
-        function escapeHtml(str) {
-            var d = document.createElement('div');
-            d.textContent = str;
-            return d.innerHTML;
+        document.querySelectorAll('#mainNav a').forEach(function(a) {
+            a.addEventListener('click', function(e) {
+                e.preventDefault();
+                var page = this.dataset.page;
+                if (page === 'home') {
+                    currentPage = 'home';
+                    renderPage('home');
+                } else if (page === 'archive') {
+                    currentPage = 'archive';
+                    renderPage('archive');
+                } else if (page === 'categories') {
+                    currentPage = 'categories';
+                    renderPage('categories');
+                } else if (page === 'about') {
+                    currentPage = 'about';
+                    renderPage('about');
+                } else if (page === 'login') {
+                    // 由登录按钮处理
+                }
+            });
+        });
+
+        // ============================================================
+        //  8. 登录相关
+        // ============================================================
+        var loginBtn = document.getElementById('loginTrigger');
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (sessionStorage.getItem('blog_admin_logged') === 'true') {
+                // 已登录则进入后台
+                toggleAdmin(true);
+                return;
+            }
+            showLoginModal();
+        });
+
+        function showLoginModal() {
+            var html = '<h2 style="text-align:center;font-weight:normal;letter-spacing:4px;font-family:\'华文楷体\',\'KaiTi\',serif;">🔐 后台登录</h2>';
+            html += '<div style="text-align:center;color:#8a7a6a;margin-bottom:16px;">— 使用私钥验证 —</div>';
+            html += '<div class="form-group"><label>私钥 (PEM格式)</label><textarea id="loginPrivateKey" rows="4"></textarea></div>';
+            html += '<button class="btn btn-primary" onclick="doLogin()" style="width:100%;padding:10px;background:#c23531;color:#fff;border:none;border-radius:6px;font-size:16px;cursor:pointer;">登录</button>';
+            html += '<div id="loginError" style="color:#c23531;text-align:center;margin-top:10px;display:none;"></div>';
+            openModal(html);
+        }
+
+        function doLogin() {
+            var privKey = document.getElementById('loginPrivateKey').value.trim();
+            if (!privKey) {
+                document.getElementById('loginError').textContent = '请输入私钥';
+                document.getElementById('loginError').style.display = 'block';
+                return;
+            }
+            // 从 localStorage 读取安全配置
+            var stored = localStorage.getItem('security_config');
+            var security = stored ? JSON.parse(stored) : null;
+            if (!security || !security.challengeCipher || !security.expectedPlain) {
+                // 尝试从 config.json 加载
+                loadAllData().then(function() {
+                    var sec = localStorage.getItem('security_config');
+                    if (sec) security = JSON.parse(sec);
+                    if (security && security.challengeCipher && security.expectedPlain) {
+                        verifyAndLogin(privKey, security);
+                    } else {
+                        showToast('未找到安全配置，请确保 config.json 包含 security 字段', 'error');
+                        document.getElementById('loginError').textContent = '配置缺失';
+                        document.getElementById('loginError').style.display = 'block';
+                    }
+                });
+                return;
+            }
+            verifyAndLogin(privKey, security);
+        }
+
+        function verifyAndLogin(privKey, security) {
+            // 调用混合解密验证
+            hybridDecrypt(security.challengeCipher, privKey).then(function(plain) {
+                if (plain === security.expectedPlain) {
+                    sessionStorage.setItem('blog_admin_logged', 'true');
+                    closeModal();
+                    toggleAdmin(true);
+                    showToast('登录成功', 'success');
+                    loadAllData().then(function() {
+                        renderPage(currentPage);
+                        renderAdminList();
+                        populateCategorySelect();
+                    });
+                } else {
+                    document.getElementById('loginError').textContent = '解密结果不匹配';
+                    document.getElementById('loginError').style.display = 'block';
+                }
+            }).catch(function(err) {
+                document.getElementById('loginError').textContent = '私钥错误: ' + err.message;
+                document.getElementById('loginError').style.display = 'block';
+            });
+        }
+
+        function toggleAdmin(show) {
+            var panel = document.getElementById('adminPanel');
+            if (show) {
+                panel.style.display = 'block';
+                loginBtn.textContent = '退出后台';
+                loginBtn.dataset.page = 'logout';
+                // 加载数据
+                loadAllData().then(function() {
+                    renderAdminList();
+                    populateCategorySelect();
+                    document.getElementById('aboutEditor').value = aboutContent;
+                    loadSecuritySettings();
+                });
+            } else {
+                panel.style.display = 'none';
+                loginBtn.textContent = '后台登录';
+                loginBtn.dataset.page = 'login';
+                sessionStorage.removeItem('blog_admin_logged');
+                showToast('已退出', 'info');
+            }
+        }
+
+        // 检查登录状态
+        if (sessionStorage.getItem('blog_admin_logged') === 'true') {
+            toggleAdmin(true);
         }
 
         // ============================================================
-        // 模态框
+        //  9. 后台管理功能
+        // ============================================================
+        function renderAdminList() {
+            var container = document.getElementById('adminPostList');
+            var sorted = posts.slice().sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+            var html = '';
+            sorted.forEach(function(p) {
+                html += '<div class="item">';
+                html += '<span>'+escapeHtml(p.title)+' <span style="color:#8a7a6a;font-size:12px;">('+p.date+')</span></span>';
+                html += '<div class="actions">';
+                html += '<button class="edit" onclick="editPost('+p.id+')">编辑</button>';
+                html += '<button class="del" onclick="deletePost('+p.id+')">删除</button>';
+                html += '</div></div>';
+            });
+            container.innerHTML = html || '<p style="color:#8a7a6a;">暂无文章</p>';
+        }
+
+        function populateCategorySelect() {
+            var sel = document.getElementById('editCategory');
+            var map = {};
+            posts.forEach(function(p) { if (p.category) map[p.category]=1; });
+            var cats = Object.keys(map);
+            if (cats.length === 0) cats = ['随笔','书评','游记','散文','诗词','其他'];
+            var html = '';
+            cats.forEach(function(c) {
+                html += '<option value="'+escapeHtml(c)+'">'+escapeHtml(c)+'</option>';
+            });
+            sel.innerHTML = html;
+        }
+
+        function editPost(id) {
+            var post = posts.find(function(p){ return p.id === id; });
+            if (!post) return;
+            document.getElementById('editId').value = post.id;
+            document.getElementById('editTitle').value = post.title;
+            document.getElementById('editCategory').value = post.category;
+            document.getElementById('editTags').value = post.tags ? post.tags.join(',') : '';
+            document.getElementById('editContent').value = post.content;
+        }
+
+        function savePost() {
+            var id = document.getElementById('editId').value;
+            var title = document.getElementById('editTitle').value.trim();
+            var category = document.getElementById('editCategory').value;
+            var tagsRaw = document.getElementById('editTags').value.trim();
+            var content = document.getElementById('editContent').value.trim();
+            if (!title || !content) { showToast('标题和正文不能为空', 'error'); return; }
+            var tags = tagsRaw ? tagsRaw.split(',').map(function(t){return t.trim();}).filter(function(t){return t;}) : [];
+            if (id) {
+                // 更新
+                var post = posts.find(function(p){ return p.id === parseInt(id); });
+                if (post) {
+                    post.title = title; post.category = category; post.tags = tags; post.content = content;
+                }
+            } else {
+                // 新增
+                var newId = posts.length ? Math.max.apply(null, posts.map(function(p){return p.id;})) + 1 : 1;
+                posts.push({ id: newId, title: title, category: category, tags: tags, content: content, date: getToday() });
+            }
+            // 保存到 GitHub
+            var txt = generatePostsTxt(posts);
+            saveFile(config.path, txt, '更新文章').then(function() {
+                showToast('保存成功', 'success');
+                document.getElementById('editId').value = '';
+                document.getElementById('editTitle').value = '';
+                document.getElementById('editTags').value = '';
+                document.getElementById('editContent').value = '';
+                renderAdminList();
+                renderPage(currentPage);
+                renderSidebarCategories();
+                populateCategorySelect();
+            }).catch(function(err) {
+                showToast('保存失败: ' + err.message, 'error');
+            });
+        }
+
+        function deletePost(id) {
+            if (!confirm('确定删除此文章？')) return;
+            posts = posts.filter(function(p){ return p.id !== id; });
+            var txt = generatePostsTxt(posts);
+            saveFile(config.path, txt, '删除文章').then(function() {
+                showToast('已删除', 'success');
+                renderAdminList();
+                renderPage(currentPage);
+                renderSidebarCategories();
+                populateCategorySelect();
+            }).catch(function(err) {
+                showToast('删除失败: ' + err.message, 'error');
+            });
+        }
+
+        function clearEditForm() {
+            document.getElementById('editId').value = '';
+            document.getElementById('editTitle').value = '';
+            document.getElementById('editTags').value = '';
+            document.getElementById('editContent').value = '';
+        }
+
+        // 分类管理
+        function addCategory() {
+            var name = document.getElementById('newCategoryName').value.trim();
+            if (!name) { showToast('请输入分类名称', 'error'); return; }
+            if (categories.indexOf(name) !== -1) { showToast('分类已存在', 'error'); return; }
+            categories.push(name);
+            saveConfigFile();
+        }
+
+        function deleteCategory(index) {
+            if (!confirm('确定删除分类？')) return;
+            categories.splice(index, 1);
+            saveConfigFile();
+        }
+
+        function renderCategoryAdmin() {
+            var container = document.getElementById('categoryAdminList');
+            var html = '';
+            categories.forEach(function(c, idx) {
+                html += '<div class="item"><span>'+escapeHtml(c)+'</span><div class="actions"><button class="del" onclick="deleteCategory('+idx+')">删除</button></div></div>';
+            });
+            container.innerHTML = html || '<p style="color:#8a7a6a;">暂无分类</p>';
+        }
+
+        // 关于编辑
+        function saveAbout() {
+            aboutContent = document.getElementById('aboutEditor').value;
+            saveConfigFile();
+        }
+
+        // 安全设置
+        function loadSecuritySettings() {
+            var stored = localStorage.getItem('security_config');
+            if (stored) {
+                try {
+                    var sec = JSON.parse(stored);
+                    document.getElementById('secPublicKey').value = sec.publicKey || '';
+                    document.getElementById('secChallengeCipher').value = sec.challengeCipher || '';
+                    document.getElementById('secExpectedPlain').value = sec.expectedPlain || '';
+                } catch(e) {}
+            }
+        }
+
+        function saveSecuritySettings() {
+            var pub = document.getElementById('secPublicKey').value.trim();
+            var cipher = document.getElementById('secChallengeCipher').value.trim();
+            var plain = document.getElementById('secExpectedPlain').value.trim();
+            if (!pub || !cipher || !plain) {
+                showToast('所有字段都必须填写', 'error');
+                return;
+            }
+            var sec = { publicKey: pub, challengeCipher: cipher, expectedPlain: plain };
+            localStorage.setItem('security_config', JSON.stringify(sec));
+            // 同步到 config.json
+            saveConfigFile().then(function() {
+                showToast('安全设置已保存', 'success');
+            });
+        }
+
+        function resetSecuritySettings() {
+            if (!confirm('恢复默认安全设置？')) return;
+            localStorage.removeItem('security_config');
+            document.getElementById('secPublicKey').value = DEFAULT_PUBLIC_KEY;
+            document.getElementById('secChallengeCipher').value = DEFAULT_CHALLENGE_CIPHER;
+            document.getElementById('secExpectedPlain').value = DEFAULT_EXPECTED_PLAIN;
+            showToast('已恢复默认', 'info');
+        }
+
+        // 保存 config.json
+        function saveConfigFile() {
+            var data = {
+                categories: categories,
+                about: aboutContent,
+                security: JSON.parse(localStorage.getItem('security_config') || '{}')
+            };
+            var jsonStr = JSON.stringify(data, null, 2);
+            return saveFile(config.configPath, jsonStr, '更新配置').then(function() {
+                showToast('配置已保存', 'success');
+                renderCategoryAdmin();
+            }).catch(function(err) {
+                showToast('保存配置失败: ' + err.message, 'error');
+            });
+        }
+
+        // 折叠面板
+        function togglePanel(header) {
+            var body = header.nextElementSibling;
+            var arrow = header.querySelector('.arrow');
+            if (body.classList.contains('open')) {
+                body.classList.remove('open');
+                arrow.classList.remove('open');
+            } else {
+                body.classList.add('open');
+                arrow.classList.add('open');
+            }
+        }
+
+        // ============================================================
+        //  10. 模态框
         // ============================================================
         function openModal(html) {
             document.getElementById('modalBody').innerHTML = html;
             document.getElementById('modalOverlay').classList.add('active');
-            document.body.style.overflow = 'hidden';
         }
-
         function closeModal() {
             document.getElementById('modalOverlay').classList.remove('active');
-            document.body.style.overflow = '';
         }
+        document.getElementById('modalClose').addEventListener('click', closeModal);
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
 
         // ============================================================
-        // 分类筛选
+        //  11. 混合解密（简化版）
         // ============================================================
-        function filterByCategory(category) {
-            var filtered = posts.filter(function(p) {
-                return (p.category || '未分类') === category;
+        function base64ToArrayBuffer(base64) {
+            var binary = atob(base64);
+            var bytes = new Uint8Array(binary.length);
+            for (var i=0; i<binary.length; i++) bytes[i] = binary.charCodeAt(i);
+            return bytes.buffer;
+        }
+        function pemToArrayBuffer(pem, type) {
+            var marker = '-----BEGIN ' + type + '-----';
+            var footer = '-----END ' + type + '-----';
+            var content = pem.trim();
+            if (content.includes(marker)) {
+                content = content.substring(content.indexOf(marker)+marker.length, content.lastIndexOf(footer));
+            }
+            return base64ToArrayBuffer(content.replace(/\s/g, ''));
+        }
+        function importPrivateKey(pem) {
+            var buf = pemToArrayBuffer(pem, 'PRIVATE KEY');
+            return crypto.subtle.importKey('pkcs8', buf, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']);
+        }
+        function hybridDecrypt(base64Package, privateKeyPem) {
+            var combinedBuf = base64ToArrayBuffer(base64Package);
+            var combined = new Uint8Array(combinedBuf);
+            var iv = combined.slice(0, 12);
+            var encryptedAESKeyLen = 256;
+            if (combined.length < 12 + encryptedAESKeyLen) throw new Error('数据包长度异常');
+            var encryptedAESKey = combined.slice(12, 12 + encryptedAESKeyLen);
+            var ciphertextWithTag = combined.slice(12 + encryptedAESKeyLen);
+            return importPrivateKey(privateKeyPem).then(function(rsaPrivKey) {
+                return crypto.subtle.decrypt({ name: 'RSA-OAEP' }, rsaPrivKey, encryptedAESKey)
+                .then(function(aesKeyRaw) {
+                    return crypto.subtle.importKey('raw', aesKeyRaw, { name: 'AES-GCM' }, false, ['decrypt']);
+                })
+                .then(function(aesKey) {
+                    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv, tagLength: 128 }, aesKey, ciphertextWithTag);
+                })
+                .then(function(plaintextBuf) {
+                    return new TextDecoder().decode(plaintextBuf);
+                });
             });
-            var container = document.getElementById('postList');
-            if (filtered.length === 0) {
-                container.innerHTML = '<div class="card" style="text-align:center;padding:40px 20px;color:#8a9aad;"><div style="font-size:48px;">📂</div><p style="font-size:18px;">该分类暂无文章</p></div>';
-                showToast('分类「' + category + '」暂无文章', 'info');
-                return;
-            }
-            var sorted = filtered.slice().sort(function(a, b) {
-                return new Date(b.date) - new Date(a.date);
-            });
-            var html = '';
-            for (var i = 0; i < sorted.length; i++) {
-                var p = sorted[i];
-                html += '<div class="card post-card" data-id="' + i + '" onclick="postClick(this)">';
-                html += '<h2 class="post-title">' + escapeHtml(p.title) + '</h2>';
-                html += '<div class="post-meta"><span>📅 ' + (p.date || '未知日期') + '</span><span>📂 ' + escapeHtml(p
-                    .category || '未分类') + '</span><span>✍ 墨轩主</span></div>';
-                html += '<div class="post-excerpt">' + escapeHtml(p.content) + '</div>';
-                if (p.tags && p.tags.length > 0) {
-                    html += '<div class="post-tags">';
-                    for (var j = 0; j < p.tags.length; j++) {
-                        html += '<span class="tag"># ' + escapeHtml(p.tags[j]) + '</span>';
-                    }
-                    html += '</div>';
+        }
+
+        // ============================================================
+        //  12. 初始化
+        // ============================================================
+        // 加载配置和文章
+        loadAllData().then(function() {
+            // 处理 URL hash 跳转
+            var hash = window.location.hash;
+            if (hash.startsWith('#post-')) {
+                var id = parseInt(hash.replace('#post-', ''));
+                if (!isNaN(id)) {
+                    currentPage = 'post';
+                    renderPage('post', id);
+                    return;
                 }
-                html += '</div>';
             }
-            container.innerHTML = html;
-            showToast('当前分类：' + category, 'info');
-        }
+            renderPage('home');
+        }).catch(function() {
+            renderPage('home');
+        });
 
-        // ============================================================
-        // 导航
-        // ============================================================
-        function navClick(page) {
-            if (page === 'home') {
-                renderPosts();
-                showToast('回到首页', 'info');
-            } else if (page === 'archive') {
-                showToast('文章归档（全部文章已展示）', 'info');
-            }
-            return false;
-        }
-
-        // ============================================================
-        // 关于
-        // ============================================================
-        function showAbout() {
-            var html = '<h2>关于墨韵轩</h2>';
-            html += '<div class="modal-sub">— 青砖檐下 · 笔墨春秋 —</div>';
-            html += '<div class="about-content">' + escapeHtml(aboutContent).replace(/\n/g, '<br>') + '</div>';
-            html += '<div class="btn-group"><button class="btn" onclick="closeModal()">关 闭</button></div>';
-            openModal(html);
-            return false;
-        }
-
-        // ============================================================
-        // 文章点击
-        // ============================================================
-        function postClick(el) {
-            var index = parseInt(el.dataset.id);
-            var post = posts[index];
-            if (!post) return;
-            var html = '<h2 style="font-size:20px;text-align:left;letter-spacing:2px;">' + escapeHtml(post.title) +
-            '</h2>';
-            html += '<div style="font-size:13px;color:#8a9aad;margin:6px 0 16px;display:flex;gap:12px;flex-wrap:wrap;">';
-            html += '<span>📅 ' + (post.date || '未知日期') + '</span><span>📂 ' + escapeHtml(post.category || '未分类') +
-                '</span>';
-            if (post.tags && post.tags.length > 0) {
-                html += '<span>🏷️ ';
-                for (var j = 0; j < post.tags.length; j++) {
-                    html += '#' + escapeHtml(post.tags[j]) + ' ';
+        // 监听 hash 变化
+        window.addEventListener('hashchange', function() {
+            var hash = window.location.hash;
+            if (hash.startsWith('#post-')) {
+                var id = parseInt(hash.replace('#post-', ''));
+                if (!isNaN(id)) {
+                    currentPage = 'post';
+                    renderPage('post', id);
                 }
-                html += '</span>';
             }
-            html += '</div>';
-            html +=
-                '<div style="font-size:15px;line-height:2;border-top:1px dashed #ddd;padding-top:16px;font-family:\'SimSun\',\'宋体\',serif;color:#2c2c2c;">';
-            html += escapeHtml(post.content).replace(/\n/g, '<br>');
-            html += '</div><div class="btn-group"><button class="btn" onclick="closeModal()">关 闭</button></div>';
-            openModal(html);
-        }
+        });
 
-        // ============================================================
-        // 初始化
-        // ============================================================
-        // 加载文章
-        loadPostsFromTxt();
-
-        console.log('🌿 墨韵轩 · TXT 文件版已启动');
-        console.log('📝 文章数据来源: posts.txt');
-        console.log('💡 添加文章请编辑 posts.txt 文件');
+        console.log('🏮 墨韵轩 · 古宅红木博客已加载');
+        console.log('📝 文章数: 0 (加载中...)');
+        console.log('🔐 登录状态:', sessionStorage.getItem('blog_admin_logged') === 'true' ? '已登录' : '未登录');
     </script>
-
 </body>
 </html>
