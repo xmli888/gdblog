@@ -5,15 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
     <title>墨韵轩 · 古宅红木博客</title>
     <style>
-        /* ========== 完整样式 ========== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* ===== 全局重置与基础 ===== */
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
             background-color: #f6efe8;
-            font-family: '华文楷体', 'KaiTi', 'SimSun', '宋体', serif;
+            font-family: '华文楷体','KaiTi','SimSun','宋体', serif;
             color: #3e2723;
             min-height: 100vh;
             display: flex;
@@ -22,24 +18,17 @@
             -webkit-tap-highlight-color: transparent;
             padding: 0;
         }
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            padding: 0 20px;
-        }
+        a { text-decoration: none; color: inherit; }
+        .container { width:100%; max-width:1200px; padding:0 20px; }
 
-        /* ========== 顶部横幅 ========== */
+        /* ===== 顶部横幅 ===== */
         .hero {
             position: relative;
             width: 100%;
             min-height: 320px;
             background: linear-gradient(145deg, #6b3a2a 0%, #4d281b 40%, #3d1f15 80%, #2d150e 100%);
             border-radius: 0 0 40px 40px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -51,111 +40,73 @@
         .hero::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top:0; left:0; width:100%; height:100%;
             background-image: repeating-linear-gradient(90deg,
-                    rgba(0, 0, 0, 0.05) 0px,
-                    rgba(0, 0, 0, 0.05) 4px,
-                    transparent 4px,
-                    transparent 8px);
+                rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 4px,
+                transparent 4px, transparent 8px);
             pointer-events: none;
         }
         .hero .branch-left {
-            position: absolute;
-            top: 20px;
-            left: 10px;
-            width: 120px;
-            height: 80px;
-            background: radial-gradient(ellipse at 20% 100%, rgba(60, 40, 30, 0.6) 0%, transparent 70%);
+            position: absolute; top:20px; left:10px;
+            width:120px; height:80px;
+            background: radial-gradient(ellipse at 20% 100%, rgba(60,40,30,0.6) 0%, transparent 70%);
             transform: rotate(-10deg);
-            pointer-events: none;
-            opacity: 0.5;
+            pointer-events: none; opacity:0.5;
         }
         .hero .branch-right {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 100px;
-            height: 60px;
-            background: radial-gradient(ellipse at 80% 100%, rgba(60, 40, 30, 0.5) 0%, transparent 70%);
+            position: absolute; top:10px; right:10px;
+            width:100px; height:60px;
+            background: radial-gradient(ellipse at 80% 100%, rgba(60,40,30,0.5) 0%, transparent 70%);
             transform: rotate(15deg);
-            pointer-events: none;
-            opacity: 0.5;
+            pointer-events: none; opacity:0.5;
         }
         .hero .bird {
-            position: absolute;
-            top: 40px;
-            right: 80px;
-            font-size: 28px;
-            color: rgba(255, 215, 140, 0.15);
+            position: absolute; top:40px; right:80px;
+            font-size:28px; color:rgba(255,215,140,0.15);
             transform: rotate(-5deg);
-            pointer-events: none;
-            display: none;
+            pointer-events: none; display:none;
         }
-        .hero .bird2 {
-            right: 160px;
-            top: 60px;
-            font-size: 20px;
-        }
-        @media (min-width: 768px) {
-            .hero .bird {
-                display: block;
-            }
-        }
+        .hero .bird2 { right:160px; top:60px; font-size:20px; }
+        @media (min-width:768px) { .hero .bird { display:block; } }
 
         .hero-content {
-            position: relative;
-            z-index: 2;
+            position: relative; z-index:2;
             text-align: center;
             color: #f5e6d3;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+            text-shadow: 0 2px 12px rgba(0,0,0,0.4);
         }
         .hero-logo {
             display: inline-block;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #c23531;
-            color: #f5e6d3;
-            font-size: 40px;
-            line-height: 80px;
-            text-align: center;
-            font-family: '华文楷体', 'KaiTi', serif;
-            font-weight: bold;
-            box-shadow: 0 4px 20px rgba(194, 53, 49, 0.4);
-            margin-bottom: 8px;
-            border: 3px solid #e8c9a0;
+            width:80px; height:80px; border-radius:50%;
+            background: #c23531; color:#f5e6d3;
+            font-size:40px; line-height:80px; text-align:center;
+            font-family: '华文楷体','KaiTi',serif;
+            font-weight:bold;
+            box-shadow: 0 4px 20px rgba(194,53,49,0.4);
+            margin-bottom:8px;
+            border:3px solid #e8c9a0;
             transition: transform 0.3s;
-            cursor: default;
+            cursor:default;
         }
         .hero-title {
-            font-size: 36px;
-            font-weight: normal;
-            letter-spacing: 12px;
-            color: #f5e6d3;
-            margin-bottom: 4px;
-            font-family: '华文楷体', 'KaiTi', serif;
+            font-size:36px; font-weight:normal; letter-spacing:12px;
+            color:#f5e6d3; margin-bottom:4px;
+            font-family: '华文楷体','KaiTi',serif;
         }
         .hero-sub {
-            font-size: 14px;
-            color: #d4c5b0;
-            letter-spacing: 4px;
-            font-family: 'SimSun', '宋体', serif;
-            opacity: 0.85;
-            margin-bottom: 8px;
+            font-size:14px; color:#d4c5b0; letter-spacing:4px;
+            font-family: 'SimSun','宋体',serif;
+            opacity:0.85; margin-bottom:8px;
         }
 
         /* 导航栏 */
         .nav-bar {
-            position: relative;
-            z-index: 3;
-            margin-top: 12px;
+            position: relative; z-index:3;
+            margin-top:12px;
             background: linear-gradient(180deg, #7a4a34, #5a3222);
             border-radius: 12px 12px 4px 4px;
             padding: 6px 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 215, 140, 0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,215,140,0.2);
             border: 1px solid #4d281b;
             border-top-color: #9a6a54;
             display: flex;
@@ -166,66 +117,42 @@
             margin-left: auto;
             margin-right: auto;
             background-image: repeating-linear-gradient(90deg,
-                    transparent 0px,
-                    transparent 20px,
-                    rgba(0, 0, 0, 0.03) 20px,
-                    rgba(0, 0, 0, 0.03) 22px);
+                transparent 0px, transparent 20px,
+                rgba(0,0,0,0.03) 20px, rgba(0,0,0,0.03) 22px);
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
-        .nav-bar::-webkit-scrollbar {
-            height: 0;
-        }
+        .nav-bar::-webkit-scrollbar { height:0; }
         .nav-bar::before,
         .nav-bar::after {
             content: '☯';
-            font-size: 14px;
-            color: #d4b08c;
-            opacity: 0.3;
-            align-self: center;
-            flex-shrink: 0;
+            font-size:14px; color:#d4b08c; opacity:0.3;
+            align-self:center; flex-shrink:0;
         }
         .nav-bar a {
-            color: #f0e0d0;
-            padding: 6px 12px;
-            font-size: 15px;
-            letter-spacing: 2px;
-            border-radius: 4px;
-            transition: all 0.2s;
-            font-family: '华文楷体', 'KaiTi', serif;
-            position: relative;
-            white-space: nowrap;
-            cursor: pointer;
-            flex-shrink: 0;
+            color:#f0e0d0; padding:6px 12px; font-size:15px; letter-spacing:2px;
+            border-radius:4px; transition:0.2s;
+            font-family: '华文楷体','KaiTi',serif;
+            white-space:nowrap; cursor:pointer; flex-shrink:0;
         }
-        .nav-bar a:hover {
-            background: rgba(255, 215, 140, 0.15);
-            color: #ffe8c8;
-        }
+        .nav-bar a:hover { background:rgba(255,215,140,0.15); color:#ffe8c8; }
         .nav-bar a.active {
-            background: rgba(194, 53, 49, 0.3);
-            color: #ffe8c8;
-            border-bottom: 2px solid #c23531;
+            background:rgba(194,53,49,0.3);
+            color:#ffe8c8;
+            border-bottom:2px solid #c23531;
         }
 
-        /* ========== 主体 ========== */
+        /* ===== 主体 ===== */
         .main {
             display: flex;
             flex-direction: column;
             gap: 30px;
             margin: 20px 0 40px;
         }
-        @media (min-width: 820px) {
-            .main {
-                flex-direction: row;
-                align-items: flex-start;
-            }
-            .main-content {
-                flex: 7;
-            }
-            .sidebar {
-                flex: 3;
-            }
+        @media (min-width:820px) {
+            .main { flex-direction: row; align-items: flex-start; }
+            .main-content { flex:7; }
+            .sidebar { flex:3; }
         }
 
         /* 卡片 */
@@ -234,342 +161,202 @@
             border: 1px solid #e8d5c0;
             border-radius: 12px;
             padding: 24px 28px;
-            box-shadow: 0 2px 12px rgba(60, 40, 30, 0.06);
+            box-shadow: 0 2px 12px rgba(60,40,30,0.06);
             margin-bottom: 20px;
             transition: box-shadow 0.2s;
         }
-        .card:hover {
-            box-shadow: 0 4px 24px rgba(60, 40, 30, 0.12);
-        }
+        .card:hover { box-shadow: 0 4px 24px rgba(60,40,30,0.12); }
         .card-title {
-            font-size: 18px;
-            font-weight: normal;
-            letter-spacing: 4px;
-            color: #4d281b;
-            border-bottom: 2px solid #e8d5c0;
-            padding-bottom: 10px;
-            margin-bottom: 16px;
-            font-family: '华文楷体', 'KaiTi', serif;
+            font-size:18px; font-weight:normal; letter-spacing:4px;
+            color:#4d281b;
+            border-bottom:2px solid #e8d5c0;
+            padding-bottom:10px; margin-bottom:16px;
+            font-family: '华文楷体','KaiTi',serif;
         }
 
         /* 文章列表 */
         .post-item {
-            padding: 16px 8px;
-            border-bottom: 1px dashed #e8d5c0;
-            cursor: pointer;
+            padding:16px 8px;
+            border-bottom:1px dashed #e8d5c0;
+            cursor:pointer;
             transition: background 0.15s;
-            border-radius: 4px;
+            border-radius:4px;
         }
-        .post-item:last-child {
-            border-bottom: none;
-        }
-        .post-item:hover {
-            background: #f8f0e8;
-        }
+        .post-item:last-child { border-bottom:none; }
+        .post-item:hover { background:#f8f0e8; }
         .post-item .title {
-            font-size: 20px;
-            font-weight: normal;
-            font-family: '华文楷体', 'KaiTi', serif;
-            color: #3e2723;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
+            font-size:20px; font-weight:normal;
+            font-family: '华文楷体','KaiTi',serif;
+            color:#3e2723; letter-spacing:1px;
+            margin-bottom:4px;
         }
         .post-item .meta {
-            font-size: 13px;
-            color: #8a7a6a;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 6px;
+            font-size:13px; color:#8a7a6a;
+            display:flex; flex-wrap:wrap; gap:12px;
+            margin-bottom:6px;
         }
         .post-item .excerpt {
-            font-size: 14px;
-            line-height: 1.7;
-            color: #5a4a3a;
-            font-family: 'SimSun', '宋体', serif;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            font-size:14px; line-height:1.7;
+            color:#5a4a3a; font-family: 'SimSun','宋体',serif;
+            display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
         }
         .post-item .tags {
-            margin-top: 8px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
+            margin-top:8px; display:flex; flex-wrap:wrap; gap:6px;
         }
         .post-item .tags span {
-            background: #efe4d8;
-            color: #6b4a3a;
-            font-size: 12px;
-            padding: 2px 12px;
-            border-radius: 12px;
-            border: 1px solid #ddd0c0;
+            background:#efe4d8; color:#6b4a3a; font-size:12px;
+            padding:2px 12px; border-radius:12px; border:1px solid #ddd0c0;
         }
 
         /* 侧边栏 */
-        .sidebar .profile {
-            text-align: center;
-        }
+        .sidebar .profile { text-align:center; }
         .sidebar .profile .avatar {
-            font-size: 48px;
-            background: #e8d5c0;
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 12px;
-            border: 2px solid #c23531;
+            font-size:48px; background:#e8d5c0;
+            width:80px; height:80px; border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            margin:0 auto 12px;
+            border:2px solid #c23531;
         }
         .sidebar .profile .name {
-            font-size: 20px;
-            letter-spacing: 4px;
-            font-family: '华文楷体', 'KaiTi', serif;
+            font-size:20px; letter-spacing:4px;
+            font-family: '华文楷体','KaiTi',serif;
         }
         .sidebar .profile .desc {
-            font-size: 14px;
-            color: #6b5a4a;
-            font-family: 'SimSun', '宋体', serif;
-            margin-top: 4px;
+            font-size:14px; color:#6b5a4a;
+            font-family: 'SimSun','宋体',serif; margin-top:4px;
         }
-        .category-list {
-            list-style: none;
-        }
+        .category-list { list-style:none; }
         .category-list li {
-            padding: 6px 0;
-            border-bottom: 1px dashed #e8d5c0;
-            display: flex;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: 0.1s;
+            padding:6px 0;
+            border-bottom:1px dashed #e8d5c0;
+            display:flex; justify-content:space-between;
+            cursor:pointer; transition:0.1s;
         }
-        .category-list li:hover {
-            background: #f8f0e8;
-        }
-        .category-list li .count {
-            color: #8a7a6a;
-            font-size: 13px;
-        }
+        .category-list li:hover { background:#f8f0e8; }
+        .category-list li .count { color:#8a7a6a; font-size:13px; }
 
         /* 文章详情 */
         .post-detail .title {
-            font-size: 28px;
-            font-weight: normal;
-            font-family: '华文楷体', 'KaiTi', serif;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
+            font-size:28px; font-weight:normal;
+            font-family: '华文楷体','KaiTi',serif;
+            letter-spacing:2px; margin-bottom:8px;
         }
         .post-detail .meta {
-            font-size: 14px;
-            color: #8a7a6a;
-            margin-bottom: 16px;
-            border-bottom: 1px dashed #ddd0c0;
-            padding-bottom: 12px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
+            font-size:14px; color:#8a7a6a;
+            margin-bottom:16px;
+            border-bottom:1px dashed #ddd0c0;
+            padding-bottom:12px;
+            display:flex; flex-wrap:wrap; gap:16px;
         }
         .post-detail .body {
-            font-size: 16px;
-            line-height: 2;
-            font-family: 'SimSun', '宋体', serif;
-            color: #3e2723;
-            margin-bottom: 24px;
+            font-size:16px; line-height:2;
+            font-family: 'SimSun','宋体',serif;
+            color:#3e2723; margin-bottom:24px;
         }
-        .post-detail .body img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 6px;
-        }
-        .post-detail .body a {
-            color: #8b2500;
-            text-decoration: underline;
-        }
-        .post-detail .body a:hover {
-            color: #c23531;
-        }
-        .post-detail .body video {
-            max-width: 100%;
-            border-radius: 6px;
-        }
+        .post-detail .body img { max-width:100%; height:auto; border-radius:6px; }
+        .post-detail .body a { color:#8b2500; text-decoration:underline; }
+        .post-detail .body a:hover { color:#c23531; }
+        .post-detail .body video,
         .post-detail .body embed,
-        .post-detail .body object {
-            max-width: 100%;
-            border-radius: 6px;
-        }
-        .post-detail .body iframe {
-            max-width: 100%;
-            border-radius: 6px;
-        }
+        .post-detail .body object,
+        .post-detail .body iframe { max-width:100%; border-radius:6px; }
 
         .post-detail .nav-links {
-            display: flex;
-            justify-content: space-between;
-            border-top: 1px solid #e8d5c0;
-            padding-top: 16px;
-            font-size: 14px;
-            flex-wrap: wrap;
-            gap: 12px;
+            display:flex; justify-content:space-between;
+            border-top:1px solid #e8d5c0;
+            padding-top:16px; font-size:14px;
+            flex-wrap:wrap; gap:12px;
         }
-        .post-detail .nav-links a {
-            color: #8b2500;
-            cursor: pointer;
-        }
-        .post-detail .nav-links a:hover {
-            text-decoration: underline;
-        }
+        .post-detail .nav-links a { color:#8b2500; cursor:pointer; }
+        .post-detail .nav-links a:hover { text-decoration:underline; }
 
         .like-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 16px 0 20px;
-            padding: 12px 0;
-            border-top: 1px solid #e8d5c0;
-            border-bottom: 1px solid #e8d5c0;
+            display:flex; align-items:center; gap:12px;
+            margin:16px 0 20px;
+            padding:12px 0;
+            border-top:1px solid #e8d5c0;
+            border-bottom:1px solid #e8d5c0;
         }
         .like-area .like-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            transition: 0.2s;
-            color: #8a7a6a;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            background:none; border:none;
+            font-size:24px; cursor:pointer;
+            transition:0.2s; color:#8a7a6a;
+            display:flex; align-items:center; gap:6px;
         }
-        .like-area .like-btn:hover {
-            color: #c23531;
-            transform: scale(1.1);
-        }
-        .like-area .like-btn.liked {
-            color: #c23531;
-        }
-        .like-area .like-count {
-            font-size: 16px;
-            color: #4d281b;
-            font-family: 'SimSun', '宋体', serif;
-        }
+        .like-area .like-btn:hover { color:#c23531; transform:scale(1.1); }
+        .like-area .like-btn.liked { color:#c23531; }
+        .like-area .like-count { font-size:16px; color:#4d281b; font-family:'SimSun','宋体',serif; }
 
-        /* 分享区域 */
         .share-area {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid #e8d5c0;
+            margin-top:20px; padding-top:16px;
+            border-top:1px solid #e8d5c0;
         }
         .share-area .share-title {
-            font-size: 14px;
-            font-weight: normal;
-            font-family: '华文楷体', 'KaiTi', serif;
-            letter-spacing: 2px;
-            color: #4d281b;
-            margin-bottom: 10px;
+            font-size:14px; font-weight:normal;
+            font-family: '华文楷体','KaiTi',serif;
+            letter-spacing:2px; color:#4d281b; margin-bottom:10px;
         }
         .share-area .share-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            display:flex; flex-wrap:wrap; gap:10px;
         }
         .share-area .share-buttons button {
-            padding: 6px 14px;
-            border: 1px solid #ddd0c0;
-            border-radius: 20px;
-            background: #fdf8f0;
-            color: #4d281b;
-            cursor: pointer;
-            font-family: 'SimSun', '宋体', serif;
-            font-size: 13px;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+            padding:6px 14px;
+            border:1px solid #ddd0c0; border-radius:20px;
+            background:#fdf8f0; color:#4d281b;
+            cursor:pointer; font-family:'SimSun','宋体',serif;
+            font-size:13px; transition:0.2s;
+            display:flex; align-items:center; gap:4px;
         }
         .share-area .share-buttons button:hover {
-            background: #efe4d8;
-            border-color: #c23531;
+            background:#efe4d8; border-color:#c23531;
         }
-        .share-area .share-buttons .btn-wechat {
-            background: #07c160;
-            color: #fff;
-            border-color: #07c160;
-        }
-        .share-area .share-buttons .btn-weibo {
-            background: #ff8200;
-            color: #fff;
-            border-color: #ff8200;
-        }
-        .share-area .share-buttons .btn-qq {
-            background: #12b7f5;
-            color: #fff;
-            border-color: #12b7f5;
-        }
+        .share-area .share-buttons .btn-wechat { background:#07c160; color:#fff; border-color:#07c160; }
+        .share-area .share-buttons .btn-weibo { background:#ff8200; color:#fff; border-color:#ff8200; }
+        .share-area .share-buttons .btn-qq { background:#12b7f5; color:#fff; border-color:#12b7f5; }
 
-        /* 推荐阅读 */
         .recommend {
-            margin-top: 20px;
-            border-top: 1px solid #e8d5c0;
-            padding-top: 16px;
+            margin-top:20px; border-top:1px solid #e8d5c0;
+            padding-top:16px;
         }
         .recommend h4 {
-            font-weight: normal;
-            font-family: '华文楷体', 'KaiTi', serif;
-            letter-spacing: 2px;
-            font-size: 16px;
-            margin-bottom: 10px;
+            font-weight:normal; font-family:'华文楷体','KaiTi',serif;
+            letter-spacing:2px; font-size:16px; margin-bottom:10px;
         }
         .recommend .rec-item {
-            padding: 6px 0;
-            border-bottom: 1px dashed #f0e8e0;
-            cursor: pointer;
-            transition: 0.1s;
+            padding:6px 0;
+            border-bottom:1px dashed #f0e8e0;
+            cursor:pointer; transition:0.1s;
         }
-        .recommend .rec-item:hover {
-            background: #f8f0e8;
-        }
+        .recommend .rec-item:hover { background:#f8f0e8; }
 
-        /* Giscus评论区 */
+        /* 评论区 */
         .comment-section {
-            margin-top: 24px;
-            padding-top: 16px;
-            border-top: 2px solid #e8d5c0;
+            margin-top:24px; padding-top:16px;
+            border-top:2px solid #e8d5c0;
         }
         .comment-section .comment-toggle {
-            padding: 8px 20px;
-            border: 1px solid #c23531;
-            border-radius: 6px;
-            background: transparent;
-            color: #c23531;
-            cursor: pointer;
-            font-family: '华文楷体', 'KaiTi', serif;
-            font-size: 14px;
-            letter-spacing: 2px;
-            transition: 0.2s;
+            padding:8px 20px;
+            border:1px solid #c23531; border-radius:6px;
+            background:transparent; color:#c23531;
+            cursor:pointer; font-family:'华文楷体','KaiTi',serif;
+            font-size:14px; letter-spacing:2px; transition:0.2s;
         }
         .comment-section .comment-toggle:hover {
-            background: #c23531;
-            color: #f5e6d3;
+            background:#c23531; color:#f5e6d3;
         }
         .comment-section .giscus-placeholder {
-            min-height: 100px;
-            padding: 20px 0;
-            text-align: center;
-            color: #8a7a6a;
-            font-family: 'SimSun', '宋体', serif;
+            min-height:100px; padding:20px 0; text-align:center;
+            color:#8a7a6a; font-family:'SimSun','宋体',serif;
         }
 
         /* 关于页面 */
         .about-content {
-            font-size: 15px;
-            line-height: 2;
-            font-family: 'SimSun', '宋体', serif;
-            white-space: pre-wrap;
-            color: #3e2723;
+            font-size:15px; line-height:2;
+            font-family:'SimSun','宋体',serif;
+            white-space:pre-wrap; color:#3e2723;
         }
 
-        /* ========== 后台管理 ========== */
+        /* ===== 后台管理面板（登录后渲染到主内容区） ===== */
         .admin-area {
             display: none;
         }
@@ -577,827 +364,448 @@
             display: block;
         }
 
+        /* 折叠面板 */
         .panel {
-            border: 1px solid #e8d5c0;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            background: #fdf8f0;
+            border:1px solid #e8d5c0; border-radius:8px;
+            margin-bottom:12px; background:#fdf8f0;
         }
         .panel-header {
-            padding: 12px 18px;
-            background: #efe4d8;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: '华文楷体', 'KaiTi', serif;
-            font-size: 16px;
-            letter-spacing: 2px;
-            border-radius: 8px 8px 0 0;
-            user-select: none;
+            padding:12px 18px;
+            background:#efe4d8;
+            cursor:pointer;
+            display:flex; justify-content:space-between; align-items:center;
+            font-family:'华文楷体','KaiTi',serif;
+            font-size:16px; letter-spacing:2px;
+            border-radius:8px 8px 0 0;
+            user-select:none;
         }
-        .panel-header:hover {
-            background: #e8d5c0;
-        }
-        .panel-header .arrow {
-            transition: transform 0.3s;
-        }
-        .panel-header .arrow.open {
-            transform: rotate(180deg);
-        }
+        .panel-header:hover { background:#e8d5c0; }
+        .panel-header .arrow { transition:transform 0.3s; }
+        .panel-header .arrow.open { transform:rotate(180deg); }
         .panel-body {
-            padding: 16px 18px;
-            display: none;
-            border-top: 1px solid #e8d5c0;
+            padding:16px 18px;
+            display:none;
+            border-top:1px solid #e8d5c0;
         }
-        .panel-body.open {
-            display: block;
-        }
+        .panel-body.open { display:block; }
 
-        /* 高亮闪烁 */
-        @keyframes highlightPulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(194, 53, 49, 0.4);
-            }
-            50% {
-                box-shadow: 0 0 0 8px rgba(194, 53, 49, 0.1);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(194, 53, 49, 0);
-            }
-        }
-        .panel-highlight {
-            animation: highlightPulse 1.2s ease 3;
-            border-color: #c23531 !important;
-        }
-
-        /* 统一表单样式 */
-        .admin-form .form-group {
-            margin-bottom: 14px;
-        }
+        /* 后台表单 */
+        .admin-form .form-group { margin-bottom:14px; }
         .admin-form .form-group label {
-            display: block;
-            font-size: 14px;
-            color: #4d281b;
-            font-weight: bold;
-            margin-bottom: 4px;
+            display:block; font-size:14px; color:#4d281b;
+            font-weight:bold; margin-bottom:4px;
         }
         .admin-form .form-group input,
         .admin-form .form-group textarea,
         .admin-form .form-group select {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #ddd0c0;
-            border-radius: 6px;
-            background: #fefcf8;
-            font-size: 14px;
-            font-family: 'SimSun', '宋体', serif;
-            outline: none;
-            transition: border 0.2s;
-            min-height: 38px;
-            box-sizing: border-box;
+            width:100%; padding:8px 12px;
+            border:1px solid #ddd0c0; border-radius:6px;
+            background:#fefcf8; font-size:14px;
+            font-family:'SimSun','宋体',serif;
+            outline:none; transition:border 0.2s;
+            min-height:38px; box-sizing:border-box;
         }
         .admin-form .form-group input:focus,
         .admin-form .form-group textarea:focus,
-        .admin-form .form-group select:focus {
-            border-color: #c23531;
-        }
-        .admin-form .form-group textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        .admin-form .form-group textarea.auto-grow {
-            min-height: 120px;
-            overflow: hidden;
-            resize: none;
-        }
+        .admin-form .form-group select:focus { border-color:#c23531; }
+        .admin-form .form-group textarea { min-height:80px; resize:vertical; }
+        .admin-form .form-group textarea.auto-grow { min-height:120px; overflow:hidden; resize:none; }
 
         .admin-form .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 8px;
+            display:flex; flex-wrap:wrap; gap:10px; margin-top:8px;
         }
-        .admin-form .btn-group .btn {
-            flex: 0 1 auto;
-        }
+        .admin-form .btn-group .btn { flex:0 1 auto; }
         .admin-form .btn {
-            padding: 6px 18px;
-            border: none;
-            border-radius: 6px;
-            background: #7a4a34;
-            color: #f5e6d3;
-            font-family: '华文楷体', 'KaiTi', serif;
-            font-size: 14px;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: 0.2s;
+            padding:6px 18px; border:none; border-radius:6px;
+            background:#7a4a34; color:#f5e6d3;
+            font-family:'华文楷体','KaiTi',serif;
+            font-size:14px; letter-spacing:2px;
+            cursor:pointer; transition:0.2s;
         }
-        .admin-form .btn:hover {
-            background: #5a3222;
-        }
-        .admin-form .btn-primary {
-            background: #c23531;
-        }
-        .admin-form .btn-primary:hover {
-            background: #a02a26;
-        }
-        .admin-form .btn-danger {
-            background: #8b2500;
-        }
-        .admin-form .btn-danger:hover {
-            background: #6b1a00;
-        }
-        .admin-form .btn-secondary {
-            background: #6b7b8b;
-        }
-        .admin-form .btn-secondary:hover {
-            background: #5a6a7a;
-        }
-        .admin-form .btn-success {
-            background: #2a7a4a;
-        }
-        .admin-form .btn-success:hover {
-            background: #1a5a3a;
-        }
+        .admin-form .btn:hover { background:#5a3222; }
+        .admin-form .btn-primary { background:#c23531; }
+        .admin-form .btn-primary:hover { background:#a02a26; }
+        .admin-form .btn-danger { background:#8b2500; }
+        .admin-form .btn-danger:hover { background:#6b1a00; }
+        .admin-form .btn-secondary { background:#6b7b8b; }
+        .admin-form .btn-secondary:hover { background:#5a6a7a; }
+        .admin-form .btn-success { background:#2a7a4a; }
+        .admin-form .btn-success:hover { background:#1a5a3a; }
 
         .admin-list .item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px dashed #e8d5c0;
-            flex-wrap: wrap;
-            gap: 8px;
+            display:flex; justify-content:space-between;
+            align-items:center; padding:8px 0;
+            border-bottom:1px dashed #e8d5c0;
+            flex-wrap:wrap; gap:8px;
         }
         .admin-list .item .actions button {
-            margin-left: 6px;
-            padding: 2px 12px;
-            border: 1px solid #ddd0c0;
-            border-radius: 4px;
-            background: transparent;
-            cursor: pointer;
-            font-size: 12px;
+            margin-left:6px; padding:2px 12px;
+            border:1px solid #ddd0c0; border-radius:4px;
+            background:transparent; cursor:pointer; font-size:12px;
         }
-        .admin-list .item .actions .edit:hover {
-            background: #7a4a34;
-            color: #fff;
-        }
-        .admin-list .item .actions .del:hover {
-            background: #8b2500;
-            color: #fff;
-        }
-        .admin-list .item .actions .approve:hover {
-            background: #2a7a4a;
-            color: #fff;
-        }
-        .admin-list .item .actions .featured:hover {
-            background: #c23531;
-            color: #fff;
-        }
+        .admin-list .item .actions .edit:hover { background:#7a4a34; color:#fff; }
+        .admin-list .item .actions .del:hover { background:#8b2500; color:#fff; }
+        .admin-list .item .actions .approve:hover { background:#2a7a4a; color:#fff; }
+        .admin-list .item .actions .featured:hover { background:#c23531; color:#fff; }
         .admin-list .item .status-badge {
-            font-size: 11px;
-            padding: 2px 10px;
-            border-radius: 12px;
-            background: #e8d5c0;
-            color: #6b5a4a;
+            font-size:11px; padding:2px 10px; border-radius:12px;
+            background:#e8d5c0; color:#6b5a4a;
         }
-        .admin-list .item .status-badge.approved {
-            background: #2a7a4a;
-            color: #fff;
-        }
-        .admin-list .item .status-badge.pending {
-            background: #f59e0b;
-            color: #fff;
-        }
-        .admin-list .item .status-badge.rejected {
-            background: #8b2500;
-            color: #fff;
-        }
+        .admin-list .item .status-badge.approved { background:#2a7a4a; color:#fff; }
+        .admin-list .item .status-badge.pending { background:#f59e0b; color:#fff; }
+        .admin-list .item .status-badge.rejected { background:#8b2500; color:#fff; }
 
         .help-text {
-            font-size: 13px;
-            color: #6b5a4a;
-            background: #f5efe8;
-            padding: 8px 12px;
-            border-radius: 6px;
-            border-left: 3px solid #c23531;
-            margin-bottom: 10px;
-            line-height: 1.6;
-            font-family: 'SimSun', '宋体', serif;
+            font-size:13px; color:#6b5a4a;
+            background:#f5efe8; padding:8px 12px; border-radius:6px;
+            border-left:3px solid #c23531; margin-bottom:10px;
+            line-height:1.6; font-family:'SimSun','宋体',serif;
         }
         .help-text code {
-            background: #e8ddd0;
-            padding: 1px 6px;
-            border-radius: 3px;
-            font-size: 12px;
-            color: #3e2723;
-            font-family: 'Courier New', monospace;
+            background:#e8ddd0; padding:1px 6px; border-radius:3px;
+            font-size:12px; color:#3e2723; font-family:'Courier New',monospace;
         }
 
-        /* ========== 字体切换 ========== */
+        /* ===== 字体切换 ===== */
         .font-switcher {
-            display: inline-block;
-            margin-left: 12px;
-            position: relative;
+            display:inline-block; margin-left:12px; position:relative;
         }
         .font-switcher select {
-            padding: 2px 8px;
-            border: 1px solid #ddd0c0;
-            border-radius: 4px;
-            background: #fdf8f0;
-            font-size: 13px;
-            font-family: 'SimSun', '宋体', serif;
-            color: #3e2723;
-            outline: none;
-            cursor: pointer;
+            padding:2px 8px; border:1px solid #ddd0c0; border-radius:4px;
+            background:#fdf8f0; font-size:13px; font-family:'SimSun','宋体',serif;
+            color:#3e2723; outline:none; cursor:pointer;
         }
-        .font-switcher select:hover {
-            border-color: #c23531;
-        }
+        .font-switcher select:hover { border-color:#c23531; }
 
-        /* ========== 音乐播放器 ========== */
+        /* ===== 音乐播放器 ===== */
         .music-player {
-            position: fixed;
-            bottom: 30px;
-            right: 20px;
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            touch-action: none;
-            user-select: none;
+            position:fixed; bottom:30px; right:20px; z-index:999;
+            display:flex; flex-direction:column; align-items:flex-end;
+            touch-action:none; user-select:none;
         }
         .music-toggle {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: #7a4a34;
-            color: #f5e6d3;
-            border: 2px solid #c23531;
-            font-size: 24px;
-            cursor: grab;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            z-index: 2;
+            width:56px; height:56px; border-radius:50%;
+            background:#7a4a34; color:#f5e6d3;
+            border:2px solid #c23531; font-size:24px;
+            cursor:grab; box-shadow:0 4px 16px rgba(0,0,0,0.3);
+            transition:0.3s; display:flex; align-items:center; justify-content:center;
+            position:relative; z-index:2;
         }
-        .music-toggle:active {
-            cursor: grabbing;
-        }
-        .music-toggle:hover {
-            transform: scale(1.05);
-            background: #5a3222;
-        }
+        .music-toggle:active { cursor:grabbing; }
+        .music-toggle:hover { transform:scale(1.05); background:#5a3222; }
         .music-panel {
-            width: 280px;
-            background: linear-gradient(145deg, #6b3a2a, #3d1f15);
-            border-radius: 16px;
-            padding: 16px 18px;
-            margin-bottom: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            border: 1px solid #9a6a54;
-            display: none;
-            transition: 0.3s;
-            color: #f5e6d3;
-            position: relative;
-            z-index: 1;
-            pointer-events: auto;
+            width:280px;
+            background:linear-gradient(145deg, #6b3a2a, #3d1f15);
+            border-radius:16px; padding:16px 18px; margin-bottom:12px;
+            box-shadow:0 8px 32px rgba(0,0,0,0.4);
+            border:1px solid #9a6a54;
+            display:none; transition:0.3s;
+            color:#f5e6d3; position:relative; z-index:1;
+            pointer-events:auto;
         }
-        .music-panel.open {
-            display: block;
-        }
+        .music-panel.open { display:block; }
         .music-panel .song-name {
-            font-size: 16px;
-            font-family: '华文楷体', 'KaiTi', serif;
-            letter-spacing: 2px;
-            text-align: center;
-            margin-bottom: 8px;
-            color: #e8d5c0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size:16px; font-family:'华文楷体','KaiTi',serif;
+            letter-spacing:2px; text-align:center; margin-bottom:8px;
+            color:#e8d5c0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
         }
         .music-panel .progress-wrap {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 215, 140, 0.2);
-            border-radius: 2px;
-            cursor: pointer;
-            margin-bottom: 10px;
+            width:100%; height:4px;
+            background:rgba(255,215,140,0.2); border-radius:2px;
+            cursor:pointer; margin-bottom:10px;
         }
         .music-panel .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: #c23531;
-            border-radius: 2px;
-            transition: width 0.1s;
+            height:100%; width:0%;
+            background:#c23531; border-radius:2px;
+            transition:width 0.1s;
         }
         .music-panel .controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 18px;
+            display:flex; justify-content:center; align-items:center; gap:18px;
         }
         .music-panel .controls button {
-            background: none;
-            border: none;
-            color: #e8d5c0;
-            font-size: 22px;
-            cursor: pointer;
-            transition: 0.2s;
-            padding: 4px;
+            background:none; border:none; color:#e8d5c0;
+            font-size:22px; cursor:pointer; transition:0.2s; padding:4px;
         }
-        .music-panel .controls button:hover {
-            color: #c23531;
-            transform: scale(1.1);
-        }
-        .music-panel .controls button.play-btn {
-            font-size: 32px;
-        }
+        .music-panel .controls button:hover { color:#c23531; transform:scale(1.1); }
+        .music-panel .controls button.play-btn { font-size:32px; }
 
-        /* ========== 回到顶部 ========== */
+        /* ===== 回到顶部 ===== */
         .back-to-top {
-            position: fixed;
-            bottom: 100px;
-            right: 20px;
-            z-index: 998;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: #7a4a34;
-            color: #f5e6d3;
-            border: 2px solid #c23531;
-            font-size: 22px;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
+            position:fixed; bottom:100px; right:20px; z-index:998;
+            width:44px; height:44px; border-radius:50%;
+            background:#7a4a34; color:#f5e6d3;
+            border:2px solid #c23531; font-size:22px;
+            cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,0.25);
+            display:none; align-items:center; justify-content:center;
+            transition:0.3s;
         }
-        .back-to-top:hover {
-            background: #5a3222;
-            transform: scale(1.05);
-        }
-        .back-to-top.show {
-            display: flex;
-        }
+        .back-to-top:hover { background:#5a3222; transform:scale(1.05); }
+        .back-to-top.show { display:flex; }
 
-        /* ========== 登录界面 ========== */
+        /* ===== 登录模态框（修复间距与居中） ===== */
         .login-box {
-            max-width: 420px;
-            margin: 30px auto;
-            padding: 30px 24px 40px;
-            background: #fdf8f0;
-            border: 1px solid #e8d5c0;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            text-align: center;
+            max-width:420px;
+            margin:30px auto;
+            padding:30px 28px 40px;
+            background:#fdf8f0;
+            border:1px solid #e8d5c0;
+            border-radius:12px;
+            box-shadow:0 4px 20px rgba(0,0,0,0.06);
+            text-align:center;
         }
         .login-box h2 {
-            text-align: center;
-            font-weight: normal;
-            letter-spacing: 6px;
-            font-family: '华文楷体', 'KaiTi', serif;
-            color: #4d281b;
-            margin-bottom: 6px;
+            text-align:center;
+            font-weight:normal;
+            letter-spacing:6px;
+            font-family:'华文楷体','KaiTi',serif;
+            color:#4d281b;
+            margin-bottom:8px;
         }
         .login-box .login-sub {
-            text-align: center;
-            color: #8a7a6a;
-            font-size: 14px;
-            margin-bottom: 18px;
+            text-align:center;
+            color:#8a7a6a;
+            font-size:14px;
+            margin-bottom:24px;
         }
         .login-box .form-group {
-            margin-bottom: 20px;
-            text-align: left;
+            margin-bottom:24px;
+            text-align:left;
         }
         .login-box .form-group label {
-            display: block;
-            font-size: 14px;
-            color: #4d281b;
-            font-weight: bold;
-            margin-bottom: 4px;
-            text-align: left;
+            display:block;
+            font-size:14px;
+            color:#4d281b;
+            font-weight:bold;
+            margin-bottom:6px;
+            text-align:center;
         }
         .login-box .form-group textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #ddd0c0;
-            border-radius: 6px;
-            background: #fefcf8;
-            font-size: 14px;
-            font-family: 'Courier New', monospace;
-            resize: vertical;
-            min-height: 80px;
-            outline: none;
-            text-align: left;
+            width:100%;
+            padding:12px 14px;
+            border:1px solid #ddd0c0;
+            border-radius:6px;
+            background:#fefcf8;
+            font-size:14px;
+            font-family:'Courier New',monospace;
+            resize:vertical;
+            min-height:100px;
+            outline:none;
+            text-align:left;
+            margin:0 auto;
         }
-        .login-box .form-group textarea:focus {
-            border-color: #c23531;
-        }
+        .login-box .form-group textarea:focus { border-color:#c23531; }
         .login-box .btn {
-            width: 100%;
-            padding: 12px;
-            background: #7a4a34;
-            color: #f5e6d3;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-family: '华文楷体', 'KaiTi', serif;
-            letter-spacing: 4px;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 4px;
+            width:100%;
+            padding:14px;
+            background:#7a4a34;
+            color:#f5e6d3;
+            border:none;
+            border-radius:6px;
+            font-size:16px;
+            font-family:'华文楷体','KaiTi',serif;
+            letter-spacing:4px;
+            cursor:pointer;
+            transition:0.2s;
+            margin-top:8px;
         }
-        .login-box .btn:hover {
-            background: #5a3222;
-        }
+        .login-box .btn:hover { background:#5a3222; }
         .login-box .error-msg {
-            color: #c23531;
-            text-align: center;
-            margin-top: 10px;
-            display: none;
+            color:#c23531;
+            text-align:center;
+            margin-top:16px;
+            display:none;
         }
 
-        /* ========== 页脚管理入口 ========== */
+        /* ===== 页脚管理入口 ===== */
         .footer-admin {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            color: #8a7a6a;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 13px;
-            font-family: 'SimSun', '宋体', serif;
+            display:inline-flex;
+            align-items:center;
+            gap:4px;
+            color:#8a7a6a;
+            cursor:pointer;
+            transition:0.2s;
+            font-size:13px;
+            font-family:'SimSun','宋体',serif;
+            padding:6px 12px;
+            border-radius:4px;
+            -webkit-touch-callout:none;
         }
-        .footer-admin:hover {
-            color: #c23531;
-        }
+        .footer-admin:hover { color:#c23531; background:rgba(194,53,49,0.05); }
+        .footer-admin:active { transform:scale(0.95); }
 
-        /* ========== 互动页面 ========== */
+        /* ===== 互动页面 ===== */
         .interact-tabs {
-            display: flex;
-            gap: 0;
-            border-bottom: 2px solid #e8d5c0;
-            margin-bottom: 20px;
+            display:flex; gap:0;
+            border-bottom:2px solid #e8d5c0;
+            margin-bottom:20px;
         }
         .interact-tabs .tab-btn {
-            padding: 10px 24px;
-            background: transparent;
-            border: none;
-            border-bottom: 3px solid transparent;
-            cursor: pointer;
-            font-family: '华文楷体', 'KaiTi', serif;
-            font-size: 16px;
-            letter-spacing: 2px;
-            color: #8a7a6a;
-            transition: 0.2s;
+            padding:10px 24px;
+            background:transparent; border:none;
+            border-bottom:3px solid transparent;
+            cursor:pointer;
+            font-family:'华文楷体','KaiTi',serif;
+            font-size:16px; letter-spacing:2px;
+            color:#8a7a6a; transition:0.2s;
         }
-        .interact-tabs .tab-btn:hover {
-            color: #4d281b;
-        }
+        .interact-tabs .tab-btn:hover { color:#4d281b; }
         .interact-tabs .tab-btn.active {
-            color: #c23531;
-            border-bottom-color: #c23531;
+            color:#c23531;
+            border-bottom-color:#c23531;
         }
-        .interact-tab-content {
-            display: none;
-        }
-        .interact-tab-content.active {
-            display: block;
-        }
+        .interact-tab-content { display:none; }
+        .interact-tab-content.active { display:block; }
         .interact-tab-content .message-item {
-            padding: 12px 0;
-            border-bottom: 1px dashed #e8d5c0;
+            padding:12px 0; border-bottom:1px dashed #e8d5c0;
         }
         .interact-tab-content .message-item .msg-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-            color: #6b5a4a;
-            font-family: 'SimSun', '宋体', serif;
-            flex-wrap: wrap;
-            gap: 4px;
+            display:flex; justify-content:space-between; align-items:center;
+            font-size:14px; color:#6b5a4a; font-family:'SimSun','宋体',serif;
+            flex-wrap:wrap; gap:4px;
         }
         .interact-tab-content .message-item .msg-header .nickname {
-            font-weight: bold;
-            color: #4d281b;
+            font-weight:bold; color:#4d281b;
         }
         .interact-tab-content .message-item .msg-header .time {
-            font-size: 12px;
-            color: #8a7a6a;
+            font-size:12px; color:#8a7a6a;
         }
         .interact-tab-content .message-item .msg-content {
-            margin-top: 4px;
-            font-size: 15px;
-            line-height: 1.7;
-            color: #3e2723;
-            font-family: 'SimSun', '宋体', serif;
+            margin-top:4px; font-size:15px; line-height:1.7;
+            color:#3e2723; font-family:'SimSun','宋体',serif;
         }
         .interact-tab-content .message-item .msg-actions {
-            margin-top: 6px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            font-size: 13px;
+            margin-top:6px; display:flex; gap:12px; align-items:center; font-size:13px;
         }
         .interact-tab-content .message-item .msg-actions .like-msg-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #8a7a6a;
-            font-size: 14px;
-            transition: 0.2s;
+            background:none; border:none; cursor:pointer;
+            color:#8a7a6a; font-size:14px; transition:0.2s;
         }
-        .interact-tab-content .message-item .msg-actions .like-msg-btn:hover {
-            color: #c23531;
-        }
-        .interact-tab-content .message-item .msg-actions .like-msg-btn.liked {
-            color: #c23531;
-        }
+        .interact-tab-content .message-item .msg-actions .like-msg-btn:hover { color:#c23531; }
+        .interact-tab-content .message-item .msg-actions .like-msg-btn.liked { color:#c23531; }
 
-        /* 发表留言表单 */
         .message-form {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 2px solid #e8d5c0;
+            margin-top:20px; padding-top:16px;
+            border-top:2px solid #e8d5c0;
         }
         .message-form .form-row {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            display:flex; gap:12px; flex-wrap:wrap;
         }
         .message-form .form-row .form-group {
-            flex: 1;
-            min-width: 120px;
-            margin-bottom: 10px;
+            flex:1; min-width:120px; margin-bottom:10px;
         }
         .message-form .form-group label {
-            display: block;
-            font-size: 13px;
-            color: #4d281b;
-            font-weight: bold;
-            margin-bottom: 2px;
+            display:block; font-size:13px; color:#4d281b;
+            font-weight:bold; margin-bottom:2px;
         }
         .message-form .form-group input,
         .message-form .form-group textarea {
-            width: 100%;
-            padding: 6px 10px;
-            border: 1px solid #ddd0c0;
-            border-radius: 4px;
-            font-family: 'SimSun', '宋体', serif;
-            font-size: 14px;
-            background: #fefcf8;
-            outline: none;
+            width:100%; padding:6px 10px;
+            border:1px solid #ddd0c0; border-radius:4px;
+            font-family:'SimSun','宋体',serif;
+            font-size:14px; background:#fefcf8; outline:none;
         }
         .message-form .form-group input:focus,
-        .message-form .form-group textarea:focus {
-            border-color: #c23531;
-        }
-        .message-form .form-group textarea {
-            min-height: 60px;
-            resize: vertical;
-        }
+        .message-form .form-group textarea:focus { border-color:#c23531; }
+        .message-form .form-group textarea { min-height:60px; resize:vertical; }
 
         /* 聊天区域 */
         .chat-area {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #e8d5c0;
-            border-radius: 8px;
-            padding: 12px;
-            background: #fefcf8;
-            margin-bottom: 12px;
+            max-height:400px; overflow-y:auto;
+            border:1px solid #e8d5c0; border-radius:8px;
+            padding:12px; background:#fefcf8; margin-bottom:12px;
         }
         .chat-area .chat-msg {
-            padding: 6px 0;
-            border-bottom: 1px dashed #f0e8e0;
+            padding:6px 0; border-bottom:1px dashed #f0e8e0;
         }
-        .chat-area .chat-msg:last-child {
-            border-bottom: none;
-        }
-        .chat-area .chat-msg .chat-name {
-            font-weight: bold;
-            color: #4d281b;
-        }
-        .chat-area .chat-msg .chat-time {
-            font-size: 12px;
-            color: #8a7a6a;
-            margin-left: 8px;
-        }
-        .chat-area .chat-msg .chat-text {
-            font-size: 14px;
-            margin-top: 2px;
-        }
+        .chat-area .chat-msg:last-child { border-bottom:none; }
+        .chat-area .chat-msg .chat-name { font-weight:bold; color:#4d281b; }
+        .chat-area .chat-msg .chat-time { font-size:12px; color:#8a7a6a; margin-left:8px; }
+        .chat-area .chat-msg .chat-text { font-size:14px; margin-top:2px; }
         .chat-input-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
+            display:flex; gap:8px; align-items:center;
         }
         .chat-input-row input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #ddd0c0;
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: 'SimSun', '宋体', serif;
-            background: #fefcf8;
-            outline: none;
-            min-height: 38px;
+            flex:1; padding:8px 12px;
+            border:1px solid #ddd0c0; border-radius:6px;
+            font-size:14px; font-family:'SimSun','宋体',serif;
+            background:#fefcf8; outline:none; min-height:38px;
         }
-        .chat-input-row input:focus {
-            border-color: #c23531;
-        }
+        .chat-input-row input:focus { border-color:#c23531; }
         .chat-input-row button {
-            padding: 6px 16px;
-            border: none;
-            border-radius: 6px;
-            background: #c23531;
-            color: #f5e6d3;
-            cursor: pointer;
-            font-family: '华文楷体', 'KaiTi', serif;
-            font-size: 14px;
-            letter-spacing: 1px;
-            white-space: nowrap;
-            min-height: 38px;
+            padding:6px 16px; border:none; border-radius:6px;
+            background:#c23531; color:#f5e6d3;
+            cursor:pointer; font-family:'华文楷体','KaiTi',serif;
+            font-size:14px; letter-spacing:1px; white-space:nowrap; min-height:38px;
         }
-        .chat-input-row button:hover {
-            background: #a02a26;
-        }
+        .chat-input-row button:hover { background:#a02a26; }
 
-        /* ========== Toast & 模态框 ========== */
+        /* ===== Toast & 模态框 ===== */
         .toast-msg {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #3e2723;
-            color: #f5e6d3;
-            padding: 12px 28px;
-            border-radius: 8px;
-            font-size: 15px;
-            z-index: 9999;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            max-width: 90%;
-            text-align: center;
-            font-family: '华文楷体', 'KaiTi', serif;
-            letter-spacing: 1px;
+            position:fixed; bottom:100px; left:50%;
+            transform:translateX(-50%);
+            background:#3e2723; color:#f5e6d3;
+            padding:12px 28px; border-radius:8px;
+            font-size:15px; z-index:9999;
+            box-shadow:0 4px 20px rgba(0,0,0,0.3);
+            opacity:0; transition:opacity 0.3s;
+            pointer-events:none; max-width:90%;
+            text-align:center; font-family:'华文楷体','KaiTi',serif;
+            letter-spacing:1px;
         }
-        .toast-msg.show {
-            opacity: 1;
-        }
+        .toast-msg.show { opacity:1; }
 
         .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(30, 20, 15, 0.7);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-            justify-content: center;
-            align-items: center;
+            display:none; position:fixed; top:0; left:0;
+            width:100%; height:100%;
+            background:rgba(30,20,15,0.7);
+            backdrop-filter:blur(4px);
+            z-index:999; justify-content:center; align-items:center;
         }
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display:flex; }
         .modal {
-            background: #fdf8f0;
-            border-radius: 16px;
-            padding: 30px 32px;
-            max-width: 600px;
-            width: 92%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid #e8d5c0;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            position: relative;
+            background:#fdf8f0; border-radius:16px;
+            padding:30px 32px; max-width:600px; width:92%;
+            max-height:90vh; overflow-y:auto;
+            border:1px solid #e8d5c0;
+            box-shadow:0 20px 60px rgba(0,0,0,0.3);
+            position:relative;
         }
         .modal-close {
-            position: absolute;
-            top: 12px;
-            right: 16px;
-            font-size: 28px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #8a7a6a;
+            position:absolute; top:12px; right:16px;
+            font-size:28px; background:none; border:none;
+            cursor:pointer; color:#8a7a6a;
         }
-        .modal-close:hover {
-            color: #c23531;
+        .modal-close:hover { color:#c23531; }
+
+        /* ===== 响应式 ===== */
+        @media (max-width:600px) {
+            .hero { min-height:240px; padding:20px 16px; }
+            .hero-logo { width:60px; height:60px; font-size:30px; line-height:60px; }
+            .hero-title { font-size:24px; letter-spacing:6px; }
+            .hero-sub { font-size:12px; letter-spacing:2px; }
+            .nav-bar { padding:6px 20px; gap:4px 10px; border-radius:12px 12px 4px 4px; justify-content:center; flex-wrap:nowrap; overflow-x:auto; }
+            .nav-bar a { font-size:13px; padding:4px 8px; letter-spacing:1px; flex-shrink:0; }
+            .card { padding:16px; }
+            .post-item .title { font-size:18px; }
+            .music-panel { width:240px; }
+            .music-toggle { width:48px; height:48px; font-size:20px; }
+            .back-to-top { width:36px; height:36px; font-size:18px; bottom:80px; right:14px; }
+            .share-area .share-buttons button { font-size:12px; padding:4px 10px; }
+            .interact-tabs .tab-btn { padding:8px 14px; font-size:14px; }
+            .login-box { padding:20px 16px 30px; }
+            .chat-input-row { flex-wrap:wrap; }
+            .chat-input-row input { width:100%; flex:1 1 100%; }
+            .chat-input-row button { width:100%; flex:1 1 100%; }
+        }
+        @media (max-width:400px) {
+            .nav-bar { padding:4px 12px; gap:3px 6px; }
+            .nav-bar a { font-size:12px; padding:3px 6px; }
         }
 
-        /* ========== 响应式 ========== */
-        @media (max-width: 600px) {
-            .hero {
-                min-height: 240px;
-                padding: 20px 16px;
-            }
-            .hero-logo {
-                width: 60px;
-                height: 60px;
-                font-size: 30px;
-                line-height: 60px;
-            }
-            .hero-title {
-                font-size: 24px;
-                letter-spacing: 6px;
-            }
-            .hero-sub {
-                font-size: 12px;
-                letter-spacing: 2px;
-            }
-            .nav-bar {
-                padding: 6px 20px;
-                gap: 4px 10px;
-                border-radius: 12px 12px 4px 4px;
-                justify-content: center;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-            }
-            .nav-bar::-webkit-scrollbar {
-                height: 0;
-            }
-            .nav-bar a {
-                font-size: 13px;
-                padding: 4px 8px;
-                letter-spacing: 1px;
-                flex-shrink: 0;
-            }
-            .card {
-                padding: 16px;
-            }
-            .post-item .title {
-                font-size: 18px;
-            }
-            .music-panel {
-                width: 240px;
-            }
-            .music-toggle {
-                width: 48px;
-                height: 48px;
-                font-size: 20px;
-            }
-            .back-to-top {
-                width: 36px;
-                height: 36px;
-                font-size: 18px;
-                bottom: 80px;
-                right: 14px;
-            }
-            .share-area .share-buttons button {
-                font-size: 12px;
-                padding: 4px 10px;
-            }
-            .interact-tabs .tab-btn {
-                padding: 8px 14px;
-                font-size: 14px;
-            }
-            .login-box {
-                padding: 20px 16px 30px;
-            }
-            .chat-input-row {
-                flex-wrap: wrap;
-            }
-            .chat-input-row input {
-                width: 100%;
-                flex: 1 1 100%;
-            }
-            .chat-input-row button {
-                width: 100%;
-                flex: 1 1 100%;
-            }
-        }
-        @media (max-width: 400px) {
-            .nav-bar {
-                padding: 4px 12px;
-                gap: 3px 6px;
-            }
-            .nav-bar a {
-                font-size: 12px;
-                padding: 3px 6px;
-            }
-        }
-
-        /* 后台布局优化 */
-        @media (min-width: 820px) {
-            .admin-area .panel-body .admin-form .form-group textarea {
-                min-height: 150px;
-            }
-            .admin-area .panel-body .admin-list .item {
-                padding: 10px 0;
-            }
+        /* 后台布局优化（面板在主内容区自动全宽） */
+        @media (min-width:820px) {
+            .admin-area .panel-body .admin-form .form-group textarea { min-height:150px; }
+            .admin-area .panel-body .admin-list .item { padding:10px 0; }
         }
     </style>
 </head>
@@ -1460,25 +868,23 @@
         <!-- 主体 -->
         <div class="main" id="app">
 
-            <!-- 左侧主内容 -->
+            <!-- 左侧主内容（前台文章展示，登录后替换为后台管理） -->
             <div class="main-content" id="mainContent">
                 <!-- 由 JavaScript 渲染 -->
             </div>
 
-            <!-- 右侧边栏 -->
+            <!-- 右侧边栏（个人信息+分类，始终保留） -->
             <aside class="sidebar" id="sidebar">
-                <!-- 个人信息 -->
                 <div class="card profile" id="profileCard">
                     <div class="avatar">✍</div>
                     <div class="name" id="authorName">墨 轩 主</div>
                     <div class="desc" id="authorDesc">闲来读书，兴至写文。<br />以文会友，以友辅仁。</div>
                 </div>
-                <!-- 分类 -->
                 <div class="card">
                     <div class="card-title">文章分类</div>
                     <ul class="category-list" id="categoryList"></ul>
                 </div>
-                <!-- 后台管理（登录后显示，移到主内容区） -->
+                <!-- 后台管理入口（登录后只显示按钮，面板在主内容区） -->
                 <div id="adminPanel" style="display:none;"></div>
             </aside>
         </div>
@@ -1499,7 +905,7 @@
 
     <script>
         // ============================================================
-        //  1. 配置 & 默认值
+        //  配置 & 默认值
         // ============================================================
         var YOUR_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
@@ -1555,7 +961,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         var DEFAULT_MESSAGES = { messages: [] };
 
         // ============================================================
-        //  2. 全局状态
+        //  全局状态
         // ============================================================
         var config = { token: '', user: '', repo: '', path: 'posts.txt', configPath: 'config.json' };
         var posts = [];
@@ -1595,7 +1001,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         var chatInterval = null;
 
         // ============================================================
-        //  3. 工具函数
+        //  工具函数
         // ============================================================
         function escapeHtml(str) {
             if (!str) return '';
@@ -1654,7 +1060,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                     config.configPath = parsed.configPath || 'config.json';
                 } catch (e) {}
             }
-            // ★ 检查元素是否存在再设置值
+            // 元素存在性检查
             var tokenInput = document.getElementById('githubTokenInput');
             var userInput = document.getElementById('githubUserInput');
             var repoInput = document.getElementById('githubRepoInput');
@@ -1662,14 +1068,12 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             if (userInput) userInput.value = config.user;
             if (repoInput) repoInput.value = config.repo;
         }
-
-        // 先执行一次，但只设置存在的元素
         loadLocalConfig();
 
         function isConfigured() { return config.token && config.user && config.repo; }
 
         // ============================================================
-        //  4. 文件读写
+        //  文件读写
         // ============================================================
         function decodeBase64Utf8(base64) {
             var binary = atob(base64);
@@ -1732,7 +1136,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  5. 数据解析
+        //  数据解析
         // ============================================================
         function parsePosts(text) {
             if (!text || !text.trim()) return [];
@@ -1840,7 +1244,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  6. 加载所有数据
+        //  加载所有数据
         // ============================================================
         function loadAllData() {
             console.log('🔄 loadAllData 开始执行...');
@@ -1924,6 +1328,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                     renderPage('home');
                 }
 
+                // 如果已登录，渲染后台管理面板到主内容区
                 if (sessionStorage.getItem('blog_admin_logged') === 'true') {
                     renderAdminPanel();
                     renderAdminList();
@@ -1936,7 +1341,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                     loadMusicSettingsForm();
                     var aboutEditor = document.getElementById('aboutEditor');
                     if (aboutEditor) aboutEditor.value = aboutContent;
-                    // 加载GitHub配置到输入框（如果存在）
                     var tokenInput = document.getElementById('githubTokenInput');
                     var userInput = document.getElementById('githubUserInput');
                     var repoInput = document.getElementById('githubRepoInput');
@@ -1990,7 +1394,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  7. 应用设置
+        //  应用设置
         // ============================================================
         function applySiteSettings() {
             var logoEl = document.getElementById('heroLogo');
@@ -2062,7 +1466,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  8. 音乐播放器
+        //  音乐播放器
         // ============================================================
         function applyMusicSettings() {
             var player = document.getElementById('musicPlayer');
@@ -2293,7 +1697,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  9. 渲染引擎（前台）
+        //  渲染引擎（前台）
         // ============================================================
         function renderPage(page, data) {
             var container = document.getElementById('mainContent');
@@ -2399,7 +1803,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  10. 互动页面
+        //  互动页面
         // ============================================================
         function renderInteract(container) {
             var approved = messages.filter(function(m) { return m.status === 'approved'; });
@@ -2543,7 +1947,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  11. 留言功能
+        //  留言功能
         // ============================================================
         function submitMessage() {
             var nickname = document.getElementById('msgNickname').value.trim();
@@ -2594,7 +1998,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  12. 文章点赞
+        //  文章点赞
         // ============================================================
         function togglePostLike(postId) {
             var post = posts.find(function(p) { return p.id === postId; });
@@ -2617,7 +2021,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  13. 文章详情
+        //  文章详情
         // ============================================================
         function renderPostDetail(container, postId) {
             var post = posts.find(function(p) { return p.id === postId; });
@@ -2719,7 +2123,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  14. 分享功能
+        //  分享功能
         // ============================================================
         function shareCopyLink(url) {
             navigator.clipboard.writeText(url).then(function() {
@@ -2751,7 +2155,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  15. Giscus 评论区
+        //  Giscus 评论区
         // ============================================================
         function renderGiscus() {
             var container = document.getElementById('giscusContainer');
@@ -2798,7 +2202,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  16. 分类筛选 / 导航
+        //  分类筛选 / 导航
         // ============================================================
         function filterByCategory(cat) {
             var filtered = posts.filter(function(p) { return p.category === cat; });
@@ -2832,7 +2236,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  17. 侧边栏分类
+        //  侧边栏分类
         // ============================================================
         function renderSidebarCategories() {
             var container = document.getElementById('categoryList');
@@ -2848,7 +2252,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  18. 导航
+        //  导航
         // ============================================================
         document.querySelectorAll('#mainNav a').forEach(function(a) {
             a.addEventListener('click', function(e) {
@@ -2888,12 +2292,23 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             });
         });
 
-        document.getElementById('footerAdminTrigger').addEventListener('click', function() {
+        // ★ 修复手机端点击管理无反应：同时绑定 touch 事件
+        var footerAdmin = document.getElementById('footerAdminTrigger');
+        footerAdmin.addEventListener('click', function(e) {
+            e.preventDefault();
             if (sessionStorage.getItem('blog_admin_logged') === 'true') {
                 toggleAdmin(true);
                 return;
             }
             showLoginModal();
+        });
+        footerAdmin.addEventListener('touchend', function(e) {
+            // 防止重复触发
+            if (!e.target._touched) {
+                e.target._touched = true;
+                setTimeout(function() { e.target._touched = false; }, 300);
+                footerAdmin.click();
+            }
         });
 
         window.addEventListener('popstate', function() {
@@ -2915,7 +2330,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         });
 
         // ============================================================
-        //  19. 回到顶部
+        //  回到顶部
         // ============================================================
         var backToTopBtn = document.getElementById('backToTop');
         window.addEventListener('scroll', function() {
@@ -2930,15 +2345,21 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         });
 
         // ============================================================
-        //  20. 登录 / 登出
+        //  登录 / 登出
         // ============================================================
         function showLoginModal() {
-            var html = '<h2 style="text-align:center;font-weight:normal;letter-spacing:6px;font-family:\'华文楷体\',\'KaiTi\',serif;">🔐 后台登录</h2>';
-            html += '<div class="login-sub">— 使用私钥验证身份 —</div>';
-            html += '<div class="form-group"><label>🔑 私钥</label><textarea id="loginPrivateKey" rows="4" placeholder="-----BEGIN PRIVATE KEY----- ... -----END PRIVATE KEY-----"></textarea></div>';
-            html +=
-                '<button class="btn btn-primary" onclick="doLogin()" style="width:100%;padding:12px;background:#c23531;color:#fff;border:none;border-radius:6px;font-size:16px;cursor:pointer;letter-spacing:4px;">登录</button>';
-            html += '<div id="loginError" style="color:#c23531;text-align:center;margin-top:12px;display:none;"></div>';
+            var html = `
+                <div class="login-box">
+                    <h2>🔐 后台登录</h2>
+                    <div class="login-sub">— 使用私钥验证身份 —</div>
+                    <div class="form-group">
+                        <label>🔑 私钥 (PEM 格式)</label>
+                        <textarea id="loginPrivateKey" rows="4" placeholder="-----BEGIN PRIVATE KEY----- ... -----END PRIVATE KEY-----"></textarea>
+                    </div>
+                    <button class="btn" onclick="doLogin()" style="width:100%;padding:14px;background:#c23531;color:#fff;border:none;border-radius:6px;font-size:16px;cursor:pointer;letter-spacing:4px;">登录</button>
+                    <div id="loginError" style="color:#c23531;text-align:center;margin-top:16px;display:none;"></div>
+                </div>
+            `;
             openModal(html);
         }
 
@@ -2972,7 +2393,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                     toggleAdmin(true);
                     showToast('登录成功', 'success');
                     loadAllData().then(function() {
-                        renderPage(currentPage);
+                        // 切换到后台管理视图
                         renderAdminPanel();
                         renderAdminList();
                         populateCategorySelect();
@@ -2994,16 +2415,8 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                         if (statusEl) statusEl.textContent = isConfigured() ? '✅ 已配置' : '⚠️ 未配置，请填写';
                         var lastBackupEl = document.getElementById('lastBackupTime');
                         if (lastBackupEl) lastBackupEl.textContent = lastBackupTime || '暂无';
-                        var autoLoadEl = document.getElementById('autoLoadComments');
-                        if (autoLoadEl) autoLoadEl.checked = autoLoadComments;
-                        var giscusRepoEl = document.getElementById('giscusRepo');
-                        if (giscusRepoEl) giscusRepoEl.value = giscusConfig.repo || '';
-                        var giscusRepoIdEl = document.getElementById('giscusRepoId');
-                        if (giscusRepoIdEl) giscusRepoIdEl.value = giscusConfig.repoId || '';
-                        var giscusCategoryEl = document.getElementById('giscusCategory');
-                        if (giscusCategoryEl) giscusCategoryEl.value = giscusConfig.category || 'General';
-                        var giscusCategoryIdEl = document.getElementById('giscusCategoryId');
-                        if (giscusCategoryIdEl) giscusCategoryIdEl.value = giscusConfig.categoryId || '';
+                        // 隐藏前台内容
+                        document.getElementById('mainContent').innerHTML = '';
                     });
                 } else {
                     document.getElementById('loginError').textContent = '解密结果不匹配';
@@ -3017,12 +2430,14 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
 
         function toggleAdmin(show) {
             if (show) {
+                // 已经登录，切换到后台
                 document.getElementById('footerAdminTrigger').textContent = '⚙️ 管理 (退出)';
                 document.getElementById('footerAdminTrigger').onclick = function() {
                     if (confirm('确定退出后台吗？')) {
                         toggleAdmin(false);
                     }
                 };
+                // 加载数据并渲染后台面板
                 loadAllData().then(function() {
                     renderAdminPanel();
                     renderAdminList();
@@ -3045,16 +2460,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                     if (statusEl) statusEl.textContent = isConfigured() ? '✅ 已配置' : '⚠️ 未配置，请填写';
                     var lastBackupEl = document.getElementById('lastBackupTime');
                     if (lastBackupEl) lastBackupEl.textContent = lastBackupTime || '暂无';
-                    var autoLoadEl = document.getElementById('autoLoadComments');
-                    if (autoLoadEl) autoLoadEl.checked = autoLoadComments;
-                    var giscusRepoEl = document.getElementById('giscusRepo');
-                    if (giscusRepoEl) giscusRepoEl.value = giscusConfig.repo || '';
-                    var giscusRepoIdEl = document.getElementById('giscusRepoId');
-                    if (giscusRepoIdEl) giscusRepoIdEl.value = giscusConfig.repoId || '';
-                    var giscusCategoryEl = document.getElementById('giscusCategory');
-                    if (giscusCategoryEl) giscusCategoryEl.value = giscusConfig.category || 'General';
-                    var giscusCategoryIdEl = document.getElementById('giscusCategoryId');
-                    if (giscusCategoryIdEl) giscusCategoryIdEl.value = giscusConfig.categoryId || '';
+                    document.getElementById('mainContent').innerHTML = '';
                 });
                 renderPage(currentPage);
             } else {
@@ -3068,8 +2474,8 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                 };
                 sessionStorage.removeItem('blog_admin_logged');
                 showToast('已退出', 'info');
-                document.getElementById('adminPanel').innerHTML = '';
-                document.getElementById('adminPanel').style.display = 'none';
+                // 清空后台面板，恢复前台内容
+                document.getElementById('mainContent').innerHTML = '';
                 renderPage(currentPage);
                 if (window.history && window.history.pushState) {
                     window.history.pushState(null, '', window.location.pathname);
@@ -3082,275 +2488,276 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  21. 后台管理面板渲染
+        //  后台管理面板渲染（渲染到主内容区）
         // ============================================================
         function renderAdminPanel() {
-            var container = document.getElementById('adminPanel');
+            var container = document.getElementById('mainContent');
             if (!container) return;
-            container.style.display = 'block';
             container.innerHTML = `
-                <div class="card">
-                    <div class="card-title">🔐 后台管理</div>
+                <div class="admin-area active">
+                    <div class="card">
+                        <div class="card-title">🔐 后台管理</div>
 
-                    <div class="panel">
-                        <div class="panel-header" onclick="togglePanel(this)">
-                            ⚙️ 站点设置 <span class="arrow">▼</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="admin-form">
-                                <div class="form-group"><label>Logo 文字</label><input type="text" id="setLogo" /></div>
-                                <div class="form-group"><label>博客标题</label><input type="text" id="setTitle" /></div>
-                                <div class="form-group"><label>博客副标题</label><input type="text" id="setSub" /></div>
-                                <div class="form-group"><label>作者名</label><input type="text" id="setAuthor" /></div>
-                                <div class="form-group"><label>作者简介</label><textarea id="setAuthorDesc" rows="2"></textarea></div>
-                                <div class="btn-group"><button class="btn btn-primary" onclick="saveSiteSettings()">保存</button></div>
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                ⚙️ 站点设置 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div class="form-group"><label>Logo 文字</label><input type="text" id="setLogo" /></div>
+                                    <div class="form-group"><label>博客标题</label><input type="text" id="setTitle" /></div>
+                                    <div class="form-group"><label>博客副标题</label><input type="text" id="setSub" /></div>
+                                    <div class="form-group"><label>作者名</label><input type="text" id="setAuthor" /></div>
+                                    <div class="form-group"><label>作者简介</label><textarea id="setAuthorDesc" rows="2"></textarea></div>
+                                    <div class="btn-group"><button class="btn btn-primary" onclick="saveSiteSettings()">保存</button></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="panel" id="newPostPanel">
-                        <div class="panel-header" onclick="togglePanel(this)">
-                            ✏️ 写新文章 <span class="arrow">▼</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="admin-form">
-                                <div class="form-group"><label>标题</label><input type="text" id="editTitle" /></div>
-                                <div class="form-row" style="display:flex; gap:10px; flex-wrap:wrap;">
-                                    <div class="form-group" style="flex:1;"><label>分类</label>
-                                        <select id="editCategory"></select>
-                                        <div style="display:flex; gap:6px; margin-top:4px;">
-                                            <input type="text" id="newCategoryQuick" placeholder="新分类名称" style="flex:1;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:13px;min-height:38px;" />
-                                            <button class="btn btn-secondary" onclick="quickAddCategory()" style="padding:2px 12px;font-size:12px;min-height:38px;">+ 添加</button>
+                        <div class="panel" id="newPostPanel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                ✏️ 写新文章 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div class="form-group"><label>标题</label><input type="text" id="editTitle" /></div>
+                                    <div class="form-row" style="display:flex; gap:10px; flex-wrap:wrap;">
+                                        <div class="form-group" style="flex:1;"><label>分类</label>
+                                            <select id="editCategory"></select>
+                                            <div style="display:flex; gap:6px; margin-top:4px;">
+                                                <input type="text" id="newCategoryQuick" placeholder="新分类名称" style="flex:1;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:13px;min-height:38px;" />
+                                                <button class="btn btn-secondary" onclick="quickAddCategory()" style="padding:2px 12px;font-size:12px;min-height:38px;">+ 添加</button>
+                                            </div>
                                         </div>
+                                        <div class="form-group" style="flex:1;"><label>标签 (逗号分隔)</label><input type="text" id="editTags" /></div>
                                     </div>
-                                    <div class="form-group" style="flex:1;"><label>标签 (逗号分隔)</label><input type="text" id="editTags" /></div>
-                                </div>
-                                <div class="form-row" style="display:flex; gap:10px; flex-wrap:wrap;">
-                                    <div class="form-group" style="flex:1;"><label>作者</label><input type="text" id="editAuthor" /></div>
-                                    <div class="form-group" style="flex:1;"><label>日期</label><input type="date" id="editDate" /></div>
-                                    <div class="form-group" style="flex:0 0 100px;"><label>阅读数</label><input type="number" id="editViews" min="0" /></div>
-                                    <div class="form-group" style="flex:0 0 100px;"><label>点赞数</label><input type="number" id="editLikes" min="0" /></div>
-                                </div>
-                                <div class="form-group"><label>正文 (支持 Markdown)</label>
-                                    <div style="display:flex; gap:6px; margin-bottom:4px; flex-wrap:wrap;">
-                                        <button class="btn btn-secondary" onclick="insertMarkdown('image')">🖼️ 图片</button>
-                                        <button class="btn btn-secondary" onclick="insertMarkdown('link')">🔗 链接</button>
-                                        <button class="btn btn-secondary" onclick="insertMarkdown('video')">🎬 视频</button>
-                                        <button class="btn btn-secondary" onclick="insertMarkdown('flash')">📦 Flash</button>
-                                        <button class="btn btn-secondary" onclick="insertMarkdown('bold')">B</button>
-                                        <button class="btn btn-secondary" onclick="insertMarkdown('italic')">I</button>
-                                        <button class="btn btn-secondary" onclick="insertMarkdown('code')">&lt;/&gt;</button>
+                                    <div class="form-row" style="display:flex; gap:10px; flex-wrap:wrap;">
+                                        <div class="form-group" style="flex:1;"><label>作者</label><input type="text" id="editAuthor" /></div>
+                                        <div class="form-group" style="flex:1;"><label>日期</label><input type="date" id="editDate" /></div>
+                                        <div class="form-group" style="flex:0 0 100px;"><label>阅读数</label><input type="number" id="editViews" min="0" /></div>
+                                        <div class="form-group" style="flex:0 0 100px;"><label>点赞数</label><input type="number" id="editLikes" min="0" /></div>
                                     </div>
-                                    <textarea id="editContent" class="auto-grow" rows="4"></textarea>
-                                </div>
-                                <input type="hidden" id="editId" />
-                                <div class="btn-group">
-                                    <button class="btn btn-primary" onclick="savePost()">保存文章</button>
-                                    <button class="btn btn-secondary" onclick="clearEditForm()">清空表单</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel">
-                        <div class="panel-header" onclick="togglePanel(this)">
-                            📄 文章管理 <span class="arrow open">▼</span>
-                        </div>
-                        <div class="panel-body open">
-                            <div class="admin-list" id="adminPostList"></div>
-                        </div>
-                    </div>
-
-                    <div class="panel">
-                        <div class="panel-header" onclick="togglePanel(this)">
-                            📂 分类管理 <span class="arrow">▼</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="admin-form">
-                                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                                    <input type="text" id="newCategoryName" placeholder="新分类名称" style="flex:1;min-height:38px;" />
-                                    <button class="btn btn-primary" onclick="addCategory()" style="min-height:38px;">添加</button>
-                                </div>
-                                <div class="admin-list" id="categoryAdminList"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel">
-                        <div class="panel-header" onclick="togglePanel(this)">
-                            🏷️ 标签管理 <span class="arrow">▼</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="admin-form">
-                                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                                    <input type="text" id="newTagName" placeholder="新标签名称" style="flex:1;min-height:38px;" />
-                                    <button class="btn btn-primary" onclick="addTag()" style="min-height:38px;">添加</button>
-                                </div>
-                                <div class="admin-list" id="tagAdminList"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel">
-                        <div class="panel-header" onclick="togglePanel(this)">
-                            🔤 字体管理 <span class="arrow">▼</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="admin-form">
-                                <div class="help-text">💡 支持系统字体名称（如 <code>楷体</code>），也支持自定义字体路径或网络字体 URL。</div>
-                                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
-                                    <input type="text" id="newFontName" placeholder="字体名称 / 路径 / URL" style="flex:1;min-height:38px;" />
-                                    <button class="btn btn-primary" onclick="addFont()" style="min-height:38px;">添加</button>
-                                </div>
-                                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
-                                    <label style="font-weight:bold;">默认字体</label>
-                                    <select id="defaultFontSelect" style="min-height:38px;padding:6px 10px;"></select>
-                                    <button class="btn btn-secondary" onclick="setDefaultFont()" style="min-height:38px;">设为默认</button>
-                                    <button class="btn btn-secondary" onclick="resetFonts()" style="min-height:38px;">重置默认列表</button>
-                                </div>
-                                <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
-                                    <label style="font-weight:bold;">前台字体切换</label>
-                                    <input type="checkbox" id="fontSwitchCheck" onchange="saveFontSettings()" />
-                                    <span style="font-size:13px; color:#8a7a6a;">开启后用户可自定义字体</span>
-                                </div>
-                                <div class="admin-list" id="fontAdminList"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel">
-                        <div class="panel-header" onclick="togglePanel(this)">
-                            🎵 音乐管理 <span class="arrow">▼</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="admin-form">
-                                <div class="help-text">💡 支持本地音乐路径或网络音乐链接。</div>
-                                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
-                                    <input type="text" id="newMusicName" placeholder="歌曲名" style="flex:1;min-height:38px;" />
-                                    <input type="text" id="newMusicUrl" placeholder="路径 / URL" style="flex:2;min-height:38px;" />
-                                    <button class="btn btn-primary" onclick="addMusic()" style="min-height:38px;">添加</button>
-                                </div>
-                                <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:10px;">
-                                    <label><input type="checkbox" id="musicEnabledCheck" onchange="saveMusicSettings()" /> 显示播放器</label>
-                                    <label><input type="checkbox" id="musicAutoPlayCheck" onchange="saveMusicSettings()" /> 自动播放</label>
-                                    <label>默认歌曲 <select id="musicDefaultSelect" style="min-height:38px;padding:6px 10px;"></select></label>
-                                </div>
-                                <div class="admin-list" id="musicAdminList"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel">
-                        <div class="panel-header" onclick="togglePanel(this)">
-                            📜 关于页面 <span class="arrow">▼</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="admin-form">
-                                <div class="form-group"><textarea id="aboutEditor" rows="6"></textarea></div>
-                                <button class="btn btn-primary" onclick="saveAbout()">保存关于</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="panel">
-                        <div class="panel-header" onclick="togglePanel(this)">
-                            🔐 安全设置 <span class="arrow">▼</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="admin-form">
-                                <div class="form-group"><label>公钥</label><textarea id="secPublicKey" rows="3" style="font-family:monospace;font-size:12px;"></textarea></div>
-                                <div class="form-group"><label>挑战码密文</label><textarea id="secChallengeCipher" rows="2" style="font-family:monospace;font-size:12px;"></textarea></div>
-                                <div class="form-group"><label>期望明文</label><input type="text" id="secExpectedPlain" style="min-height:38px;" /></div>
-                                <div class="btn-group">
-                                    <button class="btn btn-primary" onclick="saveSecuritySettings()">保存安全设置</button>
-                                    <button class="btn btn-secondary" onclick="resetSecuritySettings()">恢复默认</button>
+                                    <div class="form-group"><label>正文 (支持 Markdown)</label>
+                                        <div style="display:flex; gap:6px; margin-bottom:4px; flex-wrap:wrap;">
+                                            <button class="btn btn-secondary" onclick="insertMarkdown('image')">🖼️ 图片</button>
+                                            <button class="btn btn-secondary" onclick="insertMarkdown('link')">🔗 链接</button>
+                                            <button class="btn btn-secondary" onclick="insertMarkdown('video')">🎬 视频</button>
+                                            <button class="btn btn-secondary" onclick="insertMarkdown('flash')">📦 Flash</button>
+                                            <button class="btn btn-secondary" onclick="insertMarkdown('bold')">B</button>
+                                            <button class="btn btn-secondary" onclick="insertMarkdown('italic')">I</button>
+                                            <button class="btn btn-secondary" onclick="insertMarkdown('code')">&lt;/&gt;</button>
+                                        </div>
+                                        <textarea id="editContent" class="auto-grow" rows="4"></textarea>
+                                    </div>
+                                    <input type="hidden" id="editId" />
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary" onclick="savePost()">保存文章</button>
+                                        <button class="btn btn-secondary" onclick="clearEditForm()">清空表单</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="panel" id="githubConfigPanel">
-                        <div class="panel-header" onclick="togglePanel(this)">
-                            ⚙️ GitHub 设置 <span class="arrow">▼</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="admin-form">
-                                <div class="help-text">💡 配置 GitHub Token 后，文章和配置才能保存到远程仓库。<a href="https://github.com/settings/tokens" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处生成 Token</a>（需勾选 <code>repo</code> 权限）。</div>
-                                <div class="form-group"><label>🔑 Personal Access Token</label><input type="password" id="githubTokenInput" placeholder="ghp_xxxxxxxxxxxx" style="min-height:38px;" /></div>
-                                <div class="form-group"><label>👤 GitHub 用户名</label><input type="text" id="githubUserInput" placeholder="你的用户名" style="min-height:38px;" /></div>
-                                <div class="form-group"><label>📁 仓库名</label><input type="text" id="githubRepoInput" placeholder="仓库名" style="min-height:38px;" /></div>
-                                <div class="btn-group">
-                                    <button class="btn btn-primary" onclick="saveGitHubConfig()">保存配置</button>
-                                    <button class="btn btn-secondary" onclick="clearGitHubConfig()">清空配置</button>
-                                </div>
-                                <div id="githubConfigStatus" style="margin-top:8px;font-size:13px;color:#8a7a6a;"></div>
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                📄 文章管理 <span class="arrow open">▼</span>
+                            </div>
+                            <div class="panel-body open">
+                                <div class="admin-list" id="adminPostList"></div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="panel" id="backupPanel">
-                        <div class="panel-header" onclick="togglePanel(this)">
-                            💾 备份设置 <span class="arrow">▼</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="admin-form">
-                                <div class="help-text">💡 备份当前文章、配置和留言数据。<br/>可下载单个文件，也可批量选择后压缩下载。</div>
-                                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-                                    <button class="btn btn-secondary" onclick="downloadSingleFile('posts')">📥 posts.txt</button>
-                                    <button class="btn btn-secondary" onclick="downloadSingleFile('config')">📥 config.json</button>
-                                    <button class="btn btn-secondary" onclick="downloadSingleFile('messages')">📥 messages.json</button>
-                                </div>
-                                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-                                    <label><input type="checkbox" id="backupPosts" checked /> posts.txt</label>
-                                    <label><input type="checkbox" id="backupConfig" checked /> config.json</label>
-                                    <label><input type="checkbox" id="backupMessages" checked /> messages.json</label>
-                                    <button class="btn btn-secondary" onclick="toggleAllBackup()">全选/取消</button>
-                                    <button class="btn btn-secondary" onclick="downloadBackup()">📦 下载选中 (ZIP)</button>
-                                    <button class="btn btn-primary" onclick="syncBackupToRepo()">📤 同步到仓库</button>
-                                    <button class="btn btn-secondary" onclick="document.getElementById('uploadBackupInput').click()">📤 上传文件</button>
-                                    <input type="file" id="uploadBackupInput" accept=".txt,.json" style="display:none;" onchange="uploadBackupFile(event)" />
-                                </div>
-                                <div id="backupStatus" style="font-size:13px;color:#8a7a6a;">
-                                    上次备份：<span id="lastBackupTime">暂无</span>
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                📂 分类管理 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                                        <input type="text" id="newCategoryName" placeholder="新分类名称" style="flex:1;min-height:38px;" />
+                                        <button class="btn btn-primary" onclick="addCategory()" style="min-height:38px;">添加</button>
+                                    </div>
+                                    <div class="admin-list" id="categoryAdminList"></div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="panel">
-                        <div class="panel-header" onclick="togglePanel(this)">
-                            💬 评论设置 <span class="arrow">▼</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="admin-form">
-                                <div class="help-text">💡 使用 Giscus 评论系统（基于 GitHub Discussions）。<a href="https://giscus.app/zh-CN" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处获取配置</a></div>
-                                <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
-                                    <label style="font-weight:bold;">自动加载评论</label>
-                                    <input type="checkbox" id="autoLoadComments" />
-                                    <span style="font-size:13px; color:#8a7a6a;">开启后文章页面自动加载评论区</span>
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                🏷️ 标签管理 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                                        <input type="text" id="newTagName" placeholder="新标签名称" style="flex:1;min-height:38px;" />
+                                        <button class="btn btn-primary" onclick="addTag()" style="min-height:38px;">添加</button>
+                                    </div>
+                                    <div class="admin-list" id="tagAdminList"></div>
                                 </div>
-                                <div class="form-group"><label>仓库名</label><input type="text" id="giscusRepo" placeholder="用户名/仓库名" style="min-height:38px;" /></div>
-                                <div class="form-group"><label>Repo ID</label><input type="text" id="giscusRepoId" placeholder="R_xxxxxxxxxx" style="min-height:38px;" /></div>
-                                <div class="form-group"><label>分类</label><input type="text" id="giscusCategory" placeholder="General" style="min-height:38px;" /></div>
-                                <div class="form-group"><label>分类 ID</label><input type="text" id="giscusCategoryId" placeholder="DIC_xxxxxxx" style="min-height:38px;" /></div>
-                                <div class="btn-group"><button class="btn btn-primary" onclick="saveCommentSettings()">保存评论设置</button></div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="panel">
-                        <div class="panel-header" onclick="togglePanel(this)">
-                            💬 留言管理 <span class="arrow">▼</span>
-                        </div>
-                        <div class="panel-body">
-                            <div class="admin-form">
-                                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
-                                    <input type="text" id="adminMsgNickname" placeholder="昵称" style="flex:1;min-height:38px;" />
-                                    <input type="text" id="adminMsgEmail" placeholder="邮箱" style="flex:1;min-height:38px;" />
-                                    <input type="text" id="adminMsgContent" placeholder="留言内容" style="flex:2;min-height:38px;" />
-                                    <button class="btn btn-primary" onclick="adminAddMessage()" style="min-height:38px;">添加留言</button>
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                🔤 字体管理 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div class="help-text">💡 支持系统字体名称（如 <code>楷体</code>），也支持自定义字体路径或网络字体 URL。</div>
+                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
+                                        <input type="text" id="newFontName" placeholder="字体名称 / 路径 / URL" style="flex:1;min-height:38px;" />
+                                        <button class="btn btn-primary" onclick="addFont()" style="min-height:38px;">添加</button>
+                                    </div>
+                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
+                                        <label style="font-weight:bold;">默认字体</label>
+                                        <select id="defaultFontSelect" style="min-height:38px;padding:6px 10px;"></select>
+                                        <button class="btn btn-secondary" onclick="setDefaultFont()" style="min-height:38px;">设为默认</button>
+                                        <button class="btn btn-secondary" onclick="resetFonts()" style="min-height:38px;">重置默认列表</button>
+                                    </div>
+                                    <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+                                        <label style="font-weight:bold;">前台字体切换</label>
+                                        <input type="checkbox" id="fontSwitchCheck" onchange="saveFontSettings()" />
+                                        <span style="font-size:13px; color:#8a7a6a;">开启后用户可自定义字体</span>
+                                    </div>
+                                    <div class="admin-list" id="fontAdminList"></div>
                                 </div>
-                                <div class="admin-list" id="messageAdminList"></div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                🎵 音乐管理 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div class="help-text">💡 支持本地音乐路径或网络音乐链接。</div>
+                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
+                                        <input type="text" id="newMusicName" placeholder="歌曲名" style="flex:1;min-height:38px;" />
+                                        <input type="text" id="newMusicUrl" placeholder="路径 / URL" style="flex:2;min-height:38px;" />
+                                        <button class="btn btn-primary" onclick="addMusic()" style="min-height:38px;">添加</button>
+                                    </div>
+                                    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:10px;">
+                                        <label><input type="checkbox" id="musicEnabledCheck" onchange="saveMusicSettings()" /> 显示播放器</label>
+                                        <label><input type="checkbox" id="musicAutoPlayCheck" onchange="saveMusicSettings()" /> 自动播放</label>
+                                        <label>默认歌曲 <select id="musicDefaultSelect" style="min-height:38px;padding:6px 10px;"></select></label>
+                                    </div>
+                                    <div class="admin-list" id="musicAdminList"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                📜 关于页面 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div class="form-group"><textarea id="aboutEditor" rows="6"></textarea></div>
+                                    <button class="btn btn-primary" onclick="saveAbout()">保存关于</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                🔐 安全设置 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div class="form-group"><label>公钥</label><textarea id="secPublicKey" rows="3" style="font-family:monospace;font-size:12px;"></textarea></div>
+                                    <div class="form-group"><label>挑战码密文</label><textarea id="secChallengeCipher" rows="2" style="font-family:monospace;font-size:12px;"></textarea></div>
+                                    <div class="form-group"><label>期望明文</label><input type="text" id="secExpectedPlain" style="min-height:38px;" /></div>
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary" onclick="saveSecuritySettings()">保存安全设置</button>
+                                        <button class="btn btn-secondary" onclick="resetSecuritySettings()">恢复默认</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel" id="githubConfigPanel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                ⚙️ GitHub 设置 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div class="help-text">💡 配置 GitHub Token 后，文章和配置才能保存到远程仓库。<a href="https://github.com/settings/tokens" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处生成 Token</a>（需勾选 <code>repo</code> 权限）。</div>
+                                    <div class="form-group"><label>🔑 Personal Access Token</label><input type="password" id="githubTokenInput" placeholder="ghp_xxxxxxxxxxxx" style="min-height:38px;" /></div>
+                                    <div class="form-group"><label>👤 GitHub 用户名</label><input type="text" id="githubUserInput" placeholder="你的用户名" style="min-height:38px;" /></div>
+                                    <div class="form-group"><label>📁 仓库名</label><input type="text" id="githubRepoInput" placeholder="仓库名" style="min-height:38px;" /></div>
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary" onclick="saveGitHubConfig()">保存配置</button>
+                                        <button class="btn btn-secondary" onclick="clearGitHubConfig()">清空配置</button>
+                                    </div>
+                                    <div id="githubConfigStatus" style="margin-top:8px;font-size:13px;color:#8a7a6a;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel" id="backupPanel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                💾 备份设置 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div class="help-text">💡 备份当前文章、配置和留言数据。<br/>可下载单个文件，也可批量选择后压缩下载。</div>
+                                    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                                        <button class="btn btn-secondary" onclick="downloadSingleFile('posts')">📥 posts.txt</button>
+                                        <button class="btn btn-secondary" onclick="downloadSingleFile('config')">📥 config.json</button>
+                                        <button class="btn btn-secondary" onclick="downloadSingleFile('messages')">📥 messages.json</button>
+                                    </div>
+                                    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                                        <label><input type="checkbox" id="backupPosts" checked /> posts.txt</label>
+                                        <label><input type="checkbox" id="backupConfig" checked /> config.json</label>
+                                        <label><input type="checkbox" id="backupMessages" checked /> messages.json</label>
+                                        <button class="btn btn-secondary" onclick="toggleAllBackup()">全选/取消</button>
+                                        <button class="btn btn-secondary" onclick="downloadBackup()">📦 下载选中 (ZIP)</button>
+                                        <button class="btn btn-primary" onclick="syncBackupToRepo()">📤 同步到仓库</button>
+                                        <button class="btn btn-secondary" onclick="document.getElementById('uploadBackupInput').click()">📤 上传文件</button>
+                                        <input type="file" id="uploadBackupInput" accept=".txt,.json" style="display:none;" onchange="uploadBackupFile(event)" />
+                                    </div>
+                                    <div id="backupStatus" style="font-size:13px;color:#8a7a6a;">
+                                        上次备份：<span id="lastBackupTime">暂无</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                💬 评论设置 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div class="help-text">💡 使用 Giscus 评论系统（基于 GitHub Discussions）。<a href="https://giscus.app/zh-CN" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处获取配置</a></div>
+                                    <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+                                        <label style="font-weight:bold;">自动加载评论</label>
+                                        <input type="checkbox" id="autoLoadComments" />
+                                        <span style="font-size:13px; color:#8a7a6a;">开启后文章页面自动加载评论区</span>
+                                    </div>
+                                    <div class="form-group"><label>仓库名</label><input type="text" id="giscusRepo" placeholder="用户名/仓库名" style="min-height:38px;" /></div>
+                                    <div class="form-group"><label>Repo ID</label><input type="text" id="giscusRepoId" placeholder="R_xxxxxxxxxx" style="min-height:38px;" /></div>
+                                    <div class="form-group"><label>分类</label><input type="text" id="giscusCategory" placeholder="General" style="min-height:38px;" /></div>
+                                    <div class="form-group"><label>分类 ID</label><input type="text" id="giscusCategoryId" placeholder="DIC_xxxxxxx" style="min-height:38px;" /></div>
+                                    <div class="btn-group"><button class="btn btn-primary" onclick="saveCommentSettings()">保存评论设置</button></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                💬 留言管理 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
+                                        <input type="text" id="adminMsgNickname" placeholder="昵称" style="flex:1;min-height:38px;" />
+                                        <input type="text" id="adminMsgEmail" placeholder="邮箱" style="flex:1;min-height:38px;" />
+                                        <input type="text" id="adminMsgContent" placeholder="留言内容" style="flex:2;min-height:38px;" />
+                                        <button class="btn btn-primary" onclick="adminAddMessage()" style="min-height:38px;">添加留言</button>
+                                    </div>
+                                    <div class="admin-list" id="messageAdminList"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -3359,7 +2766,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  22. 后台管理功能
+        //  后台管理功能（与之前相同，略作精简）
         // ============================================================
         function renderAdminList() {
             var container = document.getElementById('adminPostList');
@@ -3532,9 +2939,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             }
         });
 
-        // ============================================================
-        //  23. 插入 Markdown
-        // ============================================================
         function insertMarkdown(type) {
             var textarea = document.getElementById('editContent');
             var start = textarea.selectionStart;
@@ -3588,9 +2992,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             }
         }
 
-        // ============================================================
-        //  24. 分类管理
-        // ============================================================
         function addCategory() {
             var name = document.getElementById('newCategoryName').value.trim();
             if (!name) { showToast('请输入分类名称', 'error'); return; }
@@ -3626,9 +3027,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             container.innerHTML = html || '<p style="color:#8a7a6a;">暂无分类</p>';
         }
 
-        // ============================================================
-        //  25. 标签管理
-        // ============================================================
         function addTag() {
             var name = document.getElementById('newTagName').value.trim();
             if (!name) { showToast('请输入标签名称', 'error'); return; }
@@ -3709,9 +3107,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             container.innerHTML = html || '<p style="color:#8a7a6a;">暂无标签</p>';
         }
 
-        // ============================================================
-        //  26. 站点设置
-        // ============================================================
         function loadSiteSettingsForm() {
             var logoEl = document.getElementById('setLogo');
             var titleEl = document.getElementById('setTitle');
@@ -3737,9 +3132,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             });
         }
 
-        // ============================================================
-        //  27. 字体管理
-        // ============================================================
         function loadFontSettingsForm() {
             var switchCheck = document.getElementById('fontSwitchCheck');
             if (switchCheck) switchCheck.checked = fontSwitchEnabled;
@@ -3830,9 +3222,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             sel.innerHTML = html;
         }
 
-        // ============================================================
-        //  28. 音乐管理
-        // ============================================================
         function loadMusicSettingsForm() {
             var enabledCheck = document.getElementById('musicEnabledCheck');
             var autoPlayCheck = document.getElementById('musicAutoPlayCheck');
@@ -3911,9 +3300,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             sel.innerHTML = html;
         }
 
-        // ============================================================
-        //  29. 关于页面
-        // ============================================================
         function saveAbout() {
             var editor = document.getElementById('aboutEditor');
             if (editor) {
@@ -3924,9 +3310,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             }
         }
 
-        // ============================================================
-        //  30. 安全设置
-        // ============================================================
         function loadSecuritySettings() {
             var stored = localStorage.getItem('security_config');
             if (stored) {
@@ -3969,9 +3352,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             showToast('已恢复默认', 'info');
         }
 
-        // ============================================================
-        //  31. GitHub 设置
-        // ============================================================
         function saveGitHubConfig() {
             var token = document.getElementById('githubTokenInput').value.trim();
             var user = document.getElementById('githubUserInput').value.trim();
@@ -4036,9 +3416,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             }, 600);
         }
 
-        // ============================================================
-        //  32. 备份功能
-        // ============================================================
         function downloadSingleFile(type) {
             var ts = getTimestamp();
             var content, filename;
@@ -4260,9 +3637,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             event.target.value = '';
         }
 
-        // ============================================================
-        //  33. 评论设置
-        // ============================================================
         function saveCommentSettings() {
             var autoLoadEl = document.getElementById('autoLoadComments');
             var repoEl = document.getElementById('giscusRepo');
@@ -4279,9 +3653,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             });
         }
 
-        // ============================================================
-        //  34. 留言管理
-        // ============================================================
         function renderMessageAdminList() {
             var container = document.getElementById('messageAdminList');
             if (!container) return;
@@ -4402,7 +3773,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  35. 折叠面板
+        //  折叠面板
         // ============================================================
         function togglePanel(header) {
             var body = header.nextElementSibling;
@@ -4418,7 +3789,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  36. 模态框
+        //  模态框
         // ============================================================
         function openModal(html) {
             document.getElementById('modalBody').innerHTML = html;
@@ -4434,7 +3805,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         });
 
         // ============================================================
-        //  37. 混合解密
+        //  混合解密
         // ============================================================
         function base64ToArrayBuffer(base64) {
             var binary = atob(base64);
@@ -4482,7 +3853,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  38. 初始化
+        //  初始化
         // ============================================================
         console.log('🚀 启动初始化...');
         loadAllData().then(function() {
