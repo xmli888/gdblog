@@ -35,6 +35,7 @@ category: 随笔
 tags: 测试
 date: 2026-07-13
 content: 测试文章
+下载地址：https://xmli888.github.io/gdblog
 ---
 title: 测试2
 category: 随笔
