@@ -9,6 +9,16 @@
       "status": "approved",
       "featured": true,
       "likes": 0
+    },
+    {
+      "id": 1784211748639,
+      "nickname": "访客",
+      "email": "",
+      "content": "就来看看",
+      "time": "2026-07-16 22:22:28",
+      "status": "pending",
+      "featured": false,
+      "likes": 0
     }
   ]
 }
