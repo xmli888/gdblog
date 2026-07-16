@@ -1,45 +1,14 @@
 {
-  "categories": [],
-  "tags": [],
-  "about": "关于墨韵轩...",
-  "siteSettings": {
-    "logo": "义",
-    "title": "墨韵轩",
-    "subtitle": "— 青砖檐下 · 笔墨春秋 · 静观自得 —",
-    "authorName": "墨轩主: 强哥",
-    "authorDesc": "闲来读书，兴至写文。\n以文会友，以友辅仁。"
-  },
-  "fonts": [
-    "楷体",
-    "宋体",
-    "黑体",
-    "仿宋",
-    "行楷",
-    "隶书",
-    "方正"
-  ],
-  "defaultFont": "行楷",
-  "fontSwitchEnabled": false,
-  "musicList": [
+  "messages": [
     {
-      "name": "古典",
-      "url": "bj.yy"
+      "id": 1784202742174,
+      "nickname": "光头强",
+      "email": "1235554@qq.com",
+      "content": "到此一游",
+      "time": "2026-07-16 19:52:22",
+      "status": "pending",
+      "featured": false,
+      "likes": 0
     }
-  ],
-  "musicEnabled": true,
-  "musicAutoPlay": false,
-  "musicDefault": "古典",
-  "lastBackupTime": "",
-  "autoLoadComments": true,
-  "giscus": {
-    "repo": "",
-    "repoId": "",
-    "category": "General",
-    "categoryId": ""
-  },
-  "security": {
-    "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3GujvExMjKhKErfk8yI\nfQIdZ5WTZ8krD4Q0m/b7cbOSaqwnwMMepsSDw2SonkAEEyOCVnKhX1NXoeX56yRJ\n7hdoe82RGDLZ3UDUGpdknUSCDeAjblsfzawbEMpNObo/e4TcSh8UKKBtKOdVXGHw\nHzfh6l8PByjsgvd7oi/jXPJ5iKC6PMeiiGKhK6VqAs7AexMviKtICi8ZOZseepSR\nolZEVm7zMathz/Mu0XOtSGztEopDeQjsFjIW3nhJnPYiJV+/BCmvn4WuJ9PQM1nW\nsjsd/6WGFE/kMuP1wZytb3m7vJLYuxhmOP5uKuwEFm4pa84FwosBInd5nOAtfweL\nHQIDAQAB\n-----END PUBLIC KEY-----",
-    "challengeCipher": "qlTYAKYrJa7XyyxhS6SaUrx0n/GCltGONPEeMSRYoqTY0eY3T7bJbvqK1bnop6d82YbFSjrmAv1bFf6jgYKefNS2yqe5NHW4ligkdQvXuqd6ZA3wCnR6JtrTLNwKr59n0LNzodyMWSpDIg0k0FvitZFPEnTr3TI1itVpxzUwg3Vso273Zd4GZ03wWdupWWteGquexDfYW1E+ZcCbuBURS3RURr/LzrzhPBaWMAGdgwmjsXZKtPULg2RO0vshns3sGWTuFOGCGvy96jiJshXI0PKUwf+TfYF7vVngyoHnv3P9lwiPuI1G17lDNR8lkjTuFO17W1vkRamfWdEZem1rc9BqfGg4yVZpFoPpjd8SdO0vLpfFtdZTNUIj14ZChBq3FwVzhJo6e7K3klo=",
-    "expectedPlain": "Temporary cache"
-  }
+  ]
 }
