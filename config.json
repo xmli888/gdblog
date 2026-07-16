@@ -1,14 +1,53 @@
 {
-  "messages": [
-    {
-      "id": 1784202742174,
-      "nickname": "光头强",
-      "email": "1235554@qq.com",
-      "content": "到此一游",
-      "time": "2026-07-16 19:52:22",
-      "status": "pending",
-      "featured": false,
-      "likes": 0
-    }
-  ]
+  "categories": [
+    "随笔",
+    "书评",
+    "游记",
+    "散文",
+    "诗词",
+    "其他"
+  ],
+  "tags": [
+    "墨韵",
+    "古宅",
+    "红木",
+    "诗词",
+    "阅读"
+  ],
+  "about": "墨韵轩，一处藏于青砖屋檐下的精神角落。\n\n这里没有喧嚣，只有笔墨与时光的对话。",
+  "siteSettings": {
+    "logo": "墨",
+    "title": "墨韵轩",
+    "subtitle": "— 青砖檐下 · 笔墨春秋 · 静观自得 —",
+    "authorName": "墨轩主",
+    "authorDesc": "闲来读书，兴至写文。\n以文会友，以友辅仁。"
+  },
+  "fonts": [
+    "楷体",
+    "宋体",
+    "黑体",
+    "仿宋",
+    "行楷",
+    "隶书",
+    "方正"
+  ],
+  "defaultFont": "楷体",
+  "fontSwitchEnabled": true,
+  "musicList": [],
+  "musicEnabled": true,
+  "musicAutoPlay": false,
+  "musicDefault": "",
+  "lastBackupTime": "",
+  "autoLoadComments": true,
+  "giscus": {
+    "repo": "",
+    "repoId": "",
+    "category": "General",
+    "categoryId": ""
+  },
+  "security": {
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w\n... (请替换为您实际的公钥)\n-----END PUBLIC KEY-----",
+    "challengeCipher": "... (替换为您实际的挑战码密文) ...",
+    "expectedPlain": "OK"
+  }
 }
