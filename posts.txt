@@ -1,14 +1,4 @@
 ---
-title: 小马哥曾经对“赢在中国”108将讲过的话
-category: 随笔
-tags: 语录,马云
-date: 2026-07-16
-author: 墨轩主: 强哥
-views: 69
-likes: 0
-content: ——马云在长城上对“赢在中国”108将的讲话
-如果你想成功，那么你要记住：遗产为零，诚实第一，学习第二，礼貌第三，刻苦第四，精明第五。完整的人生应有“三感”：使命感，失落感，危机感。
----
 title: i发帖覅viuiu和
 category: 随笔
 tags: 刚刚好
@@ -32,6 +22,6 @@ category: 随笔
 tags: 一样
 date: 2026-07-17
 author: 墨轩主
-views: 0
+views: 1
 likes: 0
 content: 本来奔波回报率好吧好吧
