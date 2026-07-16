@@ -10,7 +10,7 @@
            ============================================================ */
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            background-color: #f6efe8; /* 老宣纸色 */
+            background-color: #f6efe8;
             font-family: '华文楷体','KaiTi','SimSun','宋体', serif;
             color: #3e2723;
             min-height: 100vh;
@@ -45,72 +45,47 @@
             overflow: hidden;
             margin-bottom: 20px;
         }
-        /* 瓦片纹理 */
         .hero::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-image: repeating-linear-gradient(90deg,
-                rgba(0,0,0,0.05) 0px,
-                rgba(0,0,0,0.05) 4px,
-                transparent 4px,
-                transparent 8px);
+                rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 4px,
+                transparent 4px, transparent 8px);
             pointer-events: none;
         }
-        /* 树枝剪影（左） */
         .hero .branch-left {
-            position: absolute;
-            top: 20px;
-            left: 10px;
-            width: 120px;
-            height: 80px;
+            position: absolute; top: 20px; left: 10px;
+            width: 120px; height: 80px;
             background: radial-gradient(ellipse at 20% 100%, rgba(60,40,30,0.6) 0%, transparent 70%);
             transform: rotate(-10deg);
-            pointer-events: none;
-            opacity: 0.5;
+            pointer-events: none; opacity: 0.5;
         }
         .hero .branch-right {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 100px;
-            height: 60px;
+            position: absolute; top: 10px; right: 10px;
+            width: 100px; height: 60px;
             background: radial-gradient(ellipse at 80% 100%, rgba(60,40,30,0.5) 0%, transparent 70%);
             transform: rotate(15deg);
-            pointer-events: none;
-            opacity: 0.5;
+            pointer-events: none; opacity: 0.5;
         }
-        /* 鸟影装饰（仅桌面可见） */
         .hero .bird {
-            position: absolute;
-            top: 40px;
-            right: 80px;
-            font-size: 28px;
-            color: rgba(255,215,140,0.15);
+            position: absolute; top: 40px; right: 80px;
+            font-size: 28px; color: rgba(255,215,140,0.15);
             transform: rotate(-5deg);
-            pointer-events: none;
-            display: none;
+            pointer-events: none; display: none;
         }
-        @media (min-width: 768px) {
-            .hero .bird { display: block; }
-            .hero .bird2 { right: 160px; top: 60px; font-size: 20px; }
-        }
+        .hero .bird2 { right: 160px; top: 60px; font-size: 20px; }
+        @media (min-width: 768px) { .hero .bird { display: block; } }
 
-        /* Logo + 标题 + 简介 */
         .hero-content {
-            position: relative;
-            z-index: 2;
+            position: relative; z-index: 2;
             text-align: center;
             color: #f5e6d3;
             text-shadow: 0 2px 12px rgba(0,0,0,0.4);
         }
         .hero-logo {
             display: inline-block;
-            width: 80px;
-            height: 80px;
+            width: 80px; height: 80px;
             border-radius: 50%;
             background: #c23531;
             color: #f5e6d3;
@@ -123,8 +98,8 @@
             margin-bottom: 8px;
             border: 3px solid #e8c9a0;
             transition: transform 0.3s;
+            cursor: default;
         }
-        .hero-logo:hover { transform: scale(1.05); }
         .hero-title {
             font-size: 36px;
             font-weight: normal;
@@ -141,10 +116,9 @@
             opacity: 0.85;
             margin-bottom: 8px;
         }
-        /* 导航栏（红木牌匾效果） */
+        /* 导航栏（红木牌匾） */
         .nav-bar {
-            position: relative;
-            z-index: 3;
+            position: relative; z-index: 3;
             margin-top: 12px;
             background: linear-gradient(180deg, #7a4a34, #5a3222);
             border-radius: 12px 12px 4px 4px;
@@ -159,14 +133,10 @@
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
-            /* 木纹效果 */
             background-image: repeating-linear-gradient(90deg,
-                transparent 0px,
-                transparent 20px,
-                rgba(0,0,0,0.03) 20px,
-                rgba(0,0,0,0.03) 22px);
+                transparent 0px, transparent 20px,
+                rgba(0,0,0,0.03) 20px, rgba(0,0,0,0.03) 22px);
         }
-        /* 悬挂装饰（绳子） */
         .nav-bar::before,
         .nav-bar::after {
             content: '☯';
@@ -185,11 +155,9 @@
             font-family: '华文楷体','KaiTi',serif;
             position: relative;
             white-space: nowrap;
+            cursor: pointer;
         }
-        .nav-bar a:hover {
-            background: rgba(255,215,140,0.15);
-            color: #ffe8c8;
-        }
+        .nav-bar a:hover { background: rgba(255,215,140,0.15); color: #ffe8c8; }
         .nav-bar a.active {
             background: rgba(194,53,49,0.3);
             color: #ffe8c8;
@@ -202,9 +170,7 @@
             padding-right: 16px;
             border: 1px solid rgba(194,53,49,0.2);
         }
-        .nav-bar .login-btn:hover {
-            background: rgba(194,53,49,0.5);
-        }
+        .nav-bar .login-btn:hover { background: rgba(194,53,49,0.5); }
 
         /* ============================================================
            主体布局
@@ -221,7 +187,7 @@
             .sidebar { flex: 3; }
         }
 
-        /* 卡片通用样式 */
+        /* 卡片通用 */
         .card {
             background: #fdf8f0;
             border: 1px solid #e8d5c0;
@@ -231,9 +197,7 @@
             margin-bottom: 20px;
             transition: box-shadow 0.2s;
         }
-        .card:hover {
-            box-shadow: 0 4px 24px rgba(60,40,30,0.12);
-        }
+        .card:hover { box-shadow: 0 4px 24px rgba(60,40,30,0.12); }
         .card-title {
             font-size: 18px;
             font-weight: normal;
@@ -247,13 +211,11 @@
 
         /* 文章列表 */
         .post-item {
-            padding: 16px 0;
+            padding: 16px 8px;
             border-bottom: 1px dashed #e8d5c0;
             cursor: pointer;
             transition: background 0.15s;
             border-radius: 4px;
-            padding-left: 8px;
-            padding-right: 8px;
         }
         .post-item:last-child { border-bottom: none; }
         .post-item:hover { background: #f8f0e8; }
@@ -299,9 +261,7 @@
         }
 
         /* 侧边栏 */
-        .sidebar .profile {
-            text-align: center;
-        }
+        .sidebar .profile { text-align: center; }
         .sidebar .profile .avatar {
             font-size: 48px;
             background: #e8d5c0;
@@ -325,9 +285,7 @@
             font-family: 'SimSun','宋体',serif;
             margin-top: 4px;
         }
-        .category-list {
-            list-style: none;
-        }
+        .category-list { list-style: none; }
         .category-list li {
             padding: 6px 0;
             border-bottom: 1px dashed #e8d5c0;
@@ -337,12 +295,9 @@
             transition: 0.1s;
         }
         .category-list li:hover { background: #f8f0e8; }
-        .category-list li .count {
-            color: #8a7a6a;
-            font-size: 13px;
-        }
+        .category-list li .count { color: #8a7a6a; font-size: 13px; }
 
-        /* 文章详情页 */
+        /* 文章详情 */
         .post-detail .title {
             font-size: 28px;
             font-weight: normal;
@@ -365,9 +320,12 @@
             line-height: 2;
             font-family: 'SimSun','宋体',serif;
             color: #3e2723;
-            white-space: pre-wrap;
             margin-bottom: 24px;
         }
+        .post-detail .body img { max-width: 100%; height: auto; border-radius: 6px; }
+        .post-detail .body a { color: #8b2500; text-decoration: underline; }
+        .post-detail .body a:hover { color: #c23531; }
+
         .post-detail .nav-links {
             display: flex;
             justify-content: space-between;
@@ -377,10 +335,7 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-        .post-detail .nav-links a {
-            color: #8b2500;
-            cursor: pointer;
-        }
+        .post-detail .nav-links a { color: #8b2500; cursor: pointer; }
         .post-detail .nav-links a:hover { text-decoration: underline; }
         .recommend {
             margin-top: 20px;
@@ -412,12 +367,11 @@
         }
 
         /* ============================================================
-           后台管理界面（登录后）
+           后台管理（登录后显示）
            ============================================================ */
         .admin-area { display: none; }
         .admin-area.active { display: block; }
 
-        /* 折叠面板 */
         .panel {
             border: 1px solid #e8d5c0;
             border-radius: 8px;
@@ -447,9 +401,7 @@
         }
         .panel-body.open { display: block; }
 
-        .admin-form .form-group {
-            margin-bottom: 14px;
-        }
+        .admin-form .form-group { margin-bottom: 14px; }
         .admin-form .form-group label {
             display: block;
             font-size: 14px;
@@ -471,13 +423,15 @@
             transition: border 0.2s;
         }
         .admin-form .form-group input:focus,
-        .admin-form .form-group textarea:focus {
-            border-color: #c23531;
+        .admin-form .form-group textarea:focus { border-color: #c23531; }
+        .admin-form .form-group textarea { min-height: 100px; resize: vertical; }
+        .admin-form .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
         }
-        .admin-form .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
+        .admin-form .btn-group .btn { flex: 0 1 auto; }
         .admin-form .btn {
             padding: 6px 18px;
             border: none;
@@ -489,13 +443,15 @@
             letter-spacing: 2px;
             cursor: pointer;
             transition: 0.2s;
-            margin-right: 6px;
         }
         .admin-form .btn:hover { background: #5a3222; }
         .admin-form .btn-primary { background: #c23531; }
         .admin-form .btn-primary:hover { background: #a02a26; }
         .admin-form .btn-danger { background: #8b2500; }
         .admin-form .btn-danger:hover { background: #6b1a00; }
+        .admin-form .btn-secondary { background: #6b7b8b; }
+        .admin-form .btn-secondary:hover { background: #5a6a7a; }
+
         .admin-list .item {
             display: flex;
             justify-content: space-between;
@@ -518,11 +474,178 @@
         .admin-list .item .actions .del:hover { background: #8b2500; color: #fff; }
 
         /* ============================================================
+           字体切换（前台）
+           ============================================================ */
+        .font-switcher {
+            display: inline-block;
+            margin-left: 12px;
+            position: relative;
+        }
+        .font-switcher select {
+            padding: 2px 8px;
+            border: 1px solid #ddd0c0;
+            border-radius: 4px;
+            background: #fdf8f0;
+            font-size: 13px;
+            font-family: 'SimSun','宋体',serif;
+            color: #3e2723;
+            outline: none;
+            cursor: pointer;
+        }
+        .font-switcher select:hover { border-color: #c23531; }
+
+        /* ============================================================
+           音乐播放器（磁吸）
+           ============================================================ */
+        .music-player {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .music-toggle {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #7a4a34;
+            color: #f5e6d3;
+            border: 2px solid #c23531;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .music-toggle:hover { transform: scale(1.05); background: #5a3222; }
+        .music-panel {
+            width: 280px;
+            background: linear-gradient(145deg, #6b3a2a, #3d1f15);
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            border: 1px solid #9a6a54;
+            display: none;
+            transition: 0.3s;
+            color: #f5e6d3;
+        }
+        .music-panel.open { display: block; }
+        .music-panel .song-name {
+            font-size: 16px;
+            font-family: '华文楷体','KaiTi',serif;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-bottom: 8px;
+            color: #e8d5c0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .music-panel .progress-wrap {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,215,140,0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .music-panel .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #c23531;
+            border-radius: 2px;
+            transition: width 0.1s;
+        }
+        .music-panel .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+        }
+        .music-panel .controls button {
+            background: none;
+            border: none;
+            color: #e8d5c0;
+            font-size: 22px;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 4px;
+        }
+        .music-panel .controls button:hover { color: #c23531; transform: scale(1.1); }
+        .music-panel .controls button.play-btn { font-size: 32px; }
+
+        /* ============================================================
+           登录界面
+           ============================================================ */
+        .login-box {
+            max-width: 420px;
+            margin: 30px auto;
+            padding: 30px 24px;
+            background: #fdf8f0;
+            border: 1px solid #e8d5c0;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        .login-box h2 {
+            text-align: center;
+            font-weight: normal;
+            letter-spacing: 6px;
+            font-family: '华文楷体','KaiTi',serif;
+            color: #4d281b;
+            margin-bottom: 6px;
+        }
+        .login-box .login-sub {
+            text-align: center;
+            color: #8a7a6a;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+        .login-box .form-group { margin-bottom: 14px; }
+        .login-box .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd0c0;
+            border-radius: 6px;
+            background: #fefcf8;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            min-height: 80px;
+            outline: none;
+        }
+        .login-box .form-group textarea:focus { border-color: #c23531; }
+        .login-box .btn {
+            width: 100%;
+            padding: 10px;
+            background: #7a4a34;
+            color: #f5e6d3;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: '华文楷体','KaiTi',serif;
+            letter-spacing: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .login-box .btn:hover { background: #5a3222; }
+        .login-box .error-msg {
+            color: #c23531;
+            text-align: center;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* ============================================================
            Toast & 模态框
            ============================================================ */
         .toast-msg {
             position: fixed;
-            bottom: 40px;
+            bottom: 100px;
             left: 50%;
             transform: translateX(-50%);
             background: #3e2723;
@@ -579,71 +702,6 @@
         .modal-close:hover { color: #c23531; }
 
         /* ============================================================
-           登录界面
-           ============================================================ */
-        .login-box {
-            max-width: 420px;
-            margin: 30px auto;
-            padding: 30px 24px;
-            background: #fdf8f0;
-            border: 1px solid #e8d5c0;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-        }
-        .login-box h2 {
-            text-align: center;
-            font-weight: normal;
-            letter-spacing: 6px;
-            font-family: '华文楷体','KaiTi',serif;
-            color: #4d281b;
-            margin-bottom: 6px;
-        }
-        .login-box .login-sub {
-            text-align: center;
-            color: #8a7a6a;
-            font-size: 14px;
-            margin-bottom: 18px;
-        }
-        .login-box .form-group {
-            margin-bottom: 14px;
-        }
-        .login-box .form-group textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #ddd0c0;
-            border-radius: 6px;
-            background: #fefcf8;
-            font-size: 14px;
-            font-family: 'Courier New', monospace;
-            resize: vertical;
-            min-height: 80px;
-            outline: none;
-        }
-        .login-box .form-group textarea:focus {
-            border-color: #c23531;
-        }
-        .login-box .btn {
-            width: 100%;
-            padding: 10px;
-            background: #7a4a34;
-            color: #f5e6d3;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-family: '华文楷体','KaiTi',serif;
-            letter-spacing: 4px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .login-box .btn:hover { background: #5a3222; }
-        .login-box .error-msg {
-            color: #c23531;
-            text-align: center;
-            margin-top: 10px;
-            display: none;
-        }
-
-        /* ============================================================
            响应式
            ============================================================ */
         @media (max-width: 600px) {
@@ -651,13 +709,27 @@
             .hero-logo { width: 60px; height: 60px; font-size: 30px; line-height: 60px; }
             .hero-title { font-size: 24px; letter-spacing: 6px; }
             .hero-sub { font-size: 12px; letter-spacing: 2px; }
-            .nav-bar { gap: 2px 6px; padding: 4px 10px; flex-wrap: wrap; }
+            .nav-bar { gap: 2px 6px; padding: 4px 10px; }
             .nav-bar a { font-size: 13px; padding: 4px 8px; }
             .card { padding: 16px; }
             .post-item .title { font-size: 18px; }
+            .music-panel { width: 240px; }
+            .music-toggle { width: 48px; height: 48px; font-size: 20px; }
         }
         @media (max-width: 400px) {
             .nav-bar a { font-size: 12px; padding: 3px 6px; }
+        }
+
+        /* ============================================================
+           后台布局优化（宽屏下管理面板在主内容区）
+           ============================================================ */
+        @media (min-width: 820px) {
+            .admin-area .panel-body .admin-form .form-group textarea {
+                min-height: 150px;
+            }
+            .admin-area .panel-body .admin-list .item {
+                padding: 10px 0;
+            }
         }
     </style>
 </head>
@@ -674,25 +746,39 @@
         </div>
     </div>
 
+    <!-- 音乐播放器 -->
+    <div class="music-player" id="musicPlayer">
+        <div class="music-panel" id="musicPanel">
+            <div class="song-name" id="musicSongName">未选择歌曲</div>
+            <div class="progress-wrap" id="progressWrap">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="controls">
+                <button id="musicPrev">⏮</button>
+                <button class="play-btn" id="musicPlayBtn">▶️</button>
+                <button id="musicNext">⏭</button>
+            </div>
+        </div>
+        <button class="music-toggle" id="musicToggle">🎵</button>
+    </div>
+
     <div class="container">
 
         <!-- ============================================================
            顶部（古宅红木风格）
            ============================================================ -->
         <header class="hero">
-            <!-- 树枝装饰 -->
             <div class="branch-left"></div>
             <div class="branch-right"></div>
             <div class="bird">🐦</div>
             <div class="bird bird2">🐦</div>
 
-            <div class="hero-content">
-                <div class="hero-logo">墨</div>
-                <div class="hero-title">墨韵轩</div>
-                <div class="hero-sub">— 青砖檐下 · 笔墨春秋 · 静观自得 —</div>
+            <div class="hero-content" id="heroContent">
+                <div class="hero-logo" id="heroLogo">墨</div>
+                <div class="hero-title" id="heroTitle">墨韵轩</div>
+                <div class="hero-sub" id="heroSub">— 青砖檐下 · 笔墨春秋 · 静观自得 —</div>
             </div>
 
-            <!-- 导航栏（红木牌匾） -->
             <nav class="nav-bar" id="mainNav">
                 <a href="#" data-page="home" class="active">首页</a>
                 <a href="#" data-page="archive">归档</a>
@@ -715,10 +801,10 @@
             <!-- 右侧边栏 -->
             <aside class="sidebar" id="sidebar">
                 <!-- 个人信息 -->
-                <div class="card profile">
+                <div class="card profile" id="profileCard">
                     <div class="avatar">✍</div>
-                    <div class="name">墨 轩 主</div>
-                    <div class="desc">闲来读书，兴至写文。<br />以文会友，以友辅仁。</div>
+                    <div class="name" id="authorName">墨 轩 主</div>
+                    <div class="desc" id="authorDesc">闲来读书，兴至写文。<br />以文会友，以友辅仁。</div>
                 </div>
                 <!-- 分类 -->
                 <div class="card">
@@ -729,6 +815,26 @@
                 <div id="adminPanel" style="display:none;">
                     <div class="card">
                         <div class="card-title">🔐 后台管理</div>
+
+                        <!-- 面板：站点设置 -->
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                站点设置 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div class="form-group"><label>Logo 文字</label><input type="text" id="setLogo" /></div>
+                                    <div class="form-group"><label>博客标题</label><input type="text" id="setTitle" /></div>
+                                    <div class="form-group"><label>博客副标题</label><input type="text" id="setSub" /></div>
+                                    <div class="form-group"><label>作者名</label><input type="text" id="setAuthor" /></div>
+                                    <div class="form-group"><label>作者简介</label><textarea id="setAuthorDesc" rows="2"></textarea></div>
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary" onclick="saveSiteSettings()">保存</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- 面板：文章管理 -->
                         <div class="panel">
                             <div class="panel-header" onclick="togglePanel(this)">
@@ -736,27 +842,34 @@
                             </div>
                             <div class="panel-body open">
                                 <div class="admin-form">
-                                    <div class="form-group">
-                                        <label>标题</label>
-                                        <input type="text" id="editTitle" placeholder="文章标题" />
+                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px;">
+                                        <button class="btn btn-primary" onclick="newPostForm()">➕ 写新文章</button>
+                                        <button class="btn btn-secondary" onclick="clearEditForm()">清空表单</button>
+                                    </div>
+                                    <div class="form-group"><label>标题</label><input type="text" id="editTitle" /></div>
+                                    <div class="form-row" style="display:flex; gap:10px; flex-wrap:wrap;">
+                                        <div class="form-group" style="flex:1;"><label>分类</label><select id="editCategory"></select></div>
+                                        <div class="form-group" style="flex:1;"><label>标签 (逗号分隔)</label><input type="text" id="editTags" /></div>
                                     </div>
                                     <div class="form-row" style="display:flex; gap:10px; flex-wrap:wrap;">
-                                        <div class="form-group" style="flex:1;">
-                                            <label>分类</label>
-                                            <select id="editCategory"></select>
-                                        </div>
-                                        <div class="form-group" style="flex:1;">
-                                            <label>标签 (逗号分隔)</label>
-                                            <input type="text" id="editTags" placeholder="如：雨,青砖" />
-                                        </div>
+                                        <div class="form-group" style="flex:1;"><label>作者</label><input type="text" id="editAuthor" /></div>
+                                        <div class="form-group" style="flex:1;"><label>日期</label><input type="date" id="editDate" /></div>
+                                        <div class="form-group" style="flex:0 0 100px;"><label>阅读数</label><input type="number" id="editViews" min="0" /></div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>正文</label>
-                                        <textarea id="editContent" rows="5"></textarea>
+                                    <div class="form-group"><label>正文 (支持 Markdown)</label>
+                                        <div style="display:flex; gap:6px; margin-bottom:4px; flex-wrap:wrap;">
+                                            <button class="btn btn-secondary" onclick="insertMarkdown('image')">🖼️ 插入图片</button>
+                                            <button class="btn btn-secondary" onclick="insertMarkdown('link')">🔗 插入链接</button>
+                                            <button class="btn btn-secondary" onclick="insertMarkdown('bold')">B</button>
+                                            <button class="btn btn-secondary" onclick="insertMarkdown('italic')">I</button>
+                                            <button class="btn btn-secondary" onclick="insertMarkdown('code')">&lt;/&gt;</button>
+                                        </div>
+                                        <textarea id="editContent" rows="6"></textarea>
                                     </div>
                                     <input type="hidden" id="editId" />
-                                    <button class="btn btn-primary" onclick="savePost()">保存文章</button>
-                                    <button class="btn" onclick="clearEditForm()">清空</button>
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary" onclick="savePost()">保存文章</button>
+                                    </div>
                                 </div>
                                 <div class="admin-list" id="adminPostList"></div>
                             </div>
@@ -769,11 +882,76 @@
                             </div>
                             <div class="panel-body">
                                 <div class="admin-form">
-                                    <div class="form-group" style="display:flex; gap:10px; flex-wrap:wrap;">
+                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
                                         <input type="text" id="newCategoryName" placeholder="新分类名称" style="flex:1;" />
                                         <button class="btn btn-primary" onclick="addCategory()">添加</button>
                                     </div>
                                     <div class="admin-list" id="categoryAdminList"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 面板：标签管理 -->
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                标签管理 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                                        <input type="text" id="newTagName" placeholder="新标签名称" style="flex:1;" />
+                                        <button class="btn btn-primary" onclick="addTag()">添加</button>
+                                    </div>
+                                    <div class="admin-list" id="tagAdminList"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 面板：字体管理 -->
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                字体管理 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
+                                        <input type="text" id="newFontName" placeholder="字体名称 (如 楷体)" style="flex:1;" />
+                                        <button class="btn btn-primary" onclick="addFont()">添加</button>
+                                    </div>
+                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
+                                        <label style="font-weight:bold;">默认字体</label>
+                                        <select id="defaultFontSelect"></select>
+                                        <button class="btn btn-secondary" onclick="setDefaultFont()">设为默认</button>
+                                        <button class="btn btn-secondary" onclick="resetFonts()">重置默认列表</button>
+                                    </div>
+                                    <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+                                        <label style="font-weight:bold;">前台字体切换</label>
+                                        <input type="checkbox" id="fontSwitchCheck" onchange="saveFontSettings()" />
+                                        <span style="font-size:13px; color:#8a7a6a;">开启后用户可自定义字体</span>
+                                    </div>
+                                    <div class="admin-list" id="fontAdminList"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 面板：音乐管理 -->
+                        <div class="panel">
+                            <div class="panel-header" onclick="togglePanel(this)">
+                                音乐管理 <span class="arrow">▼</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="admin-form">
+                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
+                                        <input type="text" id="newMusicName" placeholder="歌曲名" style="flex:1;" />
+                                        <input type="text" id="newMusicUrl" placeholder="URL 或路径" style="flex:2;" />
+                                        <button class="btn btn-primary" onclick="addMusic()">添加</button>
+                                    </div>
+                                    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:10px;">
+                                        <label><input type="checkbox" id="musicEnabledCheck" onchange="saveMusicSettings()" /> 显示播放器</label>
+                                        <label><input type="checkbox" id="musicAutoPlayCheck" onchange="saveMusicSettings()" /> 自动播放</label>
+                                        <label>默认歌曲 <select id="musicDefaultSelect"></select></label>
+                                    </div>
+                                    <div class="admin-list" id="musicAdminList"></div>
                                 </div>
                             </div>
                         </div>
@@ -785,54 +963,43 @@
                             </div>
                             <div class="panel-body">
                                 <div class="admin-form">
-                                    <div class="form-group">
-                                        <textarea id="aboutEditor" rows="6"></textarea>
-                                    </div>
+                                    <div class="form-group"><textarea id="aboutEditor" rows="6"></textarea></div>
                                     <button class="btn btn-primary" onclick="saveAbout()">保存关于</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 面板：安全设置（折叠） -->
+                        <!-- 面板：安全设置 -->
                         <div class="panel">
                             <div class="panel-header" onclick="togglePanel(this)">
                                 安全设置 <span class="arrow">▼</span>
                             </div>
                             <div class="panel-body">
                                 <div class="admin-form">
-                                    <div class="form-group">
-                                        <label>公钥</label>
-                                        <textarea id="secPublicKey" rows="3" style="font-family:monospace;font-size:12px;"></textarea>
+                                    <div class="form-group"><label>公钥</label><textarea id="secPublicKey" rows="3" style="font-family:monospace;font-size:12px;"></textarea></div>
+                                    <div class="form-group"><label>挑战码密文</label><textarea id="secChallengeCipher" rows="2" style="font-family:monospace;font-size:12px;"></textarea></div>
+                                    <div class="form-group"><label>期望明文</label><input type="text" id="secExpectedPlain" /></div>
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary" onclick="saveSecuritySettings()">保存安全设置</button>
+                                        <button class="btn btn-secondary" onclick="resetSecuritySettings()">恢复默认</button>
                                     </div>
-                                    <div class="form-group">
-                                        <label>挑战码密文</label>
-                                        <textarea id="secChallengeCipher" rows="2" style="font-family:monospace;font-size:12px;"></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>期望明文</label>
-                                        <input type="text" id="secExpectedPlain" />
-                                    </div>
-                                    <button class="btn btn-primary" onclick="saveSecuritySettings()">保存安全设置</button>
-                                    <button class="btn" onclick="resetSecuritySettings()">恢复默认</button>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </aside>
         </div>
 
-        <!-- ============================================================
-           底部
-           ============================================================ -->
+        <!-- 底部 -->
         <footer style="text-align:center; padding:20px 0 30px; color:#8a7a6a; font-size:13px; border-top:1px solid #e8d5c0; margin-top:20px;">
             © 2026 墨韵轩 · 以古典之心，行现代之事
         </footer>
     </div>
 
-    <!-- ============================================================
-       JavaScript 全部逻辑
-       ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js">
+    </script>
     <script>
         // ============================================================
         //  1. 配置 & 默认值
@@ -841,9 +1008,28 @@
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
 ... (请替换为您的公钥)
 -----END PUBLIC KEY-----`;
-
-        var DEFAULT_CHALLENGE_CIPHER = '... (请替换为您的挑战码密文) ...';
+        var DEFAULT_CHALLENGE_CIPHER = '... (请替换) ...';
         var DEFAULT_EXPECTED_PLAIN = 'OK';
+
+        var config = { token: '', user: '', repo: '', path: 'posts.txt', configPath: 'config.json' };
+        var posts = [];
+        var categories = [];
+        var tags = [];
+        var aboutContent = '';
+        var siteSettings = {};
+        var fonts = [];
+        var defaultFont = '';
+        var fontSwitchEnabled = true;
+        var musicList = [];
+        var musicEnabled = true;
+        var musicAutoPlay = false;
+        var musicDefault = '';
+
+        // 播放器状态
+        var audio = new Audio();
+        var currentSongIndex = -1;
+        var isPlaying = false;
+        var musicPanelOpen = false;
 
         // ============================================================
         //  2. 工具函数
@@ -857,7 +1043,8 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
 
         function getToday() {
             var d = new Date();
-            return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2,
+                '0');
         }
 
         function showToast(msg, type) {
@@ -869,37 +1056,28 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
             window.toastTimer = setTimeout(function() { el.classList.remove('show'); }, 3000);
         }
 
-        // ============================================================
-        //  3. 数据读写（通过 GitHub API）
-        // ============================================================
-        var config = { token: '', user: '', repo: '', path: 'posts.txt', configPath: 'config.json' };
-        var posts = [];
-        var categories = [];
-        var aboutContent = '';
-
         function loadLocalConfig() {
             var saved = localStorage.getItem('github_config');
-            if (saved) {
-                try { config = JSON.parse(saved); } catch(e) {}
-            }
+            if (saved) { try { config = JSON.parse(saved); } catch (e) {} }
         }
         loadLocalConfig();
 
-        function isConfigured() {
-            return config.token && config.user && config.repo;
-        }
+        function isConfigured() { return config.token && config.user && config.repo; }
 
+        // ============================================================
+        //  3. 数据读写（GitHub API）
+        // ============================================================
         function decodeBase64Utf8(base64) {
             var binary = atob(base64);
             var bytes = new Uint8Array(binary.length);
-            for (var i=0; i<bytes.length; i++) bytes[i] = binary.charCodeAt(i);
+            for (var i = 0; i < bytes.length; i++) bytes[i] = binary.charCodeAt(i);
             return new TextDecoder('utf-8').decode(bytes);
         }
 
         function encodeUtf8ToBase64(text) {
             var data = new TextEncoder().encode(text);
             var binary = '';
-            for (var i=0; i<data.length; i++) binary += String.fromCharCode(data[i]);
+            for (var i = 0; i < data.length; i++) binary += String.fromCharCode(data[i]);
             return btoa(binary);
         }
 
@@ -913,9 +1091,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 return res.json();
             }).then(function(data) {
-                if (data && data.content) {
-                    return decodeBase64Utf8(data.content);
-                }
+                if (data && data.content) return decodeBase64Utf8(data.content);
                 return null;
             });
         }
@@ -961,13 +1137,28 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
                     if (text) {
                         try {
                             var json = JSON.parse(text);
-                            categories = json.categories || [];
+                            categories = json.categories || ['随笔', '书评', '游记', '散文', '诗词', '其他'];
+                            tags = json.tags || [];
                             aboutContent = json.about || '关于墨韵轩...';
-                            // 安全配置存入 localStorage 供登录使用
+                            siteSettings = json.siteSettings || {};
+                            fonts = json.fonts || ['楷体', '宋体', '黑体', '仿宋', '行楷', '隶书', '方正'];
+                            defaultFont = json.defaultFont || '楷体';
+                            fontSwitchEnabled = json.fontSwitchEnabled !== undefined ? json.fontSwitchEnabled : true;
+                            musicList = json.musicList || [];
+                            musicEnabled = json.musicEnabled !== undefined ? json.musicEnabled : true;
+                            musicAutoPlay = json.musicAutoPlay || false;
+                            musicDefault = json.musicDefault || '';
+                            // 安全配置存入 localStorage
                             if (json.security) {
                                 localStorage.setItem('security_config', JSON.stringify(json.security));
                             }
-                        } catch(e) { console.warn('config.json 解析失败', e); }
+                            // 应用站点设置
+                            applySiteSettings();
+                            // 应用字体设置
+                            applyFontSettings();
+                            // 应用音乐设置
+                            applyMusicSettings();
+                        } catch (e) { console.warn('config.json 解析失败', e); }
                     }
                 })
             ]).catch(function(err) {
@@ -978,22 +1169,27 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
         function parsePosts(text) {
             var blocks = text.split(/---\s*/).filter(function(b) { return b.trim().length > 0; });
             var result = [];
-            for (var i=0; i<blocks.length; i++) {
+            for (var i = 0; i < blocks.length; i++) {
                 var block = blocks[i].trim();
                 var lines = block.split('\n');
-                var post = { title:'', category:'', tags:[], date:'', content:'', id: i+1 };
-                var contentLines = [], isContent = false;
-                for (var j=0; j<lines.length; j++) {
+                var post = { title: '', category: '', tags: [], date: '', author: '', views: 0, content: '', id: i + 1 };
+                var contentLines = [],
+                    isContent = false;
+                for (var j = 0; j < lines.length; j++) {
                     var line = lines[j].trim();
                     if (!line) continue;
                     var match = line.match(/^(\w+):\s*(.*)/);
                     if (match && !isContent) {
-                        var key = match[1], val = match[2];
+                        var key = match[1],
+                            val = match[2];
                         if (key === 'title') post.title = val;
                         else if (key === 'category') post.category = val;
-                        else if (key === 'tags') post.tags = val.split(',').map(function(t){return t.trim();});
+                        else if (key === 'tags') post.tags = val.split(',').map(function(t) { return t.trim(); });
                         else if (key === 'date') post.date = val;
-                        else if (key === 'content') { isContent = true; contentLines.push(val); }
+                        else if (key === 'author') post.author = val;
+                        else if (key === 'views') post.views = parseInt(val) || 0;
+                        else if (key === 'content') { isContent = true;
+                            contentLines.push(val); }
                     } else {
                         if (isContent || line.startsWith('content:')) {
                             if (line.startsWith('content:')) contentLines.push(line.replace(/^content:\s*/, ''));
@@ -1004,69 +1200,261 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
                 post.content = contentLines.join('\n').trim();
                 if (post.title && post.content) result.push(post);
             }
-            // 重新分配 id 确保唯一
             result.forEach(function(p, idx) { p.id = idx + 1; });
             return result;
         }
 
         function generatePostsTxt(postsArray) {
             var text = '';
-            for (var i=0; i<postsArray.length; i++) {
+            for (var i = 0; i < postsArray.length; i++) {
                 var p = postsArray[i];
                 text += '---\n';
                 text += 'title: ' + p.title + '\n';
                 text += 'category: ' + (p.category || '随笔') + '\n';
                 text += 'tags: ' + (p.tags ? p.tags.join(',') : '') + '\n';
                 text += 'date: ' + (p.date || getToday()) + '\n';
+                text += 'author: ' + (p.author || siteSettings.authorName || '墨轩主') + '\n';
+                text += 'views: ' + (p.views || 0) + '\n';
                 text += 'content: ' + p.content + '\n';
             }
             return text;
         }
 
+        function saveConfigData() {
+            var data = {
+                categories: categories,
+                tags: tags,
+                about: aboutContent,
+                siteSettings: siteSettings,
+                fonts: fonts,
+                defaultFont: defaultFont,
+                fontSwitchEnabled: fontSwitchEnabled,
+                musicList: musicList,
+                musicEnabled: musicEnabled,
+                musicAutoPlay: musicAutoPlay,
+                musicDefault: musicDefault,
+                security: JSON.parse(localStorage.getItem('security_config') || '{}')
+            };
+            var jsonStr = JSON.stringify(data, null, 2);
+            return saveFile(config.configPath, jsonStr, '更新配置');
+        }
+
         // ============================================================
-        //  5. 渲染引擎
+        //  5. 站点设置应用
+        // ============================================================
+        function applySiteSettings() {
+            if (siteSettings.logo) document.getElementById('heroLogo').textContent = siteSettings.logo;
+            if (siteSettings.title) document.getElementById('heroTitle').textContent = siteSettings.title;
+            if (siteSettings.subtitle) document.getElementById('heroSub').textContent = siteSettings.subtitle;
+            if (siteSettings.authorName) {
+                document.getElementById('authorName').textContent = siteSettings.authorName;
+                // 更新编辑表单中的默认作者
+                var authorInput = document.getElementById('editAuthor');
+                if (authorInput && !authorInput.value) authorInput.placeholder = siteSettings.authorName;
+            }
+            if (siteSettings.authorDesc) document.getElementById('authorDesc').innerHTML = siteSettings.authorDesc.replace(
+            /\n/g, '<br>');
+        }
+
+        // ============================================================
+        //  6. 字体设置应用
+        // ============================================================
+        function applyFontSettings() {
+            var body = document.body;
+            var storedFont = localStorage.getItem('user_selected_font');
+            var useAdminDefault = false;
+            if (fontSwitchEnabled && storedFont && fonts.indexOf(storedFont) !== -1) {
+                body.style.fontFamily = storedFont + ', serif';
+            } else if (defaultFont && fonts.indexOf(defaultFont) !== -1) {
+                body.style.fontFamily = defaultFont + ', serif';
+                useAdminDefault = true;
+            } else {
+                body.style.fontFamily = 'serif';
+            }
+            // 更新前台字体切换下拉菜单
+            renderFontSwitcher();
+            // 更新后台字体列表
+            renderFontAdmin();
+            populateDefaultFontSelect();
+        }
+
+        function renderFontSwitcher() {
+            var container = document.querySelector('.main-content .card:first-child .card-title');
+            if (!container) return;
+            // 移除已有切换器
+            var oldSwitcher = container.querySelector('.font-switcher');
+            if (oldSwitcher) oldSwitcher.remove();
+
+            if (!fontSwitchEnabled) return;
+
+            var wrapper = document.createElement('span');
+            wrapper.className = 'font-switcher';
+            var select = document.createElement('select');
+            select.id = 'fontSwitcherSelect';
+            var opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = '字体';
+            select.appendChild(opt);
+            fonts.forEach(function(f) {
+                var o = document.createElement('option');
+                o.value = f;
+                o.textContent = f;
+                if (localStorage.getItem('user_selected_font') === f) o.selected = true;
+                select.appendChild(o);
+            });
+            select.addEventListener('change', function() {
+                var val = this.value;
+                if (val) {
+                    localStorage.setItem('user_selected_font', val);
+                    document.body.style.fontFamily = val + ', serif';
+                } else {
+                    localStorage.removeItem('user_selected_font');
+                    applyFontSettings();
+                }
+            });
+            wrapper.appendChild(select);
+            container.appendChild(wrapper);
+        }
+
+        // ============================================================
+        //  7. 音乐播放器
+        // ============================================================
+        function applyMusicSettings() {
+            var player = document.getElementById('musicPlayer');
+            if (!musicEnabled) {
+                player.style.display = 'none';
+                return;
+            }
+            player.style.display = 'flex';
+            // 更新播放列表
+            renderMusicAdmin();
+            populateMusicDefaultSelect();
+            // 更新开关状态
+            document.getElementById('musicEnabledCheck').checked = musicEnabled;
+            document.getElementById('musicAutoPlayCheck').checked = musicAutoPlay;
+            document.getElementById('musicDefaultSelect').value = musicDefault;
+            // 设置默认歌曲
+            if (musicList.length > 0) {
+                var defaultSong = musicDefault || musicList[0].name;
+                var idx = musicList.findIndex(function(s) { return s.name === defaultSong; });
+                if (idx === -1) idx = 0;
+                currentSongIndex = idx;
+                document.getElementById('musicSongName').textContent = musicList[idx].name;
+                audio.src = musicList[idx].url;
+                if (musicAutoPlay) {
+                    audio.play().then(function() {
+                        isPlaying = true;
+                        document.getElementById('musicPlayBtn').textContent = '⏸';
+                    }).catch(function() {});
+                }
+            } else {
+                document.getElementById('musicSongName').textContent = '无歌曲';
+            }
+            // 展开/收起
+            document.getElementById('musicToggle').addEventListener('click', function() {
+                var panel = document.getElementById('musicPanel');
+                musicPanelOpen = !musicPanelOpen;
+                panel.classList.toggle('open', musicPanelOpen);
+                this.textContent = musicPanelOpen ? '🎵' : '🎵';
+            });
+            // 播放控制
+            document.getElementById('musicPlayBtn').addEventListener('click', function() {
+                if (isPlaying) {
+                    audio.pause();
+                    isPlaying = false;
+                    this.textContent = '▶️';
+                } else {
+                    audio.play().then(function() {
+                        isPlaying = true;
+                        document.getElementById('musicPlayBtn').textContent = '⏸';
+                    }).catch(function() {});
+                }
+            });
+            document.getElementById('musicPrev').addEventListener('click', function() {
+                if (musicList.length === 0) return;
+                currentSongIndex = (currentSongIndex - 1 + musicList.length) % musicList.length;
+                playSong(currentSongIndex);
+            });
+            document.getElementById('musicNext').addEventListener('click', function() {
+                if (musicList.length === 0) return;
+                currentSongIndex = (currentSongIndex + 1) % musicList.length;
+                playSong(currentSongIndex);
+            });
+            // 进度条
+            audio.addEventListener('timeupdate', function() {
+                var percent = (audio.currentTime / audio.duration) * 100;
+                document.getElementById('progressBar').style.width = percent + '%';
+            });
+            document.getElementById('progressWrap').addEventListener('click', function(e) {
+                var rect = this.getBoundingClientRect();
+                var pos = (e.clientX - rect.left) / rect.width;
+                audio.currentTime = pos * audio.duration;
+            });
+            audio.addEventListener('ended', function() {
+                // 自动下一首
+                if (musicList.length > 1) {
+                    currentSongIndex = (currentSongIndex + 1) % musicList.length;
+                    playSong(currentSongIndex);
+                } else {
+                    isPlaying = false;
+                    document.getElementById('musicPlayBtn').textContent = '▶️';
+                }
+            });
+        }
+
+        function playSong(index) {
+            if (index < 0 || index >= musicList.length) return;
+            var song = musicList[index];
+            audio.src = song.url;
+            document.getElementById('musicSongName').textContent = song.name;
+            audio.play().then(function() {
+                isPlaying = true;
+                document.getElementById('musicPlayBtn').textContent = '⏸';
+                // 更新默认歌曲选择
+                document.getElementById('musicDefaultSelect').value = song.name;
+            }).catch(function() {});
+        }
+
+        // ============================================================
+        //  8. 渲染引擎（前台）
         // ============================================================
         var currentPage = 'home';
         var currentPostId = null;
 
         function renderPage(page, data) {
             var container = document.getElementById('mainContent');
-            if (page === 'home') {
-                renderHome(container);
-            } else if (page === 'archive') {
-                renderArchive(container);
-            } else if (page === 'categories') {
-                renderCategoriesPage(container);
-            } else if (page === 'about') {
-                renderAbout(container);
-            } else if (page === 'post') {
-                renderPostDetail(container, data);
-            } else {
-                renderHome(container);
-            }
+            if (page === 'home') renderHome(container);
+            else if (page === 'archive') renderArchive(container);
+            else if (page === 'categories') renderCategoriesPage(container);
+            else if (page === 'about') renderAbout(container);
+            else if (page === 'post') renderPostDetail(container, data);
+            else renderHome(container);
             // 高亮导航
             document.querySelectorAll('#mainNav a').forEach(function(a) {
                 a.classList.remove('active');
                 if (a.dataset.page === page) a.classList.add('active');
             });
-            // 更新侧边栏分类
             renderSidebarCategories();
+            // 字体切换器（重新注入）
+            setTimeout(renderFontSwitcher, 50);
         }
 
         function renderHome(container) {
-            var sorted = posts.slice().sort(function(a,b) { return new Date(b.date) - new Date(a.date); });
+            var sorted = posts.slice().sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
             var html = '<div class="card"><div class="card-title">📖 最新文章</div>';
             if (sorted.length === 0) {
                 html += '<p style="color:#8a7a6a;">暂无文章，请后台添加。</p>';
             } else {
                 sorted.forEach(function(p) {
-                    var excerpt = p.content.length > 120 ? p.content.substring(0,120)+'...' : p.content;
-                    html += '<div class="post-item" onclick="navigateToPost('+p.id+')">';
+                    var excerpt = p.content.length > 120 ? p.content.substring(0, 120) + '...' : p.content;
+                    html += '<div class="post-item" onclick="navigateToPost(' + p.id + ')">';
                     html += '<div class="title">' + escapeHtml(p.title) + '</div>';
-                    html += '<div class="meta"><span>📅 '+p.date+'</span><span>📂 '+escapeHtml(p.category)+'</span></div>';
-                    html += '<div class="excerpt">'+escapeHtml(excerpt)+'</div>';
+                    html += '<div class="meta"><span>📅 ' + p.date + '</span><span>📂 ' + escapeHtml(p.category) +
+                        '</span><span>👁️ ' + (p.views || 0) + '</span></div>';
+                    html += '<div class="excerpt">' + escapeHtml(excerpt) + '</div>';
                     if (p.tags && p.tags.length) {
-                        html += '<div class="tags">'+p.tags.map(function(t){return '<span>#'+escapeHtml(t)+'</span>';}).join('')+'</div>';
+                        html += '<div class="tags">' + p.tags.map(function(t) { return '<span>#' + escapeHtml(t) +
+                            '</span>'; }).join('') + '</div>';
                     }
                     html += '</div>';
                 });
@@ -1076,15 +1464,16 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
         }
 
         function renderArchive(container) {
-            var sorted = posts.slice().sort(function(a,b) { return new Date(b.date) - new Date(a.date); });
+            var sorted = posts.slice().sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
             var html = '<div class="card"><div class="card-title">📚 全部文章</div>';
             if (sorted.length === 0) {
                 html += '<p style="color:#8a7a6a;">暂无文章。</p>';
             } else {
                 sorted.forEach(function(p) {
-                    html += '<div class="post-item" onclick="navigateToPost('+p.id+')">';
+                    html += '<div class="post-item" onclick="navigateToPost(' + p.id + ')">';
                     html += '<div class="title">' + escapeHtml(p.title) + '</div>';
-                    html += '<div class="meta"><span>📅 '+p.date+'</span><span>📂 '+escapeHtml(p.category)+'</span></div>';
+                    html += '<div class="meta"><span>📅 ' + p.date + '</span><span>📂 ' + escapeHtml(p.category) +
+                        '</span><span>👁️ ' + (p.views || 0) + '</span></div>';
                     html += '</div>';
                 });
             }
@@ -1094,16 +1483,17 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
 
         function renderCategoriesPage(container) {
             var map = {};
-            posts.forEach(function(p) {
-                if (map[p.category]) map[p.category]++; else map[p.category]=1;
-            });
+            posts.forEach(function(p) { if (map[p.category]) map[p.category]++; else map[p.category] = 1; });
             var html = '<div class="card"><div class="card-title">📂 全部分类</div>';
             if (Object.keys(map).length === 0) {
                 html += '<p style="color:#8a7a6a;">暂无分类。</p>';
             } else {
                 for (var cat in map) {
-                    html += '<div style="padding:6px 0; border-bottom:1px dashed #e8d5c0; cursor:pointer;" onclick="filterByCategory(\''+cat+'\')">';
-                    html += '<span>'+escapeHtml(cat)+'</span> <span style="color:#8a7a6a;float:right;">'+map[cat]+' 篇</span>';
+                    html +=
+                        '<div style="padding:6px 0; border-bottom:1px dashed #e8d5c0; cursor:pointer;" onclick="filterByCategory(\'' +
+                        cat + '\')">';
+                    html += '<span>' + escapeHtml(cat) + '</span> <span style="color:#8a7a6a;float:right;">' + map[
+                        cat] + ' 篇</span>';
                     html += '</div>';
                 }
             }
@@ -1124,24 +1514,38 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
                 container.innerHTML = '<div class="card"><div class="card-title">文章未找到</div><p>请返回首页。</p></div>';
                 return;
             }
+            // 增加阅读数
+            if (!sessionStorage.getItem('viewed_' + post.id)) {
+                post.views = (post.views || 0) + 1;
+                sessionStorage.setItem('viewed_' + post.id, '1');
+                // 保存更新到GitHub（异步）
+                var txt = generatePostsTxt(posts);
+                saveFile(config.path, txt, '更新阅读数').catch(function() {});
+            }
+
             var idx = posts.indexOf(post);
-            var prev = idx > 0 ? posts[idx-1] : null;
-            var next = idx < posts.length-1 ? posts[idx+1] : null;
+            var prev = idx > 0 ? posts[idx - 1] : null;
+            var next = idx < posts.length - 1 ? posts[idx + 1] : null;
 
             var html = '<div class="card post-detail">';
             html += '<div class="title">' + escapeHtml(post.title) + '</div>';
             html += '<div class="meta">';
-            html += '<span>📅 '+post.date+'</span>';
-            html += '<span>📂 '+escapeHtml(post.category)+'</span>';
-            if (post.tags && post.tags.length) html += '<span>🏷️ '+post.tags.map(function(t){return '#'+escapeHtml(t);}).join(' ')+'</span>';
+            html += '<span>📅 ' + post.date + '</span>';
+            html += '<span>📂 ' + escapeHtml(post.category) + '</span>';
+            html += '<span>✍️ ' + escapeHtml(post.author || siteSettings.authorName || '墨轩主') + '</span>';
+            html += '<span>👁️ ' + (post.views || 0) + '</span>';
+            if (post.tags && post.tags.length) html += '<span>🏷️ ' + post.tags.map(function(t) { return '#' + escapeHtml(
+                t); }).join(' ') + '</span>';
             html += '</div>';
-            html += '<div class="body">' + escapeHtml(post.content).replace(/\n/g, '<br>') + '</div>';
+            // 渲染 Markdown
+            var rendered = marked.parse(post.content);
+            html += '<div class="body">' + rendered + '</div>';
 
             // 上一篇/下一篇
             html += '<div class="nav-links">';
-            if (prev) html += '<a onclick="navigateToPost('+prev.id+')">← '+escapeHtml(prev.title)+'</a>';
+            if (prev) html += '<a onclick="navigateToPost(' + prev.id + ')">← ' + escapeHtml(prev.title) + '</a>';
             else html += '<span></span>';
-            if (next) html += '<a onclick="navigateToPost('+next.id+')">'+escapeHtml(next.title)+' →</a>';
+            if (next) html += '<a onclick="navigateToPost(' + next.id + ')">' + escapeHtml(next.title) + ' →</a>';
             else html += '<span></span>';
             html += '</div>';
 
@@ -1150,98 +1554,89 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
             if (recommend.length > 0) {
                 html += '<div class="recommend"><h4>📌 推荐阅读</h4>';
                 recommend.slice(0, 5).forEach(function(p) {
-                    html += '<div class="rec-item" onclick="navigateToPost('+p.id+')">'+escapeHtml(p.title)+' <span style="color:#8a7a6a;font-size:12px;">('+p.date+')</span></div>';
+                    html += '<div class="rec-item" onclick="navigateToPost(' + p.id + ')">' + escapeHtml(p
+                        .title) + ' <span style="color:#8a7a6a;font-size:12px;">(' + p.date + ')</span></div>';
                 });
                 html += '</div>';
             }
             html += '</div>';
             container.innerHTML = html;
-            // 更新浏览器地址栏
             if (window.history && window.history.pushState) {
-                window.history.pushState({}, '', '#post-'+post.id);
+                window.history.pushState({}, '', '#post-' + post.id);
             }
         }
 
-        // 分类筛选（通过修改当前页面，直接筛选文章列表）
         function filterByCategory(cat) {
             var filtered = posts.filter(function(p) { return p.category === cat; });
             var container = document.getElementById('mainContent');
-            var html = '<div class="card"><div class="card-title">📂 分类：'+escapeHtml(cat)+'</div>';
+            var html = '<div class="card"><div class="card-title">📂 分类：' + escapeHtml(cat) + '</div>';
             if (filtered.length === 0) {
                 html += '<p style="color:#8a7a6a;">该分类暂无文章。</p>';
             } else {
                 filtered.forEach(function(p) {
-                    html += '<div class="post-item" onclick="navigateToPost('+p.id+')">';
-                    html += '<div class="title">'+escapeHtml(p.title)+'</div>';
-                    html += '<div class="meta"><span>📅 '+p.date+'</span></div>';
+                    html += '<div class="post-item" onclick="navigateToPost(' + p.id + ')">';
+                    html += '<div class="title">' + escapeHtml(p.title) + '</div>';
+                    html += '<div class="meta"><span>📅 ' + p.date + '</span><span>👁️ ' + (p.views || 0) +
+                        '</span></div>';
                     html += '</div>';
                 });
             }
             html += '</div>';
             container.innerHTML = html;
-            // 高亮分类导航（临时）
-            document.querySelectorAll('#mainNav a').forEach(function(a){ a.classList.remove('active'); });
+            document.querySelectorAll('#mainNav a').forEach(function(a) { a.classList.remove('active'); });
             var navHome = document.querySelector('#mainNav a[data-page="home"]');
             if (navHome) navHome.classList.add('active');
+            setTimeout(renderFontSwitcher, 50);
         }
 
         function navigateToPost(id) {
             currentPage = 'post';
             renderPage('post', id);
-            // 滚动到顶部
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // ============================================================
-        //  6. 侧边栏分类
+        //  9. 侧边栏
         // ============================================================
         function renderSidebarCategories() {
             var container = document.getElementById('categoryList');
             var map = {};
-            posts.forEach(function(p) {
-                if (map[p.category]) map[p.category]++; else map[p.category]=1;
-            });
+            posts.forEach(function(p) { if (map[p.category]) map[p.category]++; else map[p.category] = 1; });
             var html = '';
             for (var cat in map) {
-                html += '<li onclick="filterByCategory(\''+cat+'\')"><span>'+escapeHtml(cat)+'</span><span class="count">'+map[cat]+' 篇</span></li>';
+                html += '<li onclick="filterByCategory(\'' + cat +
+                    '\')"><span>' + escapeHtml(cat) + '</span><span class="count">' + map[cat] + ' 篇</span></li>';
             }
             container.innerHTML = html || '<li style="color:#8a7a6a;cursor:default;">暂无分类</li>';
         }
 
         // ============================================================
-        //  7. 导航事件
+        //  10. 导航事件
         // ============================================================
         document.querySelectorAll('#mainNav a').forEach(function(a) {
             a.addEventListener('click', function(e) {
                 e.preventDefault();
                 var page = this.dataset.page;
-                if (page === 'home') {
-                    currentPage = 'home';
-                    renderPage('home');
-                } else if (page === 'archive') {
-                    currentPage = 'archive';
-                    renderPage('archive');
-                } else if (page === 'categories') {
-                    currentPage = 'categories';
-                    renderPage('categories');
-                } else if (page === 'about') {
-                    currentPage = 'about';
-                    renderPage('about');
-                } else if (page === 'login') {
-                    // 由登录按钮处理
+                if (page === 'logout') {
+                    handleLogout();
+                    return;
                 }
+                if (page === 'home') { currentPage = 'home';
+                    renderPage('home'); } else if (page === 'archive') { currentPage = 'archive';
+                    renderPage('archive'); } else if (page === 'categories') { currentPage = 'categories';
+                    renderPage('categories'); } else if (page === 'about') { currentPage = 'about';
+                    renderPage('about'); }
             });
         });
 
         // ============================================================
-        //  8. 登录相关
+        //  11. 登录 / 登出
         // ============================================================
         var loginBtn = document.getElementById('loginTrigger');
         loginBtn.addEventListener('click', function(e) {
             e.preventDefault();
             if (sessionStorage.getItem('blog_admin_logged') === 'true') {
-                // 已登录则进入后台
-                toggleAdmin(true);
+                handleLogout();
                 return;
             }
             showLoginModal();
@@ -1251,7 +1646,8 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
             var html = '<h2 style="text-align:center;font-weight:normal;letter-spacing:4px;font-family:\'华文楷体\',\'KaiTi\',serif;">🔐 后台登录</h2>';
             html += '<div style="text-align:center;color:#8a7a6a;margin-bottom:16px;">— 使用私钥验证 —</div>';
             html += '<div class="form-group"><label>私钥 (PEM格式)</label><textarea id="loginPrivateKey" rows="4"></textarea></div>';
-            html += '<button class="btn btn-primary" onclick="doLogin()" style="width:100%;padding:10px;background:#c23531;color:#fff;border:none;border-radius:6px;font-size:16px;cursor:pointer;">登录</button>';
+            html +=
+                '<button class="btn btn-primary" onclick="doLogin()" style="width:100%;padding:10px;background:#c23531;color:#fff;border:none;border-radius:6px;font-size:16px;cursor:pointer;">登录</button>';
             html += '<div id="loginError" style="color:#c23531;text-align:center;margin-top:10px;display:none;"></div>';
             openModal(html);
         }
@@ -1263,11 +1659,9 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
                 document.getElementById('loginError').style.display = 'block';
                 return;
             }
-            // 从 localStorage 读取安全配置
             var stored = localStorage.getItem('security_config');
             var security = stored ? JSON.parse(stored) : null;
             if (!security || !security.challengeCipher || !security.expectedPlain) {
-                // 尝试从 config.json 加载
                 loadAllData().then(function() {
                     var sec = localStorage.getItem('security_config');
                     if (sec) security = JSON.parse(sec);
@@ -1285,7 +1679,6 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
         }
 
         function verifyAndLogin(privKey, security) {
-            // 调用混合解密验证
             hybridDecrypt(security.challengeCipher, privKey).then(function(plain) {
                 if (plain === security.expectedPlain) {
                     sessionStorage.setItem('blog_admin_logged', 'true');
@@ -1296,6 +1689,12 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
                         renderPage(currentPage);
                         renderAdminList();
                         populateCategorySelect();
+                        populateTagAdminList();
+                        loadSecuritySettings();
+                        loadSiteSettingsForm();
+                        loadFontSettingsForm();
+                        loadMusicSettingsForm();
+                        document.getElementById('aboutEditor').value = aboutContent;
                     });
                 } else {
                     document.getElementById('loginError').textContent = '解密结果不匹配';
@@ -1313,12 +1712,16 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
                 panel.style.display = 'block';
                 loginBtn.textContent = '退出后台';
                 loginBtn.dataset.page = 'logout';
-                // 加载数据
+                // 刷新数据
                 loadAllData().then(function() {
                     renderAdminList();
                     populateCategorySelect();
-                    document.getElementById('aboutEditor').value = aboutContent;
+                    populateTagAdminList();
                     loadSecuritySettings();
+                    loadSiteSettingsForm();
+                    loadFontSettingsForm();
+                    loadMusicSettingsForm();
+                    document.getElementById('aboutEditor').value = aboutContent;
                 });
             } else {
                 panel.style.display = 'none';
@@ -1329,24 +1732,32 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
             }
         }
 
+        function handleLogout() {
+            if (confirm('确定退出后台吗？')) {
+                toggleAdmin(false);
+                renderPage(currentPage);
+            }
+        }
+
         // 检查登录状态
         if (sessionStorage.getItem('blog_admin_logged') === 'true') {
             toggleAdmin(true);
         }
 
         // ============================================================
-        //  9. 后台管理功能
+        //  12. 后台管理功能
         // ============================================================
         function renderAdminList() {
             var container = document.getElementById('adminPostList');
-            var sorted = posts.slice().sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+            var sorted = posts.slice().sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
             var html = '';
             sorted.forEach(function(p) {
                 html += '<div class="item">';
-                html += '<span>'+escapeHtml(p.title)+' <span style="color:#8a7a6a;font-size:12px;">('+p.date+')</span></span>';
+                html += '<span>' + escapeHtml(p.title) + ' <span style="color:#8a7a6a;font-size:12px;">(' + p.date +
+                    ')</span></span>';
                 html += '<div class="actions">';
-                html += '<button class="edit" onclick="editPost('+p.id+')">编辑</button>';
-                html += '<button class="del" onclick="deletePost('+p.id+')">删除</button>';
+                html += '<button class="edit" onclick="editPost(' + p.id + ')">编辑</button>';
+                html += '<button class="del" onclick="deletePost(' + p.id + ')">删除</button>';
                 html += '</div></div>';
             });
             container.innerHTML = html || '<p style="color:#8a7a6a;">暂无文章</p>';
@@ -1354,25 +1765,36 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
 
         function populateCategorySelect() {
             var sel = document.getElementById('editCategory');
-            var map = {};
-            posts.forEach(function(p) { if (p.category) map[p.category]=1; });
-            var cats = Object.keys(map);
-            if (cats.length === 0) cats = ['随笔','书评','游记','散文','诗词','其他'];
+            var cats = categories.length ? categories : ['随笔', '书评', '游记', '散文', '诗词', '其他'];
             var html = '';
-            cats.forEach(function(c) {
-                html += '<option value="'+escapeHtml(c)+'">'+escapeHtml(c)+'</option>';
-            });
+            cats.forEach(function(c) { html += '<option value="' + escapeHtml(c) + '">' + escapeHtml(c) + '</option>'; });
             sel.innerHTML = html;
         }
 
+        function newPostForm() {
+            document.getElementById('editId').value = '';
+            document.getElementById('editTitle').value = '';
+            document.getElementById('editTags').value = '';
+            document.getElementById('editContent').value = '';
+            document.getElementById('editDate').value = getToday();
+            document.getElementById('editViews').value = 0;
+            document.getElementById('editAuthor').value = siteSettings.authorName || '';
+            document.getElementById('editTitle').focus();
+            showToast('已清空表单，可以写新文章', 'info');
+        }
+
         function editPost(id) {
-            var post = posts.find(function(p){ return p.id === id; });
+            var post = posts.find(function(p) { return p.id === id; });
             if (!post) return;
             document.getElementById('editId').value = post.id;
             document.getElementById('editTitle').value = post.title;
             document.getElementById('editCategory').value = post.category;
             document.getElementById('editTags').value = post.tags ? post.tags.join(',') : '';
             document.getElementById('editContent').value = post.content;
+            document.getElementById('editDate').value = post.date || getToday();
+            document.getElementById('editViews').value = post.views || 0;
+            document.getElementById('editAuthor').value = post.author || siteSettings.authorName || '';
+            showToast('已加载文章，可编辑', 'info');
         }
 
         function savePost() {
@@ -1381,20 +1803,30 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
             var category = document.getElementById('editCategory').value;
             var tagsRaw = document.getElementById('editTags').value.trim();
             var content = document.getElementById('editContent').value.trim();
+            var date = document.getElementById('editDate').value || getToday();
+            var views = parseInt(document.getElementById('editViews').value) || 0;
+            var author = document.getElementById('editAuthor').value.trim() || siteSettings.authorName || '墨轩主';
             if (!title || !content) { showToast('标题和正文不能为空', 'error'); return; }
-            var tags = tagsRaw ? tagsRaw.split(',').map(function(t){return t.trim();}).filter(function(t){return t;}) : [];
+            var tags = tagsRaw ? tagsRaw.split(',').map(function(t) { return t.trim(); }).filter(function(t) { return t; }) :
+            [];
             if (id) {
-                // 更新
-                var post = posts.find(function(p){ return p.id === parseInt(id); });
+                var post = posts.find(function(p) { return p.id === parseInt(id); });
                 if (post) {
-                    post.title = title; post.category = category; post.tags = tags; post.content = content;
+                    post.title = title;
+                    post.category = category;
+                    post.tags = tags;
+                    post.content = content;
+                    post.date = date;
+                    post.views = views;
+                    post.author = author;
                 }
             } else {
-                // 新增
-                var newId = posts.length ? Math.max.apply(null, posts.map(function(p){return p.id;})) + 1 : 1;
-                posts.push({ id: newId, title: title, category: category, tags: tags, content: content, date: getToday() });
+                var newId = posts.length ? Math.max.apply(null, posts.map(function(p) { return p.id; })) + 1 : 1;
+                posts.push({ id: newId, title: title, category: category, tags: tags, content: content, date: date,
+                    views: views, author: author });
             }
-            // 保存到 GitHub
+            // 更新标签列表
+            tags.forEach(function(t) { if (tags.indexOf(t) === -1) tags.push(t); });
             var txt = generatePostsTxt(posts);
             saveFile(config.path, txt, '更新文章').then(function() {
                 showToast('保存成功', 'success');
@@ -1406,6 +1838,8 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
                 renderPage(currentPage);
                 renderSidebarCategories();
                 populateCategorySelect();
+                // 保存标签到 config
+                saveConfigData().catch(function() {});
             }).catch(function(err) {
                 showToast('保存失败: ' + err.message, 'error');
             });
@@ -1413,7 +1847,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
 
         function deletePost(id) {
             if (!confirm('确定删除此文章？')) return;
-            posts = posts.filter(function(p){ return p.id !== id; });
+            posts = posts.filter(function(p) { return p.id !== id; });
             var txt = generatePostsTxt(posts);
             saveFile(config.path, txt, '删除文章').then(function() {
                 showToast('已删除', 'success');
@@ -1431,39 +1865,353 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
             document.getElementById('editTitle').value = '';
             document.getElementById('editTags').value = '';
             document.getElementById('editContent').value = '';
+            document.getElementById('editDate').value = getToday();
+            document.getElementById('editViews').value = 0;
+            document.getElementById('editAuthor').value = siteSettings.authorName || '';
+            showToast('表单已清空', 'info');
         }
 
-        // 分类管理
+        // 插入 Markdown
+        function insertMarkdown(type) {
+            var textarea = document.getElementById('editContent');
+            var start = textarea.selectionStart;
+            var end = textarea.selectionEnd;
+            var text = textarea.value;
+            var before = text.substring(0, start);
+            var selected = text.substring(start, end);
+            var after = text.substring(end);
+            var insert = '';
+            if (type === 'image') {
+                var url = prompt('请输入图片 URL:');
+                if (url) insert = '![](' + url + ')';
+            } else if (type === 'link') {
+                var url = prompt('请输入链接 URL:');
+                var txt = prompt('请输入链接文字:');
+                if (url && txt) insert = '[' + txt + '](' + url + ')';
+            } else if (type === 'bold') {
+                insert = '**' + (selected || '加粗文字') + '**';
+            } else if (type === 'italic') {
+                insert = '*' + (selected || '斜体文字') + '*';
+            } else if (type === 'code') {
+                insert = '`' + (selected || '代码') + '`';
+            }
+            if (insert) {
+                textarea.value = before + insert + after;
+                var newPos = start + insert.length;
+                textarea.selectionStart = textarea.selectionEnd = newPos;
+                textarea.focus();
+            }
+        }
+
+        // ============================================================
+        //  13. 分类管理
+        // ============================================================
         function addCategory() {
             var name = document.getElementById('newCategoryName').value.trim();
             if (!name) { showToast('请输入分类名称', 'error'); return; }
             if (categories.indexOf(name) !== -1) { showToast('分类已存在', 'error'); return; }
             categories.push(name);
-            saveConfigFile();
+            saveConfigData().then(function() {
+                renderCategoryAdmin();
+                populateCategorySelect();
+                showToast('分类已添加', 'success');
+                document.getElementById('newCategoryName').value = '';
+            });
         }
 
         function deleteCategory(index) {
             if (!confirm('确定删除分类？')) return;
             categories.splice(index, 1);
-            saveConfigFile();
+            saveConfigData().then(function() {
+                renderCategoryAdmin();
+                populateCategorySelect();
+                showToast('分类已删除', 'success');
+            });
         }
 
         function renderCategoryAdmin() {
             var container = document.getElementById('categoryAdminList');
             var html = '';
             categories.forEach(function(c, idx) {
-                html += '<div class="item"><span>'+escapeHtml(c)+'</span><div class="actions"><button class="del" onclick="deleteCategory('+idx+')">删除</button></div></div>';
+                html += '<div class="item"><span>' + escapeHtml(c) +
+                    '</span><div class="actions"><button class="del" onclick="deleteCategory(' + idx +
+                    ')">删除</button></div></div>';
             });
             container.innerHTML = html || '<p style="color:#8a7a6a;">暂无分类</p>';
         }
 
-        // 关于编辑
-        function saveAbout() {
-            aboutContent = document.getElementById('aboutEditor').value;
-            saveConfigFile();
+        // ============================================================
+        //  14. 标签管理
+        // ============================================================
+        function addTag() {
+            var name = document.getElementById('newTagName').value.trim();
+            if (!name) { showToast('请输入标签名称', 'error'); return; }
+            if (tags.indexOf(name) !== -1) { showToast('标签已存在', 'error'); return; }
+            tags.push(name);
+            saveConfigData().then(function() {
+                populateTagAdminList();
+                showToast('标签已添加', 'success');
+                document.getElementById('newTagName').value = '';
+            });
         }
 
-        // 安全设置
+        function deleteTag(index) {
+            if (!confirm('确定删除标签？')) return;
+            var tag = tags[index];
+            tags.splice(index, 1);
+            // 从所有文章中移除该标签
+            posts.forEach(function(p) {
+                if (p.tags) {
+                    p.tags = p.tags.filter(function(t) { return t !== tag; });
+                }
+            });
+            var txt = generatePostsTxt(posts);
+            saveFile(config.path, txt, '删除标签').then(function() {
+                saveConfigData().then(function() {
+                    populateTagAdminList();
+                    renderAdminList();
+                    renderPage(currentPage);
+                    showToast('标签已删除', 'success');
+                });
+            });
+        }
+
+        function editTag(index) {
+            var oldName = tags[index];
+            var newName = prompt('修改标签名:', oldName);
+            if (newName && newName.trim() && newName.trim() !== oldName) {
+                var newTrim = newName.trim();
+                if (tags.indexOf(newTrim) !== -1) { showToast('标签已存在', 'error'); return; }
+                tags[index] = newTrim;
+                // 更新文章中的标签
+                posts.forEach(function(p) {
+                    if (p.tags) {
+                        var idx = p.tags.indexOf(oldName);
+                        if (idx !== -1) p.tags[idx] = newTrim;
+                    }
+                });
+                var txt = generatePostsTxt(posts);
+                saveFile(config.path, txt, '更新标签').then(function() {
+                    saveConfigData().then(function() {
+                        populateTagAdminList();
+                        renderAdminList();
+                        renderPage(currentPage);
+                        showToast('标签已更新', 'success');
+                    });
+                });
+            }
+        }
+
+        function populateTagAdminList() {
+            var container = document.getElementById('tagAdminList');
+            var html = '';
+            tags.forEach(function(t, idx) {
+                html += '<div class="item"><span>' + escapeHtml(t) +
+                    '</span><div class="actions"><button class="edit" onclick="editTag(' + idx +
+                    ')">编辑</button><button class="del" onclick="deleteTag(' + idx +
+                    ')">删除</button></div></div>';
+            });
+            container.innerHTML = html || '<p style="color:#8a7a6a;">暂无标签</p>';
+        }
+
+        // ============================================================
+        //  15. 站点设置表单
+        // ============================================================
+        function loadSiteSettingsForm() {
+            document.getElementById('setLogo').value = siteSettings.logo || '墨';
+            document.getElementById('setTitle').value = siteSettings.title || '墨韵轩';
+            document.getElementById('setSub').value = siteSettings.subtitle || '— 青砖檐下 · 笔墨春秋 · 静观自得 —';
+            document.getElementById('setAuthor').value = siteSettings.authorName || '墨轩主';
+            document.getElementById('setAuthorDesc').value = siteSettings.authorDesc || '闲来读书，兴至写文。\n以文会友，以友辅仁。';
+        }
+
+        function saveSiteSettings() {
+            siteSettings.logo = document.getElementById('setLogo').value.trim();
+            siteSettings.title = document.getElementById('setTitle').value.trim();
+            siteSettings.subtitle = document.getElementById('setSub').value.trim();
+            siteSettings.authorName = document.getElementById('setAuthor').value.trim();
+            siteSettings.authorDesc = document.getElementById('setAuthorDesc').value.trim();
+            applySiteSettings();
+            saveConfigData().then(function() {
+                showToast('站点设置已保存', 'success');
+            });
+        }
+
+        // ============================================================
+        //  16. 字体管理
+        // ============================================================
+        function loadFontSettingsForm() {
+            document.getElementById('fontSwitchCheck').checked = fontSwitchEnabled;
+            populateDefaultFontSelect();
+            renderFontAdmin();
+        }
+
+        function addFont() {
+            var name = document.getElementById('newFontName').value.trim();
+            if (!name) { showToast('请输入字体名称', 'error'); return; }
+            if (fonts.indexOf(name) !== -1) { showToast('字体已存在', 'error'); return; }
+            fonts.push(name);
+            saveConfigData().then(function() {
+                renderFontAdmin();
+                populateDefaultFontSelect();
+                applyFontSettings();
+                showToast('字体已添加', 'success');
+                document.getElementById('newFontName').value = '';
+            });
+        }
+
+        function deleteFont(index) {
+            if (!confirm('确定删除字体？')) return;
+            var f = fonts[index];
+            fonts.splice(index, 1);
+            if (defaultFont === f) defaultFont = fonts.length ? fonts[0] : '';
+            saveConfigData().then(function() {
+                renderFontAdmin();
+                populateDefaultFontSelect();
+                applyFontSettings();
+                showToast('字体已删除', 'success');
+            });
+        }
+
+        function setDefaultFont() {
+            var sel = document.getElementById('defaultFontSelect');
+            defaultFont = sel.value;
+            saveConfigData().then(function() {
+                applyFontSettings();
+                showToast('默认字体已设置', 'success');
+            });
+        }
+
+        function resetFonts() {
+            if (!confirm('重置字体列表为默认？')) return;
+            fonts = ['楷体', '宋体', '黑体', '仿宋', '行楷', '隶书', '方正'];
+            defaultFont = '楷体';
+            saveConfigData().then(function() {
+                renderFontAdmin();
+                populateDefaultFontSelect();
+                applyFontSettings();
+                showToast('字体已重置', 'success');
+            });
+        }
+
+        function saveFontSettings() {
+            fontSwitchEnabled = document.getElementById('fontSwitchCheck').checked;
+            saveConfigData().then(function() {
+                applyFontSettings();
+                showToast('字体设置已保存', 'success');
+            });
+        }
+
+        function renderFontAdmin() {
+            var container = document.getElementById('fontAdminList');
+            var html = '';
+            fonts.forEach(function(f, idx) {
+                html += '<div class="item"><span>' + escapeHtml(f) + (f === defaultFont ? ' <span style="color:#c23531;">(默认)</span>' :
+                    '') +
+                    '</span><div class="actions"><button class="del" onclick="deleteFont(' + idx +
+                    ')">删除</button></div></div>';
+            });
+            container.innerHTML = html || '<p style="color:#8a7a6a;">暂无字体</p>';
+        }
+
+        function populateDefaultFontSelect() {
+            var sel = document.getElementById('defaultFontSelect');
+            var html = '';
+            fonts.forEach(function(f) {
+                html += '<option value="' + escapeHtml(f) + '"' + (f === defaultFont ? ' selected' : '') + '>' +
+                    escapeHtml(f) + '</option>';
+            });
+            sel.innerHTML = html;
+        }
+
+        // ============================================================
+        //  17. 音乐管理
+        // ============================================================
+        function loadMusicSettingsForm() {
+            document.getElementById('musicEnabledCheck').checked = musicEnabled;
+            document.getElementById('musicAutoPlayCheck').checked = musicAutoPlay;
+            populateMusicDefaultSelect();
+            renderMusicAdmin();
+        }
+
+        function addMusic() {
+            var name = document.getElementById('newMusicName').value.trim();
+            var url = document.getElementById('newMusicUrl').value.trim();
+            if (!name || !url) { showToast('请填写歌曲名和URL', 'error'); return; }
+            if (musicList.some(function(s) { return s.name === name; })) { showToast('歌曲已存在', 'error'); return; }
+            musicList.push({ name: name, url: url });
+            if (!musicDefault) musicDefault = name;
+            saveConfigData().then(function() {
+                renderMusicAdmin();
+                populateMusicDefaultSelect();
+                applyMusicSettings();
+                showToast('歌曲已添加', 'success');
+                document.getElementById('newMusicName').value = '';
+                document.getElementById('newMusicUrl').value = '';
+            });
+        }
+
+        function deleteMusic(index) {
+            if (!confirm('确定删除歌曲？')) return;
+            var name = musicList[index].name;
+            musicList.splice(index, 1);
+            if (musicDefault === name && musicList.length) musicDefault = musicList[0].name;
+            if (musicList.length === 0) musicDefault = '';
+            saveConfigData().then(function() {
+                renderMusicAdmin();
+                populateMusicDefaultSelect();
+                applyMusicSettings();
+                showToast('歌曲已删除', 'success');
+            });
+        }
+
+        function saveMusicSettings() {
+            musicEnabled = document.getElementById('musicEnabledCheck').checked;
+            musicAutoPlay = document.getElementById('musicAutoPlayCheck').checked;
+            var sel = document.getElementById('musicDefaultSelect');
+            musicDefault = sel.value;
+            saveConfigData().then(function() {
+                applyMusicSettings();
+                showToast('音乐设置已保存', 'success');
+            });
+        }
+
+        function renderMusicAdmin() {
+            var container = document.getElementById('musicAdminList');
+            var html = '';
+            musicList.forEach(function(s, idx) {
+                html += '<div class="item"><span>' + escapeHtml(s.name) + ' <span style="color:#8a7a6a;font-size:12px;">' +
+                    escapeHtml(s.url) + '</span>' + (s.name === musicDefault ? ' <span style="color:#c23531;">(默认)</span>' :
+                    '') +
+                    '</span><div class="actions"><button class="del" onclick="deleteMusic(' + idx +
+                    ')">删除</button></div></div>';
+            });
+            container.innerHTML = html || '<p style="color:#8a7a6a;">暂无歌曲</p>';
+        }
+
+        function populateMusicDefaultSelect() {
+            var sel = document.getElementById('musicDefaultSelect');
+            var html = '';
+            musicList.forEach(function(s) {
+                html += '<option value="' + escapeHtml(s.name) + '"' + (s.name === musicDefault ? ' selected' : '') +
+                    '>' + escapeHtml(s.name) + '</option>';
+            });
+            sel.innerHTML = html;
+        }
+
+        // ============================================================
+        //  18. 关于页面
+        // ============================================================
+        function saveAbout() {
+            aboutContent = document.getElementById('aboutEditor').value;
+            saveConfigData().then(function() {
+                showToast('关于已保存', 'success');
+            });
+        }
+
+        // ============================================================
+        //  19. 安全设置
+        // ============================================================
         function loadSecuritySettings() {
             var stored = localStorage.getItem('security_config');
             if (stored) {
@@ -1472,7 +2220,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
                     document.getElementById('secPublicKey').value = sec.publicKey || '';
                     document.getElementById('secChallengeCipher').value = sec.challengeCipher || '';
                     document.getElementById('secExpectedPlain').value = sec.expectedPlain || '';
-                } catch(e) {}
+                } catch (e) {}
             }
         }
 
@@ -1486,8 +2234,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
             }
             var sec = { publicKey: pub, challengeCipher: cipher, expectedPlain: plain };
             localStorage.setItem('security_config', JSON.stringify(sec));
-            // 同步到 config.json
-            saveConfigFile().then(function() {
+            saveConfigData().then(function() {
                 showToast('安全设置已保存', 'success');
             });
         }
@@ -1501,23 +2248,9 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
             showToast('已恢复默认', 'info');
         }
 
-        // 保存 config.json
-        function saveConfigFile() {
-            var data = {
-                categories: categories,
-                about: aboutContent,
-                security: JSON.parse(localStorage.getItem('security_config') || '{}')
-            };
-            var jsonStr = JSON.stringify(data, null, 2);
-            return saveFile(config.configPath, jsonStr, '更新配置').then(function() {
-                showToast('配置已保存', 'success');
-                renderCategoryAdmin();
-            }).catch(function(err) {
-                showToast('保存配置失败: ' + err.message, 'error');
-            });
-        }
-
-        // 折叠面板
+        // ============================================================
+        //  20. 折叠面板
+        // ============================================================
         function togglePanel(header) {
             var body = header.nextElementSibling;
             var arrow = header.querySelector('.arrow');
@@ -1531,12 +2264,13 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
         }
 
         // ============================================================
-        //  10. 模态框
+        //  21. 模态框
         // ============================================================
         function openModal(html) {
             document.getElementById('modalBody').innerHTML = html;
             document.getElementById('modalOverlay').classList.add('active');
         }
+
         function closeModal() {
             document.getElementById('modalOverlay').classList.remove('active');
         }
@@ -1546,27 +2280,30 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
         });
 
         // ============================================================
-        //  11. 混合解密（简化版）
+        //  22. 混合解密（登录用）
         // ============================================================
         function base64ToArrayBuffer(base64) {
             var binary = atob(base64);
             var bytes = new Uint8Array(binary.length);
-            for (var i=0; i<binary.length; i++) bytes[i] = binary.charCodeAt(i);
+            for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
             return bytes.buffer;
         }
+
         function pemToArrayBuffer(pem, type) {
             var marker = '-----BEGIN ' + type + '-----';
             var footer = '-----END ' + type + '-----';
             var content = pem.trim();
             if (content.includes(marker)) {
-                content = content.substring(content.indexOf(marker)+marker.length, content.lastIndexOf(footer));
+                content = content.substring(content.indexOf(marker) + marker.length, content.lastIndexOf(footer));
             }
             return base64ToArrayBuffer(content.replace(/\s/g, ''));
         }
+
         function importPrivateKey(pem) {
             var buf = pemToArrayBuffer(pem, 'PRIVATE KEY');
             return crypto.subtle.importKey('pkcs8', buf, { name: 'RSA-OAEP', hash: 'SHA-256' }, false, ['decrypt']);
         }
+
         function hybridDecrypt(base64Package, privateKeyPem) {
             var combinedBuf = base64ToArrayBuffer(base64Package);
             var combined = new Uint8Array(combinedBuf);
@@ -1577,24 +2314,23 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
             var ciphertextWithTag = combined.slice(12 + encryptedAESKeyLen);
             return importPrivateKey(privateKeyPem).then(function(rsaPrivKey) {
                 return crypto.subtle.decrypt({ name: 'RSA-OAEP' }, rsaPrivKey, encryptedAESKey)
-                .then(function(aesKeyRaw) {
-                    return crypto.subtle.importKey('raw', aesKeyRaw, { name: 'AES-GCM' }, false, ['decrypt']);
-                })
-                .then(function(aesKey) {
-                    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv, tagLength: 128 }, aesKey, ciphertextWithTag);
-                })
-                .then(function(plaintextBuf) {
-                    return new TextDecoder().decode(plaintextBuf);
-                });
+                    .then(function(aesKeyRaw) {
+                        return crypto.subtle.importKey('raw', aesKeyRaw, { name: 'AES-GCM' }, false, ['decrypt']);
+                    })
+                    .then(function(aesKey) {
+                        return crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv, tagLength: 128 }, aesKey,
+                            ciphertextWithTag);
+                    })
+                    .then(function(plaintextBuf) {
+                        return new TextDecoder().decode(plaintextBuf);
+                    });
             });
         }
 
         // ============================================================
-        //  12. 初始化
+        //  23. 初始化
         // ============================================================
-        // 加载配置和文章
         loadAllData().then(function() {
-            // 处理 URL hash 跳转
             var hash = window.location.hash;
             if (hash.startsWith('#post-')) {
                 var id = parseInt(hash.replace('#post-', ''));
@@ -1609,7 +2345,6 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
             renderPage('home');
         });
 
-        // 监听 hash 变化
         window.addEventListener('hashchange', function() {
             var hash = window.location.hash;
             if (hash.startsWith('#post-')) {
@@ -1621,9 +2356,10 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
             }
         });
 
-        console.log('🏮 墨韵轩 · 古宅红木博客已加载');
-        console.log('📝 文章数: 0 (加载中...)');
+        console.log('🏮 墨韵轩 · 古宅红木博客完整版已加载');
+        console.log('📝 文章数:', posts.length);
         console.log('🔐 登录状态:', sessionStorage.getItem('blog_admin_logged') === 'true' ? '已登录' : '未登录');
     </script>
+
 </body>
 </html>
