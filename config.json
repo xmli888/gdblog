@@ -32,7 +32,7 @@
     "方正"
   ],
   "defaultFont": "楷体",
-  "fontSwitchEnabled": true,
+  "fontSwitchEnabled": false,
   "musicList": [],
   "musicEnabled": true,
   "musicAutoPlay": false,
