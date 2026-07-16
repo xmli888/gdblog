@@ -1258,7 +1258,7 @@
             }
         }
 
-        // ========== 文章详情 ==========
+        // ========== ★★★ 修复：文章详情（移除自动保存阅读数）★★★ ==========
         function renderPostDetail(container, postId) {
             var post = posts.find(function(p) { return p.id === postId; });
             if (!post) {
@@ -1267,14 +1267,8 @@
             }
             currentPostId = postId;
 
-            if (!sessionStorage.getItem('viewed_' + post.id)) {
-                post.views = (post.views || 0) + 1;
-                sessionStorage.setItem('viewed_' + post.id, '1');
-                var txt = generatePostsTxt(posts);
-                if (isConfigured()) {
-                    saveFile('posts.txt', txt, '更新阅读数').catch(function() {});
-                }
-            }
+            // ✅ 已删除自动更新阅读数的逻辑，不再调用 saveFile
+            // 阅读数只在后台管理界面编辑时更新，前台不再自动写入
 
             var idx = posts.indexOf(post);
             var prev = idx > 0 ? posts[idx - 1] : null;
@@ -1288,8 +1282,7 @@
             html += '<span>✍️ ' + escapeHtml(post.author || siteSettings.authorName || '墨轩主') + '</span>';
             html += '<span>👁️ ' + (post.views || 0) + '</span>';
             html += '<span>❤️ ' + (post.likes || 0) + '</span>';
-            if (post.tags && post.tags.length) html += '<span>🏷️ ' + post.tags.map(function(t) { return '#' + escapeHtml(
-                t); }).join(' ') + '</span>';
+            if (post.tags && post.tags.length) html += '<span>🏷️ ' + post.tags.map(function(t) { return '#' + escapeHtml(t); }).join(' ') + '</span>';
             html += '</div>';
             var rendered = marked.parse(post.content);
             html += '<div class="body">' + rendered + '</div>';
@@ -1306,12 +1299,9 @@
             html += '<div class="share-title">📤 分享这篇文章</div>';
             html += '<div class="share-buttons">';
             html += '<button onclick="shareCopyLink(\'' + url + '\')">📋 复制链接</button>';
-            html += '<button class="btn-wechat" onclick="shareWechat(\'' + url + '\', \'' + escapeHtml(post.title) +
-                '\')">💬 微信</button>';
-            html += '<button class="btn-weibo" onclick="shareWeibo(\'' + url + '\', \'' + escapeHtml(post.title) +
-                '\')">🐦 微博</button>';
-            html += '<button class="btn-qq" onclick="shareQQ(\'' + url + '\', \'' + escapeHtml(post.title) +
-                '\')">💬 QQ</button>';
+            html += '<button class="btn-wechat" onclick="shareWechat(\'' + url + '\', \'' + escapeHtml(post.title) + '\')">💬 微信</button>';
+            html += '<button class="btn-weibo" onclick="shareWeibo(\'' + url + '\', \'' + escapeHtml(post.title) + '\')">🐦 微博</button>';
+            html += '<button class="btn-qq" onclick="shareQQ(\'' + url + '\', \'' + escapeHtml(post.title) + '\')">💬 QQ</button>';
             html += '</div></div>';
 
             html += '<div class="nav-links">';
@@ -1325,8 +1315,7 @@
             if (recommend.length > 0) {
                 html += '<div class="recommend"><h4>📌 推荐阅读</h4>';
                 recommend.slice(0, 5).forEach(function(p) {
-                    html += '<div class="rec-item" onclick="navigateToPost(' + p.id + ')">' + escapeHtml(p
-                        .title) + ' <span style="color:#8a7a6a;font-size:12px;">(' + p.date + ')</span></div>';
+                    html += '<div class="rec-item" onclick="navigateToPost(' + p.id + ')">' + escapeHtml(p.title) + ' <span style="color:#8a7a6a;font-size:12px;">(' + p.date + ')</span></div>';
                 });
                 html += '</div>';
             }
@@ -1336,8 +1325,7 @@
                 html += '<div id="giscusContainer" style="min-height:100px;"></div>';
                 html += '<div id="giscusScript"></div>';
             } else if (!autoLoadComments) {
-                html +=
-                    '<button class="comment-toggle" onclick="loadGiscusComments()">💬 查看评论</button>';
+                html += '<button class="comment-toggle" onclick="loadGiscusComments()">💬 查看评论</button>';
                 html += '<div id="giscusContainer" style="display:none;min-height:100px;margin-top:12px;"></div>';
             } else {
                 html += '<div class="giscus-placeholder">💬 请先在后台配置 Giscus 评论系统</div>';
@@ -1576,7 +1564,6 @@
             document.addEventListener('visibilitychange', function() {
                 if (!document.hidden) {
                     loadAllData().then(function() {
-                        // 重新渲染当前页面
                         if (currentPage === 'post' && currentPostId) {
                             renderPostDetail(document.getElementById('mainContent'), currentPostId);
                         } else {
