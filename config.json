@@ -40,7 +40,7 @@
     }
   ],
   "musicEnabled": true,
-  "musicAutoPlay": false,
+  "musicAutoPlay": true,
   "musicDefault": "古典",
   "lastBackupTime": "",
   "autoLoadComments": true,
