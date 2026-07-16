@@ -1,14 +1,4 @@
 ---
-title: 复古红
-category: 其他
-tags: 
-date: 2026-07-13
-author: 墨轩主: 强哥
-views: 0
-likes: 0
-content: 文章加载失败
-请确认 posts.txt 文件存在于网站根目录
----
 title: 人生不应该有改天
 category: 随笔
 tags: 感悟
@@ -55,3 +45,12 @@ author: 墨轩主
 views: 99
 likes: 2
 content: 煮一壶清茶，看茶烟袅袅升起。茶香氤氲中，心神渐安。生活不必太匆忙，给自己留一段安静的时光。茶如人生，初尝苦涩，回甘悠长。在这一盏茶的时间里，放下纷扰，静观自得。所谓幸福，不过是一杯茶、一本书、一个宁静的午后。
+---
+title: 咕咕咕u
+category: 随笔
+tags: 将举报
+date: 2026-07-17
+author: 墨轩主
+views: 0
+likes: 0
+content: 客户就赶快赶快
