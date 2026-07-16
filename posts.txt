@@ -41,3 +41,9 @@ category: 随笔
 tags: 测试2
 date: 2026-07-13
 content: 测试
+---
+title: 参数
+category: 随笔
+tags: 测试
+date: 2026-07-16
+content: 测试不成功便成仁
