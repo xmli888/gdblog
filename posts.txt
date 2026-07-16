@@ -1,14 +1,4 @@
 ---
-title: 人生不应该有改天
-category: 随笔
-tags: 感悟
-date: 2026-07-16
-author: 墨轩主: 强哥
-views: 53
-likes: 0
-content: 改天是哪天，下次是哪次，以后是多久，去经历，去后悔。保持热爱，奔赴山海。我们都在奔赴各自不同的人生！！！
-[强哥博客](https://xmli888.github.io/gdblog)
----
 title: 小马哥曾经对“赢在中国”108将讲过的话
 category: 随笔
 tags: 语录,马云
@@ -54,3 +44,12 @@ author: 墨轩主
 views: 0
 likes: 0
 content: u好好一个
+---
+title: 聚会PHP
+category: 随笔
+tags: 购物
+date: 2026-07-17
+author: 墨轩主
+views: 0
+likes: 0
+content: 沟通过呼呼
