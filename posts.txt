@@ -1,19 +1,10 @@
 ---
-title: i发帖覅viuiu和
-category: 随笔
-tags: 刚刚好
-date: 2026-07-17
-author: 墨轩主
-views: 0
-likes: 0
-content: 给i更应该就会被
----
 title: 这是一篇测试文章
 category: 随笔
 tags: 人生
 date: 2026-07-17
 author: 墨轩主
-views: 0
+views: 1
 likes: 0
 content: 付款就凭空积分打开乱码了
 ---
