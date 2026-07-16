@@ -42,15 +42,6 @@ category: 随笔
 tags: 茶,禅意,生活
 date: 2026-07-17
 author: 墨轩主
-views: 99
+views: 100
 likes: 2
 content: 煮一壶清茶，看茶烟袅袅升起。茶香氤氲中，心神渐安。生活不必太匆忙，给自己留一段安静的时光。茶如人生，初尝苦涩，回甘悠长。在这一盏茶的时间里，放下纷扰，静观自得。所谓幸福，不过是一杯茶、一本书、一个宁静的午后。
----
-title: 几乎和
-category: 随笔
-tags: 
-date: 2026-07-17
-author: 墨轩主
-views: 0
-likes: 0
-content: 看i两个  篇hi就
