@@ -107,7 +107,6 @@ function getTimestamp() {
 function showToast(msg, type) {
     var el = document.getElementById('toastContainer');
     if (!el) {
-        // fallback
         alert(msg);
         return;
     }
@@ -194,7 +193,7 @@ function saveFile(path, content, message) {
     });
 }
 
-// ========== 文章解析 ==========
+// ========== ★★★ 修复：文章解析（过滤空标签）★★★ ==========
 function parsePosts(text) {
     if (!text || !text.trim()) return [];
     if (text.charCodeAt(0) === 0xFEFF) text = text.substring(1);
@@ -217,7 +216,10 @@ function parsePosts(text) {
                     var val = match[2];
                     if (key === 'title') post.title = val;
                     else if (key === 'category') post.category = val;
-                    else if (key === 'tags') post.tags = val.split(',').map(function(t) { return t.trim(); });
+                    else if (key === 'tags') {
+                        // ★ 修复：过滤掉空字符串标签
+                        post.tags = val.split(',').map(function(t) { return t.trim(); }).filter(function(t) { return t; });
+                    }
                     else if (key === 'date') post.date = val;
                     else if (key === 'author') post.author = val;
                     else if (key === 'views') post.views = parseInt(val) || 0;
