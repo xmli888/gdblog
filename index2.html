@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>墨韵轩 · 文章管理</title>
+    <style>
+        /* ========== 完整样式 ========== */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background-color:#f5f0e8; font-family:'华文楷体','KaiTi','SimSun','宋体',serif; color:#2c2c2c; min-height:100vh; padding:20px; display:flex; justify-content:center; align-items:center; }
+        .container { max-width:900px; width:100%; margin:0 auto; background:#fcf9f5; border:1px solid #d5cdc0; border-radius:12px; padding:30px 36px; box-shadow:0 4px 30px rgba(0,0,0,0.10); position:relative; }
+        .container::before { content:''; position:absolute; top:0; left:40px; right:40px; height:3px; background:linear-gradient(90deg, transparent, #8b2500, transparent); border-radius:0 0 4px 4px; opacity:0.5; }
+        h1 { font-size:28px; font-weight:normal; letter-spacing:6px; text-align:center; color:#2c2c2c; font-family:'华文楷体','KaiTi',serif; }
+        .subtitle { text-align:center; font-size:14px; color:#8a9aad; margin-bottom:24px; letter-spacing:2px; font-family:'SimSun','宋体',serif; }
+        .login-box { max-width:420px; margin:20px auto; padding:30px 24px; background:#f5f0e8; border-radius:8px; border:1px solid #d5cdc0; }
+        .login-box h2 { font-size:22px; font-weight:normal; text-align:center; font-family:'华文楷体','KaiTi',serif; letter-spacing:4px; margin-bottom:6px; color:#2c2c2c; }
+        .login-box .login-sub { text-align:center; font-size:13px; color:#8a9aad; margin-bottom:18px; font-family:'SimSun','宋体',serif; letter-spacing:1px; }
+        .login-box .form-group { margin-bottom:14px; }
+        .login-box .form-group label { display:block; font-size:14px; color:#4a5a6a; margin-bottom:3px; font-family:'SimSun','宋体',serif; font-weight:bold; }
+        .login-box .form-group textarea { width:100%; padding:10px 14px; border:1px solid #d5cdc0; border-radius:6px; background:#fcf9f5; font-size:14px; font-family:'Courier New', monospace; color:#2c2c2c; outline:none; transition:border-color 0.3s; resize:vertical; min-height:100px; }
+        .login-box .form-group textarea:focus { border-color:#8b2500; box-shadow:0 0 0 3px rgba(139,37,0,0.10); }
+        .login-box .btn { width:100%; padding:10px; border:1px solid #8b2500; border-radius:6px; background:#8b2500; color:#f5f0e8; font-size:16px; font-family:'华文楷体','KaiTi',serif; letter-spacing:4px; cursor:pointer; transition:all 0.3s ease; }
+        .login-box .btn:active { transform:scale(0.96); }
+        .login-box .btn:hover { background:#6b1a00; border-color:#6b1a00; }
+        .login-box .btn:disabled { opacity:0.5; cursor:not-allowed; }
+        .login-box .error-msg { color:#8b2500; font-size:14px; text-align:center; margin-top:10px; display:none; font-family:'SimSun','宋体',serif; word-break:break-word; }
+        .login-box .file-import-btn { display:inline-block; background:#e0d8cc; border:1px solid #d5cdc0; border-radius:4px; padding:4px 12px; font-size:13px; cursor:pointer; margin-top:6px; }
+        .login-box .file-import-btn:active { background:#d5cdc0; }
+        .admin-area { display:none; }
+        .admin-area.active { display:block; }
+        .status-bar { display:flex; justify-content:space-between; align-items:center; background:#f5f0e8; padding:6px 14px; border-radius:6px; margin-bottom:12px; font-size:13px; color:#6b7b8b; font-family:'SimSun','宋体',serif; border:1px solid #e0d8cc; flex-wrap:wrap; gap:6px; }
+        .status-bar .user-info { color:#4a5a6a; }
+        .status-bar .logout-btn { background:none; border:none; color:#8b2500; cursor:pointer; font-size:13px; font-family:'SimSun','宋体',serif; text-decoration:underline; }
+        .status-bar .logout-btn:active { opacity:0.6; }
+        .security-badge { display:inline-block; background:#4a5a6a; color:#f5f0e8; font-size:11px; padding:2px 10px; border-radius:12px; font-family:'SimSun','宋体',serif; letter-spacing:0.5px; margin-left:6px; }
+        .info-box { background:#efe8dd; border-radius:6px; padding:12px 16px; font-size:13px; color:#5a5a5a; font-family:'SimSun','宋体',serif; line-height:1.8; margin-bottom:16px; border:1px dashed #d5cdc0; }
+        .config-box { background:#f5f0e8; border:1px solid #d5cdc0; border-radius:6px; padding:16px; margin-bottom:16px; display:none; }
+        .config-box .form-group { margin-bottom:10px; }
+        .config-box .form-group label { display:block; font-size:13px; color:#4a5a6a; margin-bottom:3px; font-weight:bold; }
+        .config-box .form-group input { width:100%; padding:6px 10px; border:1px solid #d5cdc0; border-radius:4px; font-size:13px; outline:none; }
+        .config-box .btn { padding:6px 16px; border:1px solid #4a5a6a; border-radius:4px; background:#4a5a6a; color:#fff; cursor:pointer; font-family:'华文楷体','KaiTi',serif; font-size:14px; letter-spacing:1px; margin-top:6px; }
+        .config-box .btn:active { transform:scale(0.95); }
+        .security-panel { background:#f5f0e8; border:1px solid #8b2500; border-radius:6px; padding:16px 20px; margin-bottom:16px; display:none; }
+        .security-panel.active { display:block; }
+        .security-panel .panel-title { font-size:17px; font-weight:normal; font-family:'华文楷体','KaiTi',serif; color:#2c2c2c; letter-spacing:2px; margin-bottom:12px; border-bottom:2px solid #d5cdc0; padding-bottom:6px; }
+        .security-panel .form-group { margin-bottom:12px; }
+        .security-panel .form-group label { display:block; font-size:13px; color:#4a5a6a; font-weight:bold; font-family:'SimSun','宋体',serif; margin-bottom:2px; }
+        .security-panel .form-group textarea, .security-panel .form-group input { width:100%; padding:6px 10px; border:1px solid #d5cdc0; border-radius:4px; font-size:13px; font-family:'Courier New', monospace; background:#fcf9f5; outline:none; resize:vertical; }
+        .security-panel .form-group textarea:focus, .security-panel .form-group input:focus { border-color:#8b2500; }
+        .security-panel .btn-group { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+        .security-panel .btn-group .btn { padding:6px 20px; border:1px solid #4a5a6a; border-radius:4px; background:transparent; color:#4a5a6a; cursor:pointer; font-family:'华文楷体','KaiTi',serif; font-size:14px; letter-spacing:1px; transition:0.2s; flex:1; min-width:80px; text-align:center; }
+        .security-panel .btn-group .btn-primary { background:#8b2500; border-color:#8b2500; color:#f5f0e8; }
+        .security-panel .btn-group .btn-primary:active { background:#6b1a00; }
+        .security-panel .btn-group .btn-secondary { background:#4a5a6a; border-color:#4a5a6a; color:#f5f0e8; }
+        .security-panel .btn-group .btn-secondary:active { background:#3a4a5a; }
+        .security-panel .btn-group .btn:active { transform:scale(0.95); }
+        .toolbar { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+        .toolbar .btn { padding:8px 20px; border:1px solid #8a9aad; border-radius:6px; background:transparent; color:#4a5a6a; font-size:14px; font-family:'华文楷体','KaiTi',serif; letter-spacing:2px; cursor:pointer; transition:all 0.3s ease; }
+        .toolbar .btn:active { transform:scale(0.96); }
+        .toolbar .btn-primary { background:#8b2500; border-color:#8b2500; color:#f5f0e8; }
+        .toolbar .btn-success { background:#4a5a6a; border-color:#4a5a6a; color:#f5f0e8; }
+        .toolbar .btn-github { background:#24292e; border-color:#24292e; color:#fff; }
+        .post-list { margin:16px 0; max-height:400px; overflow-y:auto; border:1px solid #e0d8cc; border-radius:6px; background:#fcf9f5; }
+        .post-item { padding:12px 16px; border-bottom:1px dashed #e0d8cc; display:flex; justify-content:space-between; align-items:center; font-size:14px; font-family:'SimSun','宋体',serif; }
+        .post-item:last-child { border-bottom:none; }
+        .post-item .info { flex:1; }
+        .post-item .info .title { font-weight:bold; color:#2c2c2c; }
+        .post-item .info .meta { font-size:12px; color:#8a9aad; margin-top:2px; }
+        .post-item .info .excerpt { font-size:12px; color:#6b7b8b; margin-top:4px; }
+        .post-item .actions { display:flex; gap:8px; }
+        .post-item .actions button { padding:2px 12px; font-size:12px; border:1px solid #d5cdc0; border-radius:4px; background:transparent; cursor:pointer; font-family:'SimSun','宋体',serif; }
+        .post-item .actions .del-btn:hover { background:#8b2500; color:#fff; border-color:#8b2500; }
+        .empty-msg { text-align:center; padding:40px 20px; color:#8a9aad; font-size:16px; font-family:'SimSun','宋体',serif; }
+        .form-group { margin-bottom:14px; }
+        .form-group label { display:block; font-size:14px; color:#4a5a6a; margin-bottom:3px; font-family:'SimSun','宋体',serif; font-weight:bold; letter-spacing:1px; }
+        .form-group input, .form-group textarea, .form-group select { width:100%; padding:8px 12px; border:1px solid #d5cdc0; border-radius:6px; background:#fcf9f5; font-size:14px; font-family:'SimSun','宋体',serif; color:#2c2c2c; transition:border-color 0.3s; outline:none; }
+        .form-group input:focus, .form-group textarea:focus { border-color:#8b2500; box-shadow:0 0 0 3px rgba(139,37,0,0.10); }
+        .form-group textarea { min-height:120px; resize:vertical; line-height:1.8; }
+        .form-row { display:flex; gap:16px; }
+        .form-row .form-group { flex:1; }
+        .btn-group { display:flex; gap:12px; margin-top:8px; flex-wrap:wrap; }
+        .btn { padding:8px 24px; border:1px solid #8a9aad; border-radius:6px; background:transparent; color:#4a5a6a; font-size:15px; font-family:'华文楷体','KaiTi',serif; letter-spacing:3px; cursor:pointer; transition:all 0.3s ease; flex:1; text-align:center; min-width:100px; }
+        .btn:active { transform:scale(0.96); }
+        .btn-primary { background:#8b2500; border-color:#8b2500; color:#f5f0e8; }
+        .btn-success { background:#4a5a6a; border-color:#4a5a6a; color:#f5f0e8; }
+        .toast-msg { position:fixed; bottom:40px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:12px 28px; border-radius:8px; font-size:15px; z-index:9999; box-shadow:0 4px 20px rgba(0,0,0,0.3); opacity:0; transition:opacity 0.3s; pointer-events:none; max-width:90%; text-align:center; font-family:'华文楷体','KaiTi',serif; letter-spacing:1px; }
+        .toast-msg.show { opacity:1; }
+        .config-hint { background:#f0e8d8; border:1px solid #c9b99a; border-radius:6px; padding:12px 16px; margin-bottom:16px; font-size:14px; color:#4a5a6a; font-family:'SimSun','宋体',serif; display:none; }
+        .config-hint strong { color:#8b2500; }
+        @media (max-width:600px) { .container { padding:18px 14px; } h1 { font-size:22px; letter-spacing:4px; } .form-row { flex-direction:column; gap:0; } .btn { padding:6px 14px; font-size:13px; min-width:70px; } .post-item { flex-direction:column; align-items:flex-start; gap:6px; } .post-item .actions { width:100%; justify-content:flex-end; } .login-box { padding:20px 16px; } .security-panel .btn-group .btn { min-width:60px; font-size:13px; } }
+    </style>
+</head>
+<body>
+
+    <div id="toastContainer" class="toast-msg"></div>
+
+    <div class="container">
+
+        <h1>📝 墨韵轩 · 文章管理</h1>
+        <div class="subtitle">— RSA 私钥登录 · 登录前强制读取同目录 config.json 三个字段 —</div>
+
+        <!-- ====== 登录界面 ====== -->
+        <div id="loginBox" class="login-box">
+            <h2>🔐 后台登录</h2>
+            <div class="login-sub">— 使用私钥验证身份 —</div>
+            <div class="form-group">
+                <label>🔑 私钥 (PEM 格式)</label>
+                <textarea id="loginPrivateKey" rows="4" placeholder="-----BEGIN PRIVATE KEY----- ... -----END PRIVATE KEY-----"></textarea>
+                <div style="display:flex; gap:8px; margin-top:4px; flex-wrap:wrap;">
+                    <span class="file-import-btn" onclick="document.getElementById('privKeyFileInput').click()">📂 从文件导入</span>
+                    <span class="file-import-btn" onclick="pastePrivateKey()">📥 粘贴</span>
+                    <input type="file" id="privKeyFileInput" accept=".pem,.txt" style="display:none;" onchange="importPrivateKeyFile(event)" />
+                </div>
+            </div>
+            <button class="btn" id="loginWithPrivateKeyBtn">🔓 使用私钥登录</button>
+            <div class="error-msg" id="loginError"></div>
+            <div style="text-align:center;margin-top:12px;font-size:12px;color:#b0a8a0;font-family:'SimSun','宋体',serif;">
+                🔒 登录前自动读取同目录 config.json 的 publicKey / challengeCipher / expectedPlain
+            </div>
+        </div>
+
+        <!-- ====== 管理界面 ====== -->
+        <div id="adminArea" class="admin-area">
+
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <span class="user-info">👤 管理员已登录 <span class="security-badge">🔒 RSA 私钥</span></span>
+                <span>
+                    <button class="logout-btn" onclick="handleLogout()">退出登录</button>
+                </span>
+            </div>
+
+            <!-- 提示配置 -->
+            <div class="config-hint" id="configHint">
+                ⚠️ <strong>尚未配置 GitHub</strong>，请点击下方「⚙️ 配置 GitHub」完成设置，否则无法保存文章和 config.json！
+            </div>
+
+            <!-- 安全设置面板 -->
+            <div class="security-panel" id="securityPanel">
+                <div class="panel-title">🔐 安全设置（公钥/挑战码/期望明文）</div>
+                <div class="form-group">
+                    <label>公钥 (PUBLIC_KEY_PEM)</label>
+                    <textarea id="secPublicKey" rows="3" style="font-family:'Courier New',monospace;font-size:12px;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>挑战码密文 (CHALLENGE_CIPHER)</label>
+                    <textarea id="secChallengeCipher" rows="2" style="font-family:'Courier New',monospace;font-size:12px;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>期望明文 (如 OK)</label>
+                    <input type="text" id="secExpectedPlain" style="font-family:'Courier New',monospace;font-size:12px;" />
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="saveSecuritySettings()">💾 保存到本地 & 同步 config.json</button>
+                    <button class="btn btn-secondary" onclick="resetSecuritySettings()">↩️ 恢复默认</button>
+                </div>
+                <div style="font-size:12px;color:#8a9aad;margin-top:8px;font-family:'SimSun','宋体',serif;">
+                    💡 修改后自动保存到本地，并尝试写入同目录的 config.json（需配置 GitHub）。
+                </div>
+            </div>
+
+            <!-- 配置 GitHub -->
+            <div class="config-box" id="configBox">
+                <h3 style="font-weight:normal;font-size:16px;font-family:'华文楷体','KaiTi',serif;margin-bottom:12px;color:#2c2c2c;">⚙️ GitHub 配置（用于保存文章和 config.json）</h3>
+                <div class="form-group">
+                    <label>🔑 Personal Access Token</label>
+                    <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" />
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>👤 GitHub 用户名</label>
+                        <input type="text" id="githubUser" placeholder="你的用户名" />
+                    </div>
+                    <div class="form-group">
+                        <label>📁 仓库名</label>
+                        <input type="text" id="githubRepo" placeholder="仓库名" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>📄 文章文件路径</label>
+                    <input type="text" id="githubPath" value="posts.txt" />
+                </div>
+                <div class="form-group">
+                    <label>📄 配置文件路径 (config.json)</label>
+                    <input type="text" id="configPath" value="config.json" />
+                </div>
+                <button class="btn" onclick="saveConfig()" style="background:#4a5a6a;color:#fff;width:100%;">✅ 保存配置</button>
+                <button class="btn" onclick="syncAllConfig()" style="background:#8b2500;color:#fff;width:100%;margin-top:6px;">📤 强制同步安全配置到 config.json</button>
+            </div>
+
+            <!-- 工具栏 -->
+            <div class="toolbar">
+                <button class="btn btn-github" onclick="toggleConfig()">⚙️ 配置 GitHub</button>
+                <button class="btn btn-success" onclick="loadFromGitHub()">📂 从 GitHub 读取文章</button>
+                <button class="btn" onclick="clearAll()">🗑️ 清空列表</button>
+                <button class="btn btn-primary" onclick="saveToGitHub()">💾 保存文章到 GitHub</button>
+                <span style="flex:1;text-align:right;font-size:13px;color:#8a9aad;line-height:36px;" id="countDisplay">共 0 篇文章</span>
+            </div>
+
+            <!-- 文章列表 -->
+            <div class="post-list" id="postList">
+                <div class="empty-msg">📖 请点击「从 GitHub 读取」导入文章</div>
+            </div>
+
+            <hr style="border: none; border-top: 2px dashed #e0d8cc; margin: 20px 0;" />
+
+            <!-- 添加文章 -->
+            <h2 style="font-size:20px;font-weight:normal;letter-spacing:3px;font-family:'华文楷体','KaiTi',serif;margin-bottom:12px;">✏️ 添加新文章</h2>
+
+            <form id="editorForm">
+                <div class="form-group">
+                    <label>📌 标题 *</label>
+                    <input type="text" id="postTitle" placeholder="请输入文章标题" required />
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📂 分类</label>
+                        <select id="postCategory">
+                            <option value="随笔">随笔</option>
+                            <option value="书评">书评</option>
+                            <option value="游记">游记</option>
+                            <option value="散文">散文</option>
+                            <option value="诗词">诗词</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>🏷️ 标签 (用逗号分隔)</label>
+                        <input type="text" id="postTags" placeholder="如：雨,青砖,静思" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>📖 正文 *</label>
+                    <textarea id="postContent" placeholder="写一篇文章..." required></textarea>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">➕ 添加到列表</button>
+                    <button type="button" class="btn" onclick="clearForm()">清空表单</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // ★ 硬编码默认值（仅作为最后的后备）
+        // ============================================================
+        var DEFAULT_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3GujvExMjKhKErfk8yI
+fQIdZ5WTZ8krD4Q0m/b7cbOSaqwnwMMepsSDw2SonkAEEyOCVnKhX1NXoeX56yRJ
+7hdoe82RGDLZ3UDUGpdknUSCDeAjblsfzawbEMpNObo/e4TcSh8UKKBtKOdVXGHw
+Hzfh6l8PByjsgvd7oi/jXPJ5iKC6PMeiiGKhK6VqAs7AexMviKtICi8ZOZseepSR
+olZEVm7zMathz/Mu0XOtSGztEopDeQjsFjIW3nhJnPYiJV+/BCmvn4WuJ9PQM1nW
+sjsd/6WGFE/kMuP1wZytb3m7vJLYuxhmOP5uKuwEFm4pa84FwosBInd5nOAtfweL
+HQIDAQAB
+-----END PUBLIC KEY-----`;
+
+        var DEFAULT_CHALLENGE_CIPHER = 'zpXm+kPYtfPIDaaRCufSMrIuJ8//3LlbJEjmOyZA86W9HDJTNlU8lCO/GbOPv/+yQS4S7jlFOLbl3w+1G5EzCuvVKUl1KUzpzXRqUDSpVIZixwxqPY4C90tjlXI5XnzkrdZdpz3FR6ufZdZV9kSp9Av1K+hwOib0qdcDJkS6ETLMwG7fia6V3Enhed6Xwb7jiaR9uLGijvEQlTaUw8V3V1t2A2x7NMczCWxDLT2efgL26IDIBipP51TtqO1cQwE0NQSfrx9siKsPe0xDUkl2aIE0qx0DezZ/5qDNnckM/zIB5fVyHdUbzM+zWBNJ9DRKHNwGiYo64uIrDUXYAnADaMNPZ16AEWeHa6yGyOl1nqiY8B3GRG/NvmM3uQ9uD0itsc0=';
+
+        var DEFAULT_EXPECTED_PLAIN = '888999';
+
+        // ============================================================
+        // 配置有效性检查（三个字段都必须有效）
+        // ============================================================
+        function isValidSecurityConfig(cfg) {
+            return cfg &&
+                   typeof cfg.publicKey === 'string' && cfg.publicKey.includes('BEGIN PUBLIC KEY') &&
+                   typeof cfg.challengeCipher === 'string' && cfg.challengeCipher.length > 50 &&
+                   typeof cfg.expectedPlain === 'string' && cfg.expectedPlain.length > 0;
+        }
+
+        // ============================================================
+        // 获取当前生效的配置（强制从 config.json 读取，并替换所有本地缓存）
+        // ============================================================
+        var securityConfigCache = null;
+
+        function getSecurityConfig() {
+            // 1. 强制从同目录的 config.json 读取（使用同步请求，带随机参数避免缓存）
+            var cacheBuster = Date.now();
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'config.json?_=' + cacheBuster, false);
+            xhr.send();
+            if (xhr.status === 200) {
+                try {
+                    var remote = JSON.parse(xhr.responseText);
+                    if (remote && remote.security && isValidSecurityConfig(remote.security)) {
+                        // 远程配置有效，覆盖所有本地缓存
+                        var remoteConfig = {
+                            publicKey: remote.security.publicKey,
+                            challengeCipher: remote.security.challengeCipher,
+                            expectedPlain: remote.security.expectedPlain
+                        };
+                        // 同步写入 localStorage
+                        localStorage.setItem('security_config', JSON.stringify(remoteConfig));
+                        // 更新内存缓存
+                        securityConfigCache = remoteConfig;
+                        console.log('✅ 从 config.json 加载配置成功，已替换本地和缓存');
+                        return remoteConfig;
+                    }
+                } catch (e) {
+                    console.warn('config.json 解析失败:', e);
+                }
+            }
+
+            // 2. 如果远程无效或不存在，尝试 localStorage
+            var stored = localStorage.getItem('security_config');
+            if (stored) {
+                try {
+                    var local = JSON.parse(stored);
+                    if (isValidSecurityConfig(local)) {
+                        securityConfigCache = {
+                            publicKey: local.publicKey,
+                            challengeCipher: local.challengeCipher,
+                            expectedPlain: local.expectedPlain
+                        };
+                        console.log('✅ 从 localStorage 加载配置');
+                        return securityConfigCache;
+                    }
+                } catch (e) {
+                    console.warn('localStorage 解析失败:', e);
+                }
+            }
+
+            // 3. 最后使用硬编码默认值
+            console.warn('⚠️ 使用硬编码默认配置');
+            securityConfigCache = {
+                publicKey: DEFAULT_PUBLIC_KEY,
+                challengeCipher: DEFAULT_CHALLENGE_CIPHER,
+                expectedPlain: DEFAULT_EXPECTED_PLAIN
+            };
+            // 同时写入 localStorage 以便下次使用
+            localStorage.setItem('security_config', JSON.stringify(securityConfigCache));
+            return securityConfigCache;
+        }
+
+        // 清除缓存（在修改配置或需要重新加载时调用）
+        function clearSecurityCache() {
+            securityConfigCache = null;
+        }
+
+        // ============================================================
+        // 核心加解密函数
+        // ============================================================
+        function base64ToArrayBuffer(base64) {
+            var binary = atob(base64);
+            var bytes = new Uint8Array(binary.length);
+            for (var i = 0; i < binary.length; i++) {
+                bytes[i] = binary.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        function pemToArrayBuffer(pem, type) {
+            var marker = '-----BEGIN ' + type + '-----';
+            var footer = '-----END ' + type + '-----';
+            var content = pem.trim();
+            if (content.includes(marker)) {
+                content = content.substring(
+                    content.indexOf(marker) + marker.length,
+                    content.lastIndexOf(footer)
+                );
+            }
+            return base64ToArrayBuffer(content.replace(/\s/g, ''));
+        }
+
+        function importPrivateKey(pem) {
+            var buf = pemToArrayBuffer(pem, 'PRIVATE KEY');
+            return crypto.subtle.importKey(
+                'pkcs8',
+                buf,
+                { name: 'RSA-OAEP', hash: 'SHA-256' },
+                false,
+                ['decrypt']
+            );
+        }
+
+        function hybridDecrypt(base64Package, privateKeyPem) {
+            var combinedBuf = base64ToArrayBuffer(base64Package);
+            var combined = new Uint8Array(combinedBuf);
+            var iv = combined.slice(0, 12);
+            var encryptedAESKeyLen = 256;
+            if (combined.length < 12 + encryptedAESKeyLen) throw new Error('数据包长度异常');
+            var encryptedAESKey = combined.slice(12, 12 + encryptedAESKeyLen);
+            var ciphertextWithTag = combined.slice(12 + encryptedAESKeyLen);
+
+            return importPrivateKey(privateKeyPem).then(function(rsaPrivateKey) {
+                return crypto.subtle.decrypt(
+                    { name: 'RSA-OAEP' },
+                    rsaPrivateKey,
+                    encryptedAESKey
+                ).then(function(aesKeyRaw) {
+                    return crypto.subtle.importKey(
+                        'raw',
+                        aesKeyRaw,
+                        { name: 'AES-GCM' },
+                        false,
+                        ['decrypt']
+                    );
+                }).then(function(aesKey) {
+                    return crypto.subtle.decrypt(
+                        { name: 'AES-GCM', iv: iv, tagLength: 128 },
+                        aesKey,
+                        ciphertextWithTag
+                    );
+                }).then(function(plaintextBuf) {
+                    return new TextDecoder().decode(plaintextBuf);
+                });
+            });
+        }
+
+        // ============================================================
+        // 验证函数（使用当前生效的配置）
+        // ============================================================
+        function verifyPrivateKey(privateKeyPem) {
+            var config = getSecurityConfig(); // 强制重新读取
+            console.log('🔍 验证使用的配置:', config);
+            return hybridDecrypt(config.challengeCipher, privateKeyPem)
+                .then(function(plain) {
+                    console.log('✅ 解密结果:', plain);
+                    if (plain === config.expectedPlain) {
+                        return true;
+                    } else {
+                        throw new Error('解密结果不是 "' + config.expectedPlain + '"，而是: ' + plain);
+                    }
+                })
+                .catch(function(err) {
+                    console.error('❌ 验证失败:', err);
+                    document.getElementById('loginError').textContent = '❌ ' + err.message;
+                    document.getElementById('loginError').style.display = 'block';
+                    return false;
+                });
+        }
+
+        // ============================================================
+        // 登录处理
+        // ============================================================
+        function handlePrivateKeyLogin() {
+            var privKey = document.getElementById('loginPrivateKey').value.trim();
+            var errorEl = document.getElementById('loginError');
+
+            if (!privKey) {
+                errorEl.textContent = '❌ 请粘贴或导入私钥';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            // 清除缓存，强制重新读取 config.json
+            clearSecurityCache();
+
+            var btn = document.getElementById('loginWithPrivateKeyBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ 验证中...';
+
+            verifyPrivateKey(privKey).then(function(success) {
+                btn.disabled = false;
+                btn.textContent = '🔓 使用私钥登录';
+                if (success) {
+                    sessionStorage.setItem('blog_admin_logged', 'true');
+                    errorEl.style.display = 'none';
+                    document.getElementById('loginBox').style.display = 'none';
+                    document.getElementById('adminArea').classList.add('active');
+                    showToast('✅ 私钥验证通过，登录成功', 'success');
+                    if (loadConfig()) {
+                        document.getElementById('githubToken').value = config.token || '';
+                        document.getElementById('githubUser').value = config.user || '';
+                        document.getElementById('githubRepo').value = config.repo || '';
+                        document.getElementById('githubPath').value = config.path || 'posts.txt';
+                        document.getElementById('configPath').value = config.configPath || 'config.json';
+                    }
+                    document.getElementById('configHint').style.display = isConfigured() ? 'none' : 'block';
+                    // 加载安全设置到表单（显示当前使用的配置）
+                    loadSecuritySettingsToForm();
+                    document.getElementById('securityPanel').classList.add('active');
+                } else {
+                    document.getElementById('loginPrivateKey').value = '';
+                    document.getElementById('loginPrivateKey').focus();
+                }
+            }).catch(function(err) {
+                btn.disabled = false;
+                btn.textContent = '🔓 使用私钥登录';
+                showToast('❌ 登录异常：' + err.message, 'error');
+            });
+        }
+
+        // ============================================================
+        // 从 GitHub 拉取/同步安全配置（用于保存时写入）
+        // ============================================================
+        function fetchRemoteConfigForWrite() {
+            if (!isConfigured()) return Promise.reject(new Error('未配置 GitHub'));
+            var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + (config.configPath || 'config.json');
+            return fetch(url, {
+                headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+            }).then(function(response) {
+                if (response.status === 404) return null;
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            }).then(function(data) {
+                if (data && data.content) {
+                    var content = decodeBase64Utf8(data.content);
+                    try {
+                        return JSON.parse(content);
+                    } catch (e) { throw new Error('JSON 解析失败'); }
+                }
+                return null;
+            });
+        }
+
+        function saveSecurityConfigToGitHub(securityObj) {
+            if (!isConfigured()) return Promise.reject(new Error('未配置 GitHub'));
+
+            var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + (config.configPath || 'config.json');
+            return fetchRemoteConfigForWrite().then(function(remoteData) {
+                var jsonData = remoteData || {};
+                jsonData.security = securityObj;
+                var content = JSON.stringify(jsonData, null, 2);
+                var encoded = encodeUtf8ToBase64(content);
+                var body = {
+                    message: '更新安全配置 ' + new Date().toLocaleString(),
+                    content: encoded,
+                    branch: 'main'
+                };
+                // 先获取最新 sha
+                return fetch(url, {
+                    headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+                }).then(function(resp) {
+                    if (resp.status === 404) return null;
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                    return resp.json();
+                }).then(function(data) {
+                    if (data && data.sha) body.sha = data.sha;
+                    return fetch(url, {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': 'token ' + config.token,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(body)
+                    });
+                });
+            }).then(function(response) {
+                if (!response || !response.ok) {
+                    if (response) {
+                        return response.json().then(function(err) {
+                            throw new Error(err.message || '保存失败');
+                        });
+                    }
+                    throw new Error('保存失败');
+                }
+                return response.json();
+            });
+        }
+
+        // ============================================================
+        // 安全设置相关函数
+        // ============================================================
+        function loadSecuritySettingsToForm() {
+            var cfg = getSecurityConfig(); // 读取当前生效的配置
+            document.getElementById('secPublicKey').value = cfg.publicKey;
+            document.getElementById('secChallengeCipher').value = cfg.challengeCipher;
+            document.getElementById('secExpectedPlain').value = cfg.expectedPlain;
+            console.log('📋 表单已加载配置:', cfg);
+        }
+
+        function saveSecuritySettings() {
+            var pubKey = document.getElementById('secPublicKey').value.trim();
+            var cipher = document.getElementById('secChallengeCipher').value.trim();
+            var plain = document.getElementById('secExpectedPlain').value.trim();
+
+            if (!pubKey || !cipher || !plain) {
+                showToast('❌ 所有字段都不能为空', 'error');
+                return;
+            }
+            if (!pubKey.includes('BEGIN PUBLIC KEY')) {
+                showToast('❌ 公钥格式不正确', 'error');
+                return;
+            }
+
+            var securityObj = {
+                publicKey: pubKey,
+                challengeCipher: cipher,
+                expectedPlain: plain
+            };
+
+            // 保存到 localStorage
+            localStorage.setItem('security_config', JSON.stringify(securityObj));
+            // 清除缓存
+            clearSecurityCache();
+            // 刷新表单
+            loadSecuritySettingsToForm();
+            showToast('✅ 已保存到本地', 'success');
+
+            // 如果已配置 GitHub，同步到远程 config.json
+            if (isConfigured()) {
+                saveSecurityConfigToGitHub(securityObj).then(function() {
+                    showToast('✅ 已同步到 config.json', 'success');
+                }).catch(function(err) {
+                    showToast('⚠️ 本地已保存，但同步 config.json 失败：' + err.message, 'error');
+                });
+            } else {
+                showToast('ℹ️ 未配置 GitHub，仅保存在本地。配置后会自动同步。', 'info');
+            }
+        }
+
+        function resetSecuritySettings() {
+            if (!confirm('确定要恢复默认的安全设置吗？')) return;
+            localStorage.removeItem('security_config');
+            clearSecurityCache();
+            loadSecuritySettingsToForm();
+            showToast('↩️ 已恢复默认设置', 'info');
+        }
+
+        function syncAllConfig() {
+            if (!isConfigured()) {
+                showToast('请先配置 GitHub', 'error');
+                toggleConfig();
+                return;
+            }
+            var securityObj = {
+                publicKey: document.getElementById('secPublicKey').value.trim(),
+                challengeCipher: document.getElementById('secChallengeCipher').value.trim(),
+                expectedPlain: document.getElementById('secExpectedPlain').value.trim()
+            };
+            if (!securityObj.publicKey || !securityObj.challengeCipher || !securityObj.expectedPlain) {
+                showToast('❌ 请先填写完整的安全设置', 'error');
+                return;
+            }
+            saveSecurityConfigToGitHub(securityObj).then(function() {
+                showToast('✅ 安全配置已同步到 config.json', 'success');
+            }).catch(function(err) {
+                showToast('❌ 同步失败：' + err.message, 'error');
+            });
+        }
+
+        // ============================================================
+        // 退出登录
+        // ============================================================
+        function handleLogout() {
+            if (confirm('确定退出登录吗？')) {
+                sessionStorage.removeItem('blog_admin_logged');
+                document.getElementById('loginBox').style.display = 'block';
+                document.getElementById('adminArea').classList.remove('active');
+                document.getElementById('securityPanel').classList.remove('active');
+                showToast('已退出', 'info');
+            }
+        }
+
+        // ============================================================
+        // Toast
+        // ============================================================
+        var toastEl = document.getElementById('toastContainer');
+        var toastTimer = null;
+        function showToast(msg, type) {
+            toastEl.textContent = msg;
+            toastEl.style.background = type === 'success' ? '#4a5a6a' : (type === 'error' ? '#8b2500' : '#333');
+            toastEl.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(function() { toastEl.classList.remove('show'); }, 3000);
+        }
+
+        // ============================================================
+        // 私钥导入辅助
+        // ============================================================
+        function pastePrivateKey() {
+            navigator.clipboard.readText().then(function(text) {
+                if (text) {
+                    document.getElementById('loginPrivateKey').value = text;
+                    showToast('私钥已粘贴', 'success');
+                } else {
+                    showToast('剪贴板为空', 'error');
+                }
+            }).catch(function() {
+                showToast('无法读取剪贴板，请手动粘贴', 'error');
+            });
+        }
+
+        function importPrivateKeyFile(event) {
+            var file = event.target.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var content = e.target.result;
+                if (content.includes('BEGIN PRIVATE KEY')) {
+                    document.getElementById('loginPrivateKey').value = content;
+                    showToast('私钥文件导入成功', 'success');
+                } else {
+                    showToast('文件内容不是有效的私钥', 'error');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // ============================================================
+        // 配置管理（GitHub）
+        // ============================================================
+        var config = {};
+
+        function getPostsPath() {
+            return document.getElementById('githubPath').value.trim() || 'posts.txt';
+        }
+
+        function getConfigPath() {
+            return document.getElementById('configPath').value.trim() || 'config.json';
+        }
+
+        function toggleConfig() {
+            var box = document.getElementById('configBox');
+            if (box.style.display === 'block') {
+                box.style.display = 'none';
+            } else {
+                box.style.display = 'block';
+                var saved = localStorage.getItem('github_config');
+                if (saved) {
+                    try {
+                        var cfg = JSON.parse(saved);
+                        document.getElementById('githubToken').value = cfg.token || '';
+                        document.getElementById('githubUser').value = cfg.user || '';
+                        document.getElementById('githubRepo').value = cfg.repo || '';
+                        document.getElementById('githubPath').value = cfg.path || 'posts.txt';
+                        document.getElementById('configPath').value = cfg.configPath || 'config.json';
+                    } catch (e) {}
+                }
+            }
+        }
+
+        function saveConfig() {
+            var token = document.getElementById('githubToken').value.trim();
+            var user = document.getElementById('githubUser').value.trim();
+            var repo = document.getElementById('githubRepo').value.trim();
+            var path = getPostsPath();
+            var configPath = getConfigPath();
+
+            if (!token || !user || !repo) {
+                showToast('请填写完整配置', 'error');
+                return;
+            }
+
+            config = { token: token, user: user, repo: repo, path: path, configPath: configPath };
+            localStorage.setItem('github_config', JSON.stringify(config));
+            showToast('✅ 配置已保存', 'success');
+            document.getElementById('configBox').style.display = 'none';
+            document.getElementById('configHint').style.display = 'none';
+            // 尝试同步安全配置
+            syncAllConfig();
+        }
+
+        function loadConfig() {
+            var saved = localStorage.getItem('github_config');
+            if (saved) {
+                try {
+                    config = JSON.parse(saved);
+                    document.getElementById('githubToken').value = config.token || '';
+                    document.getElementById('githubUser').value = config.user || '';
+                    document.getElementById('githubRepo').value = config.repo || '';
+                    document.getElementById('githubPath').value = config.path || 'posts.txt';
+                    document.getElementById('configPath').value = config.configPath || 'config.json';
+                    return true;
+                } catch (e) {}
+            }
+            return false;
+        }
+
+        function isConfigured() {
+            return !!(config.token && config.user && config.repo);
+        }
+
+        // ============================================================
+        // 文章管理
+        // ============================================================
+        var posts = [];
+
+        function getToday() {
+            var d = new Date();
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
+
+        function escapeHtml(str) {
+            var d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+
+        function parsePostsFromTxt(text) {
+            var blocks = text.split(/---\s*/).filter(function(block) { return block.trim().length > 0; });
+            var result = [];
+            for (var i = 0; i < blocks.length; i++) {
+                var block = blocks[i].trim();
+                var lines = block.split('\n');
+                var post = {};
+                var contentLines = [];
+                var isContent = false;
+                for (var j = 0; j < lines.length; j++) {
+                    var line = lines[j].trim();
+                    if (!line) continue;
+                    var match = line.match(/^(\w+):\s*(.*)/);
+                    if (match && !isContent) {
+                        var key = match[1];
+                        var value = match[2];
+                        if (key === 'title') post.title = value;
+                        else if (key === 'category') post.category = value;
+                        else if (key === 'tags') post.tags = value.split(',').map(function(t) { return t.trim(); });
+                        else if (key === 'date') post.date = value;
+                        else if (key === 'content') { isContent = true;
+                            contentLines.push(value); }
+                    } else {
+                        if (isContent || line.startsWith('content:')) {
+                            if (line.startsWith('content:')) {
+                                contentLines.push(line.replace(/^content:\s*/, ''));
+                            } else {
+                                contentLines.push(line);
+                            }
+                        }
+                    }
+                }
+                post.content = contentLines.join('\n').trim();
+                if (post.title && post.content) result.push(post);
+            }
+            return result;
+        }
+
+        function generatePostsTxt(postsArray) {
+            var text = '';
+            for (var i = 0; i < postsArray.length; i++) {
+                var p = postsArray[i];
+                text += '---\n';
+                text += 'title: ' + p.title + '\n';
+                text += 'category: ' + (p.category || '随笔') + '\n';
+                text += 'tags: ' + (p.tags ? p.tags.join(',') : '') + '\n';
+                text += 'date: ' + (p.date || getToday()) + '\n';
+                text += 'content: ' + p.content + '\n';
+            }
+            return text;
+        }
+
+        function renderPosts() {
+            var container = document.getElementById('postList');
+            var countDisplay = document.getElementById('countDisplay');
+            if (posts.length === 0) {
+                container.innerHTML = '<div class="empty-msg">📖 暂无文章</div>';
+                countDisplay.textContent = '共 0 篇文章';
+                return;
+            }
+            var html = '';
+            for (var i = 0; i < posts.length; i++) {
+                var p = posts[i];
+                var excerpt = p.content.length > 80 ? p.content.substring(0, 80) + '...' : p.content;
+                html += '<div class="post-item">';
+                html += '<div class="info">';
+                html += '<div class="title">' + escapeHtml(p.title) + '</div>';
+                html += '<div class="meta">📅 ' + (p.date || '未知') + '  📂 ' + escapeHtml(p.category || '未分类');
+                if (p.tags && p.tags.length > 0) {
+                    html += '  🏷️ ' + p.tags.map(function(t) { return '#' + t; }).join(' ');
+                }
+                html += '</div>';
+                html += '<div class="excerpt">' + escapeHtml(excerpt) + '</div>';
+                html += '</div>';
+                html += '<div class="actions">';
+                html += '<button onclick="editPost(' + i + ')">✏️ 编辑</button>';
+                html += '<button class="del-btn" onclick="deletePost(' + i + ')">🗑️ 删除</button>';
+                html += '</div></div>';
+            }
+            container.innerHTML = html;
+            countDisplay.textContent = '共 ' + posts.length + ' 篇文章';
+        }
+
+        document.getElementById('editorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var title = document.getElementById('postTitle').value.trim();
+            var category = document.getElementById('postCategory').value;
+            var tagsRaw = document.getElementById('postTags').value.trim();
+            var content = document.getElementById('postContent').value.trim();
+            if (!title) { showToast('请输入标题', 'error'); return; }
+            if (!content) { showToast('请输入正文', 'error'); return; }
+            var tags = tagsRaw ? tagsRaw.split(/[,，\s]+/).filter(function(t) { return t.trim(); }) : [];
+            posts.push({ title: title, category: category, tags: tags, content: content, date: getToday() });
+            renderPosts();
+            clearForm();
+            showToast('✅ 已添加，共 ' + posts.length + ' 篇', 'success');
+        });
+
+        function clearForm() {
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postTags').value = '';
+            document.getElementById('postContent').value = '';
+        }
+
+        function deletePost(index) {
+            if (!confirm('确定删除「' + posts[index].title + '」？')) return;
+            posts.splice(index, 1);
+            renderPosts();
+            showToast('已删除', 'info');
+        }
+
+        function editPost(index) {
+            var p = posts[index];
+            document.getElementById('postTitle').value = p.title;
+            document.getElementById('postCategory').value = p.category || '随笔';
+            document.getElementById('postTags').value = p.tags ? p.tags.join(',') : '';
+            document.getElementById('postContent').value = p.content;
+            posts.splice(index, 1);
+            renderPosts();
+            showToast('✏️ 已加载到表单', 'info');
+            document.querySelector('form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearAll() {
+            if (!confirm('确定清空所有文章？')) return;
+            posts = [];
+            renderPosts();
+            showToast('已清空', 'info');
+        }
+
+        // ============================================================
+        // GitHub 读写文章
+        // ============================================================
+        function decodeBase64Utf8(base64) {
+            var binaryString = atob(base64);
+            var bytes = new Uint8Array(binaryString.length);
+            for (var i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return new TextDecoder('utf-8').decode(bytes);
+        }
+
+        function encodeUtf8ToBase64(text) {
+            var encoder = new TextEncoder();
+            var data = encoder.encode(text);
+            var binaryString = '';
+            for (var i = 0; i < data.length; i++) {
+                binaryString += String.fromCharCode(data[i]);
+            }
+            return btoa(binaryString);
+        }
+
+        function loadFromGitHub() {
+            if (!isConfigured()) {
+                showToast('请先配置 GitHub', 'error');
+                toggleConfig();
+                return;
+            }
+            var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + getPostsPath();
+            fetch(url, {
+                headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+            }).then(function(response) {
+                if (response.status === 404) {
+                    showToast('文件不存在，将创建新文件', 'info');
+                    posts = [];
+                    renderPosts();
+                    return;
+                }
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            }).then(function(data) {
+                if (data && data.content) {
+                    var content = decodeBase64Utf8(data.content);
+                    var parsed = parsePostsFromTxt(content);
+                    if (parsed.length > 0) {
+                        posts = parsed;
+                        renderPosts();
+                        showToast('✅ 导入 ' + posts.length + ' 篇文章', 'success');
+                    } else {
+                        posts = [];
+                        renderPosts();
+                        showToast('文件为空或格式错误', 'info');
+                    }
+                }
+            }).catch(function(err) {
+                showToast('❌ 读取失败：' + err.message, 'error');
+            });
+        }
+
+        function saveToGitHub() {
+            if (posts.length === 0) {
+                showToast('没有文章可保存', 'error');
+                return;
+            }
+            if (!isConfigured()) {
+                showToast('请先配置 GitHub', 'error');
+                toggleConfig();
+                return;
+            }
+            var content = generatePostsTxt(posts);
+            var encoded = encodeUtf8ToBase64(content);
+            var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + getPostsPath();
+            fetch(url, {
+                headers: { 'Authorization': 'token ' + config.token, 'Accept': 'application/vnd.github.v3+json' }
+            }).then(function(response) {
+                if (response.status === 404) return null;
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            }).then(function(data) {
+                var body = {
+                    message: '更新文章 ' + new Date().toLocaleString(),
+                    content: encoded,
+                    branch: 'main'
+                };
+                if (data && data.sha) body.sha = data.sha;
+                return fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': 'token ' + config.token,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+            }).then(function(response) {
+                if (!response.ok) {
+                    return response.json().then(function(err) {
+                        throw new Error(err.message || '保存失败');
+                    });
+                }
+                return response.json();
+            }).then(function() {
+                showToast('✅ 保存成功！共 ' + posts.length + ' 篇', 'success');
+            }).catch(function(err) {
+                showToast('❌ 保存失败：' + err.message, 'error');
+            });
+        }
+
+        // ============================================================
+        // 快捷键
+        // ============================================================
+        document.getElementById('postContent').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                document.getElementById('editorForm').dispatchEvent(new Event('submit'));
+            }
+        });
+
+        // ============================================================
+        // 初始化
+        // ============================================================
+        if (sessionStorage.getItem('blog_admin_logged') === 'true') {
+            document.getElementById('loginBox').style.display = 'none';
+            document.getElementById('adminArea').classList.add('active');
+            if (loadConfig()) {
+                document.getElementById('githubToken').value = config.token || '';
+                document.getElementById('githubUser').value = config.user || '';
+                document.getElementById('githubRepo').value = config.repo || '';
+                document.getElementById('githubPath').value = config.path || 'posts.txt';
+                document.getElementById('configPath').value = config.configPath || 'config.json';
+            }
+            document.getElementById('configHint').style.display = isConfigured() ? 'none' : 'block';
+            loadSecuritySettingsToForm();
+            document.getElementById('securityPanel').classList.add('active');
+        } else {
+            document.getElementById('securityPanel').classList.remove('active');
+            // 预读取一次 config.json 以填充缓存，但登录时才真正使用
+            getSecurityConfig();
+        }
+
+        document.getElementById('loginWithPrivateKeyBtn').addEventListener('click', handlePrivateKeyLogin);
+
+        console.log('📝 墨韵轩 · 文章管理 (最终修复版) 已加载');
+        console.log('🔑 登录前强制读取同目录 config.json 的三个字段，并替换所有本地缓存');
+    </script>
+
+</body>
+</html>
