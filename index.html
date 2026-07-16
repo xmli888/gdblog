@@ -151,7 +151,7 @@
             margin-bottom: 8px;
         }
 
-        /* 导航栏（红木牌匾） */
+        /* 导航栏 */
         .nav-bar {
             position: relative;
             z-index: 3;
@@ -212,7 +212,6 @@
             border-bottom: 2px solid #c23531;
         }
 
-        /* 登录/管理入口在页脚，导航栏不再有登录按钮 */
         /* ============================================================
            主体布局
            ============================================================ */
@@ -397,7 +396,6 @@
         .post-detail .body a:hover {
             color: #c23531;
         }
-        /* 视频和Flash容器 */
         .post-detail .body video {
             max-width: 100%;
             border-radius: 6px;
@@ -427,6 +425,39 @@
         }
         .post-detail .nav-links a:hover {
             text-decoration: underline;
+        }
+
+        .like-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 16px 0 20px;
+            padding: 12px 0;
+            border-top: 1px solid #e8d5c0;
+            border-bottom: 1px solid #e8d5c0;
+        }
+        .like-area .like-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #8a7a6a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .like-area .like-btn:hover {
+            color: #c23531;
+            transform: scale(1.1);
+        }
+        .like-area .like-btn.liked {
+            color: #c23531;
+        }
+        .like-area .like-count {
+            font-size: 16px;
+            color: #4d281b;
+            font-family: 'SimSun', '宋体', serif;
         }
 
         /* 分享区域 */
@@ -482,40 +513,6 @@
             border-color: #12b7f5;
         }
 
-        /* 点赞区域 */
-        .like-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin: 16px 0 20px;
-            padding: 12px 0;
-            border-top: 1px solid #e8d5c0;
-            border-bottom: 1px solid #e8d5c0;
-        }
-        .like-area .like-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            transition: 0.2s;
-            color: #8a7a6a;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .like-area .like-btn:hover {
-            color: #c23531;
-            transform: scale(1.1);
-        }
-        .like-area .like-btn.liked {
-            color: #c23531;
-        }
-        .like-area .like-count {
-            font-size: 16px;
-            color: #4d281b;
-            font-family: 'SimSun', '宋体', serif;
-        }
-
         /* 推荐阅读 */
         .recommend {
             margin-top: 20px;
@@ -539,9 +536,7 @@
             background: #f8f0e8;
         }
 
-        /* ============================================================
-           Giscus 评论区
-           ============================================================ */
+        /* Giscus评论区 */
         .comment-section {
             margin-top: 24px;
             padding-top: 16px;
@@ -571,9 +566,7 @@
             font-family: 'SimSun', '宋体', serif;
         }
 
-        /* ============================================================
-           关于页面
-           ============================================================ */
+        /* 关于页面 */
         .about-content {
             font-size: 15px;
             line-height: 2;
@@ -629,7 +622,7 @@
             display: block;
         }
 
-        /* 高亮闪烁动画 */
+        /* 高亮闪烁 */
         @keyframes highlightPulse {
             0% {
                 box-shadow: 0 0 0 0 rgba(194, 53, 49, 0.4);
@@ -646,6 +639,7 @@
             border-color: #c23531 !important;
         }
 
+        /* ★ 统一表单样式 */
         .admin-form .form-group {
             margin-bottom: 14px;
         }
@@ -668,18 +662,20 @@
             font-family: 'SimSun', '宋体', serif;
             outline: none;
             transition: border 0.2s;
+            min-height: 38px;
+            box-sizing: border-box;
         }
         .admin-form .form-group input:focus,
-        .admin-form .form-group textarea:focus {
+        .admin-form .form-group textarea:focus,
+        .admin-form .form-group select:focus {
             border-color: #c23531;
         }
         .admin-form .form-group textarea {
-            min-height: 100px;
+            min-height: 80px;
             resize: vertical;
         }
-        /* 自动增高文本框 */
         .admin-form .form-group textarea.auto-grow {
-            min-height: 80px;
+            min-height: 120px;
             overflow: hidden;
             resize: none;
         }
@@ -787,7 +783,6 @@
             color: #fff;
         }
 
-        /* 帮助文字 */
         .help-text {
             font-size: 13px;
             color: #6b5a4a;
@@ -967,16 +962,17 @@
         }
 
         /* ============================================================
-           登录界面
+           登录界面（修复布局）
            ============================================================ */
         .login-box {
             max-width: 420px;
             margin: 30px auto;
-            padding: 30px 24px;
+            padding: 30px 24px 40px;
             background: #fdf8f0;
             border: 1px solid #e8d5c0;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            text-align: center;
         }
         .login-box h2 {
             text-align: center;
@@ -993,7 +989,16 @@
             margin-bottom: 18px;
         }
         .login-box .form-group {
-            margin-bottom: 14px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .login-box .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #4d281b;
+            font-weight: bold;
+            margin-bottom: 4px;
+            text-align: left;
         }
         .login-box .form-group textarea {
             width: 100%;
@@ -1006,13 +1011,14 @@
             resize: vertical;
             min-height: 80px;
             outline: none;
+            text-align: left;
         }
         .login-box .form-group textarea:focus {
             border-color: #c23531;
         }
         .login-box .btn {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background: #7a4a34;
             color: #f5e6d3;
             border: none;
@@ -1022,6 +1028,7 @@
             letter-spacing: 4px;
             cursor: pointer;
             transition: 0.2s;
+            margin-top: 4px;
         }
         .login-box .btn:hover {
             background: #5a3222;
@@ -1178,6 +1185,72 @@
             resize: vertical;
         }
 
+        /* 聊天区域 */
+        .chat-area {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e8d5c0;
+            border-radius: 8px;
+            padding: 12px;
+            background: #fefcf8;
+            margin-bottom: 12px;
+        }
+        .chat-area .chat-msg {
+            padding: 6px 0;
+            border-bottom: 1px dashed #f0e8e0;
+        }
+        .chat-area .chat-msg:last-child {
+            border-bottom: none;
+        }
+        .chat-area .chat-msg .chat-name {
+            font-weight: bold;
+            color: #4d281b;
+        }
+        .chat-area .chat-msg .chat-time {
+            font-size: 12px;
+            color: #8a7a6a;
+            margin-left: 8px;
+        }
+        .chat-area .chat-msg .chat-text {
+            font-size: 14px;
+            margin-top: 2px;
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .chat-input-row input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd0c0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'SimSun', '宋体', serif;
+            background: #fefcf8;
+            outline: none;
+            min-height: 38px;
+        }
+        .chat-input-row input:focus {
+            border-color: #c23531;
+        }
+        .chat-input-row button {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #c23531;
+            color: #f5e6d3;
+            cursor: pointer;
+            font-family: '华文楷体', 'KaiTi', serif;
+            font-size: 14px;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            min-height: 38px;
+        }
+        .chat-input-row button:hover {
+            background: #a02a26;
+        }
+
         /* ============================================================
            Toast & 模态框
            ============================================================ */
@@ -1315,6 +1388,20 @@
                 padding: 8px 14px;
                 font-size: 14px;
             }
+            .login-box {
+                padding: 20px 16px 30px;
+            }
+            .chat-input-row {
+                flex-wrap: wrap;
+            }
+            .chat-input-row input {
+                width: 100%;
+                flex: 1 1 100%;
+            }
+            .chat-input-row button {
+                width: 100%;
+                flex: 1 1 100%;
+            }
         }
         @media (max-width: 400px) {
             .nav-bar {
@@ -1324,10 +1411,6 @@
             .nav-bar a {
                 font-size: 12px;
                 padding: 3px 6px;
-            }
-            .share-area .share-buttons button {
-                font-size: 11px;
-                padding: 3px 8px;
             }
         }
 
@@ -1376,9 +1459,7 @@
 
     <div class="container">
 
-        <!-- ============================================================
-           顶部（古宅红木风格）
-           ============================================================ -->
+        <!-- 顶部 -->
         <header class="hero">
             <div class="branch-left"></div>
             <div class="branch-right"></div>
@@ -1400,9 +1481,7 @@
             </nav>
         </header>
 
-        <!-- ============================================================
-           主体
-           ============================================================ -->
+        <!-- 主体 -->
         <div class="main" id="app">
 
             <!-- 左侧主内容 -->
@@ -1423,311 +1502,8 @@
                     <div class="card-title">文章分类</div>
                     <ul class="category-list" id="categoryList"></ul>
                 </div>
-                <!-- 后台管理（登录后显示） -->
-                <div id="adminPanel" style="display:none;">
-                    <div class="card">
-                        <div class="card-title">🔐 后台管理</div>
-
-                        <!-- 面板：站点设置 -->
-                        <div class="panel">
-                            <div class="panel-header" onclick="togglePanel(this)">
-                                ⚙️ 站点设置 <span class="arrow">▼</span>
-                            </div>
-                            <div class="panel-body">
-                                <div class="admin-form">
-                                    <div class="form-group"><label>Logo 文字</label><input type="text" id="setLogo" /></div>
-                                    <div class="form-group"><label>博客标题</label><input type="text" id="setTitle" /></div>
-                                    <div class="form-group"><label>博客副标题</label><input type="text" id="setSub" /></div>
-                                    <div class="form-group"><label>作者名</label><input type="text" id="setAuthor" /></div>
-                                    <div class="form-group"><label>作者简介</label><textarea id="setAuthorDesc" rows="2"></textarea></div>
-                                    <div class="btn-group">
-                                        <button class="btn btn-primary" onclick="saveSiteSettings()">保存</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- =========================================================
-                        面板：写新文章（独立面板，放在文章管理前面）
-                        ========================================================= -->
-                        <div class="panel" id="newPostPanel">
-                            <div class="panel-header" onclick="togglePanel(this)">
-                                ✏️ 写新文章 <span class="arrow">▼</span>
-                            </div>
-                            <div class="panel-body">
-                                <div class="admin-form">
-                                    <div class="form-group"><label>标题</label><input type="text" id="editTitle" /></div>
-                                    <div class="form-row" style="display:flex; gap:10px; flex-wrap:wrap;">
-                                        <div class="form-group" style="flex:1;"><label>分类</label>
-                                            <select id="editCategory"></select>
-                                            <!-- 添加分类输入框（下拉框下方） -->
-                                            <div style="display:flex; gap:6px; margin-top:4px;">
-                                                <input type="text" id="newCategoryQuick" placeholder="新分类名称" style="flex:1;padding:4px 8px;border:1px solid #ddd0c0;border-radius:4px;font-size:13px;" />
-                                                <button class="btn btn-secondary" onclick="quickAddCategory()" style="padding:2px 12px;font-size:12px;">+ 添加</button>
-                                            </div>
-                                        </div>
-                                        <div class="form-group" style="flex:1;"><label>标签 (逗号分隔)</label><input type="text" id="editTags" /></div>
-                                    </div>
-                                    <div class="form-row" style="display:flex; gap:10px; flex-wrap:wrap;">
-                                        <div class="form-group" style="flex:1;"><label>作者</label><input type="text" id="editAuthor" /></div>
-                                        <div class="form-group" style="flex:1;"><label>日期</label><input type="date" id="editDate" /></div>
-                                        <div class="form-group" style="flex:0 0 100px;"><label>阅读数</label><input type="number" id="editViews" min="0" /></div>
-                                        <div class="form-group" style="flex:0 0 100px;"><label>点赞数</label><input type="number" id="editLikes" min="0" /></div>
-                                    </div>
-                                    <div class="form-group"><label>正文 (支持 Markdown)</label>
-                                        <div style="display:flex; gap:6px; margin-bottom:4px; flex-wrap:wrap;">
-                                            <button class="btn btn-secondary" onclick="insertMarkdown('image')">🖼️ 图片</button>
-                                            <button class="btn btn-secondary" onclick="insertMarkdown('link')">🔗 链接</button>
-                                            <button class="btn btn-secondary" onclick="insertMarkdown('video')">🎬 视频</button>
-                                            <button class="btn btn-secondary" onclick="insertMarkdown('flash')">📦 Flash</button>
-                                            <button class="btn btn-secondary" onclick="insertMarkdown('bold')">B</button>
-                                            <button class="btn btn-secondary" onclick="insertMarkdown('italic')">I</button>
-                                            <button class="btn btn-secondary" onclick="insertMarkdown('code')">&lt;/&gt;</button>
-                                        </div>
-                                        <textarea id="editContent" class="auto-grow" rows="4"></textarea>
-                                    </div>
-                                    <input type="hidden" id="editId" />
-                                    <div class="btn-group">
-                                        <button class="btn btn-primary" onclick="savePost()">保存文章</button>
-                                        <button class="btn btn-secondary" onclick="clearEditForm()">清空表单</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 面板：文章管理 -->
-                        <div class="panel">
-                            <div class="panel-header" onclick="togglePanel(this)">
-                                📄 文章管理 <span class="arrow open">▼</span>
-                            </div>
-                            <div class="panel-body open">
-                                <div class="admin-list" id="adminPostList"></div>
-                            </div>
-                        </div>
-
-                        <!-- 面板：分类管理 -->
-                        <div class="panel">
-                            <div class="panel-header" onclick="togglePanel(this)">
-                                📂 分类管理 <span class="arrow">▼</span>
-                            </div>
-                            <div class="panel-body">
-                                <div class="admin-form">
-                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                                        <input type="text" id="newCategoryName" placeholder="新分类名称" style="flex:1;" />
-                                        <button class="btn btn-primary" onclick="addCategory()">添加</button>
-                                    </div>
-                                    <div class="admin-list" id="categoryAdminList"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 面板：标签管理 -->
-                        <div class="panel">
-                            <div class="panel-header" onclick="togglePanel(this)">
-                                🏷️ 标签管理 <span class="arrow">▼</span>
-                            </div>
-                            <div class="panel-body">
-                                <div class="admin-form">
-                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-                                        <input type="text" id="newTagName" placeholder="新标签名称" style="flex:1;" />
-                                        <button class="btn btn-primary" onclick="addTag()">添加</button>
-                                    </div>
-                                    <div class="admin-list" id="tagAdminList"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 面板：字体管理 -->
-                        <div class="panel">
-                            <div class="panel-header" onclick="togglePanel(this)">
-                                🔤 字体管理 <span class="arrow">▼</span>
-                            </div>
-                            <div class="panel-body">
-                                <div class="admin-form">
-                                    <div class="help-text">
-                                        💡 支持系统字体名称（如 <code>楷体</code>），
-                                        也支持自定义字体路径（如 <code>fonts/MyFont.ttf</code>）
-                                        或网络字体 URL（如 <code>https://example.com/font.woff</code>）。
-                                    </div>
-                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
-                                        <input type="text" id="newFontName" placeholder="字体名称 / 路径 / URL" style="flex:1;" />
-                                        <button class="btn btn-primary" onclick="addFont()">添加</button>
-                                    </div>
-                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
-                                        <label style="font-weight:bold;">默认字体</label>
-                                        <select id="defaultFontSelect"></select>
-                                        <button class="btn btn-secondary" onclick="setDefaultFont()">设为默认</button>
-                                        <button class="btn btn-secondary" onclick="resetFonts()">重置默认列表</button>
-                                    </div>
-                                    <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
-                                        <label style="font-weight:bold;">前台字体切换</label>
-                                        <input type="checkbox" id="fontSwitchCheck" onchange="saveFontSettings()" />
-                                        <span style="font-size:13px; color:#8a7a6a;">开启后用户可自定义字体</span>
-                                    </div>
-                                    <div class="admin-list" id="fontAdminList"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 面板：音乐管理 -->
-                        <div class="panel">
-                            <div class="panel-header" onclick="togglePanel(this)">
-                                🎵 音乐管理 <span class="arrow">▼</span>
-                            </div>
-                            <div class="panel-body">
-                                <div class="admin-form">
-                                    <div class="help-text">
-                                        💡 支持本地音乐路径（如 <code>music/song.mp3</code>）
-                                        或网络音乐链接（如 <code>https://example.com/song.mp3</code>）。
-                                    </div>
-                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
-                                        <input type="text" id="newMusicName" placeholder="歌曲名" style="flex:1;" />
-                                        <input type="text" id="newMusicUrl" placeholder="路径 / URL" style="flex:2;" />
-                                        <button class="btn btn-primary" onclick="addMusic()">添加</button>
-                                    </div>
-                                    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:10px;">
-                                        <label><input type="checkbox" id="musicEnabledCheck" onchange="saveMusicSettings()" /> 显示播放器</label>
-                                        <label><input type="checkbox" id="musicAutoPlayCheck" onchange="saveMusicSettings()" /> 自动播放</label>
-                                        <label>默认歌曲 <select id="musicDefaultSelect"></select></label>
-                                    </div>
-                                    <div class="admin-list" id="musicAdminList"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 面板：关于页面 -->
-                        <div class="panel">
-                            <div class="panel-header" onclick="togglePanel(this)">
-                                📜 关于页面 <span class="arrow">▼</span>
-                            </div>
-                            <div class="panel-body">
-                                <div class="admin-form">
-                                    <div class="form-group"><textarea id="aboutEditor" rows="6"></textarea></div>
-                                    <button class="btn btn-primary" onclick="saveAbout()">保存关于</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 面板：安全设置 -->
-                        <div class="panel">
-                            <div class="panel-header" onclick="togglePanel(this)">
-                                🔐 安全设置 <span class="arrow">▼</span>
-                            </div>
-                            <div class="panel-body">
-                                <div class="admin-form">
-                                    <div class="form-group"><label>公钥</label><textarea id="secPublicKey" rows="3" style="font-family:monospace;font-size:12px;"></textarea></div>
-                                    <div class="form-group"><label>挑战码密文</label><textarea id="secChallengeCipher" rows="2" style="font-family:monospace;font-size:12px;"></textarea></div>
-                                    <div class="form-group"><label>期望明文</label><input type="text" id="secExpectedPlain" /></div>
-                                    <div class="btn-group">
-                                        <button class="btn btn-primary" onclick="saveSecuritySettings()">保存安全设置</button>
-                                        <button class="btn btn-secondary" onclick="resetSecuritySettings()">恢复默认</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 面板：GitHub 设置 -->
-                        <div class="panel" id="githubConfigPanel">
-                            <div class="panel-header" onclick="togglePanel(this)">
-                                ⚙️ GitHub 设置 <span class="arrow">▼</span>
-                            </div>
-                            <div class="panel-body">
-                                <div class="admin-form">
-                                    <div class="help-text">
-                                        💡 配置 GitHub Token 后，文章和配置才能保存到远程仓库。
-                                        <a href="https://github.com/settings/tokens" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处生成 Token</a>
-                                        （需勾选 <code>repo</code> 权限）。
-                                    </div>
-                                    <div class="form-group"><label>🔑 Personal Access Token</label><input type="password" id="githubTokenInput" placeholder="ghp_xxxxxxxxxxxx" /></div>
-                                    <div class="form-group"><label>👤 GitHub 用户名</label><input type="text" id="githubUserInput" placeholder="你的用户名" /></div>
-                                    <div class="form-group"><label>📁 仓库名</label><input type="text" id="githubRepoInput" placeholder="仓库名" /></div>
-                                    <div class="btn-group">
-                                        <button class="btn btn-primary" onclick="saveGitHubConfig()">保存配置</button>
-                                        <button class="btn btn-secondary" onclick="clearGitHubConfig()">清空配置</button>
-                                    </div>
-                                    <div id="githubConfigStatus" style="margin-top:8px;font-size:13px;color:#8a7a6a;"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 面板：备份设置 -->
-                        <div class="panel" id="backupPanel">
-                            <div class="panel-header" onclick="togglePanel(this)">
-                                💾 备份设置 <span class="arrow">▼</span>
-                            </div>
-                            <div class="panel-body">
-                                <div class="admin-form">
-                                    <div class="help-text">
-                                        💡 备份当前文章和配置数据。<br/>
-                                        <strong>下载到本地</strong>：将数据保存到您的电脑或手机。<br/>
-                                        <strong>同步到仓库</strong>：将数据写入 GitHub 仓库（会自动备份当前版本到 <code>backups/</code> 目录）。
-                                    </div>
-                                    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-                                        <label><input type="checkbox" id="backupPosts" checked /> posts.txt</label>
-                                        <label><input type="checkbox" id="backupConfig" checked /> config.json</label>
-                                        <label><input type="checkbox" id="backupMessages" checked /> messages.json</label>
-                                        <button class="btn btn-secondary" onclick="toggleAllBackup()">全选/取消</button>
-                                    </div>
-                                    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
-                                        <button class="btn btn-secondary" onclick="downloadBackup()">📥 下载选中</button>
-                                        <button class="btn btn-primary" onclick="syncBackupToRepo()">📤 同步到仓库</button>
-                                        <button class="btn btn-secondary" onclick="document.getElementById('uploadBackupInput').click()">📤 上传文件</button>
-                                        <input type="file" id="uploadBackupInput" accept=".txt,.json" style="display:none;" onchange="uploadBackupFile(event)" />
-                                    </div>
-                                    <div id="backupStatus" style="font-size:13px;color:#8a7a6a;">
-                                        上次备份：<span id="lastBackupTime">暂无</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 面板：评论设置（含 Giscus 配置） -->
-                        <div class="panel">
-                            <div class="panel-header" onclick="togglePanel(this)">
-                                💬 评论设置 <span class="arrow">▼</span>
-                            </div>
-                            <div class="panel-body">
-                                <div class="admin-form">
-                                    <div class="help-text">
-                                        💡 使用 Giscus 评论系统（基于 GitHub Discussions）。
-                                        <a href="https://giscus.app/zh-CN" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处获取配置</a>
-                                    </div>
-                                    <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
-                                        <label style="font-weight:bold;">自动加载评论</label>
-                                        <input type="checkbox" id="autoLoadComments" />
-                                        <span style="font-size:13px; color:#8a7a6a;">开启后文章页面自动加载评论区</span>
-                                    </div>
-                                    <div class="form-group"><label>仓库名</label><input type="text" id="giscusRepo" placeholder="用户名/仓库名" /></div>
-                                    <div class="form-group"><label>Repo ID</label><input type="text" id="giscusRepoId" placeholder="R_xxxxxxxxxx" /></div>
-                                    <div class="form-group"><label>分类</label><input type="text" id="giscusCategory" placeholder="General" /></div>
-                                    <div class="form-group"><label>分类 ID</label><input type="text" id="giscusCategoryId" placeholder="DIC_xxxxxxx" /></div>
-                                    <div class="btn-group">
-                                        <button class="btn btn-primary" onclick="saveCommentSettings()">保存评论设置</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 面板：留言管理 -->
-                        <div class="panel">
-                            <div class="panel-header" onclick="togglePanel(this)">
-                                💬 留言管理 <span class="arrow">▼</span>
-                            </div>
-                            <div class="panel-body">
-                                <div class="admin-form">
-                                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
-                                        <input type="text" id="adminMsgNickname" placeholder="昵称" style="flex:1;" />
-                                        <input type="text" id="adminMsgEmail" placeholder="邮箱" style="flex:1;" />
-                                        <input type="text" id="adminMsgContent" placeholder="留言内容" style="flex:2;" />
-                                        <button class="btn btn-primary" onclick="adminAddMessage()">添加留言</button>
-                                    </div>
-                                    <div class="admin-list" id="messageAdminList"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+                <!-- 后台管理（登录后显示，移到主内容区） -->
+                <div id="adminPanel" style="display:none;"></div>
             </aside>
         </div>
 
@@ -1747,7 +1523,7 @@
 
     <script>
         // ============================================================
-        //  1. 配置 & 默认值（使用您当前的安全配置，请替换为您自己的）
+        //  1. 配置 & 默认值
         // ============================================================
         var YOUR_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
@@ -1824,24 +1600,23 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         var giscusConfig = { repo: '', repoId: '', category: 'General', categoryId: '' };
         var messages = [];
 
-        // 播放器状态
+        // 播放器
         var audio = new Audio();
         var currentSongIndex = -1;
         var isPlaying = false;
         var musicPanelOpen = false;
-
-        // 播放器拖拽状态
         var isDragging = false;
         var dragStartX = 0,
             dragStartY = 0;
-        var dragMoved = false;
-
-        // 当前文章ID（用于评论）
-        var currentPostIdForComment = null;
 
         // 点赞状态
         var likedPosts = JSON.parse(localStorage.getItem('liked_posts') || '{}');
         var likedMessages = JSON.parse(localStorage.getItem('liked_messages') || '{}');
+
+        // 页面状态
+        var currentPage = 'home';
+        var currentPostId = null;
+        var chatInterval = null;
 
         // ============================================================
         //  3. 工具函数
@@ -1911,7 +1686,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         function isConfigured() { return config.token && config.user && config.repo; }
 
         // ============================================================
-        //  4. 文件读写（GitHub API）
+        //  4. 文件读写
         // ============================================================
         function decodeBase64Utf8(base64) {
             var binary = atob(base64);
@@ -2096,7 +1871,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                         saveFile('config.json', JSON.stringify(DEFAULT_CONFIG, null, 2), '创建默认配置').catch(function() {});
                     }
                 }
-                // 加载留言
                 return fetchJsonRaw('messages.json');
             }).then(function(msgJson) {
                 if (msgJson && msgJson.messages) {
@@ -2108,13 +1882,13 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                         ) {});
                     }
                 }
-                // 应用界面
                 applySiteSettings();
                 applyFontSettings();
                 applyMusicSettings();
                 renderSidebarCategories();
                 if (currentPage === 'home') renderHome(document.getElementById('mainContent'));
                 if (sessionStorage.getItem('blog_admin_logged') === 'true') {
+                    renderAdminPanel();
                     renderAdminList();
                     populateCategorySelect();
                     populateTagAdminList();
@@ -2145,9 +1919,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             });
         }
 
-        // ============================================================
-        //  7. 保存配置
-        // ============================================================
         function saveConfigData() {
             var data = {
                 categories: categories,
@@ -2177,7 +1948,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  8. 应用设置到界面
+        //  7. 应用设置
         // ============================================================
         function applySiteSettings() {
             if (siteSettings.logo) document.getElementById('heroLogo').textContent = siteSettings.logo;
@@ -2243,7 +2014,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  9. 音乐播放器
+        //  8. 音乐播放器（修复拖拽）
         // ============================================================
         function applyMusicSettings() {
             var player = document.getElementById('musicPlayer');
@@ -2291,35 +2062,92 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                 var toggleBtn = document.getElementById('musicToggle');
                 var panel = document.getElementById('musicPanel');
 
-                // 点击展开/收起（区分点击与拖拽）
-                var dragStartX = 0,
-                    dragStartY = 0;
-                var dragMoved = false;
+                // ★ 修复：区分点击与拖拽
+                var dragStartX2 = 0,
+                    dragStartY2 = 0;
+                var dragMoved2 = false;
+
                 toggleBtn.addEventListener('touchstart', function(e) {
                     var touch = e.touches[0];
-                    dragStartX = touch.clientX;
-                    dragStartY = touch.clientY;
-                    dragMoved = false;
+                    dragStartX2 = touch.clientX;
+                    dragStartY2 = touch.clientY;
+                    dragMoved2 = false;
                 }, { passive: true });
+
                 toggleBtn.addEventListener('touchmove', function(e) {
                     var touch = e.touches[0];
-                    var dx = touch.clientX - dragStartX;
-                    var dy = touch.clientY - dragStartY;
-                    if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
-                        dragMoved = true;
+                    var dx = touch.clientX - dragStartX2;
+                    var dy = touch.clientY - dragStartY2;
+                    if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
+                        dragMoved2 = true;
                     }
                 }, { passive: true });
+
                 toggleBtn.addEventListener('touchend', function(e) {
-                    if (!dragMoved) {
+                    if (!dragMoved2) {
+                        musicPanelOpen = !musicPanelOpen;
+                        panel.classList.toggle('open', musicPanelOpen);
+                    } else {
+                        // 拖拽结束后保存位置
+                        var rect = player.getBoundingClientRect();
+                        localStorage.setItem('music_player_position', JSON.stringify({ left: rect.left,
+                            top: rect.top }));
+                    }
+                });
+
+                // 鼠标拖拽（桌面端）
+                var isDragging2 = false;
+                var dragStartX3 = 0,
+                    dragStartY3 = 0;
+                var origLeft = 0,
+                    origTop = 0;
+                var moved2 = false;
+
+                toggleBtn.addEventListener('mousedown', function(e) {
+                    isDragging2 = true;
+                    moved2 = false;
+                    dragStartX3 = e.clientX;
+                    dragStartY3 = e.clientY;
+                    var rect = player.getBoundingClientRect();
+                    origLeft = rect.left;
+                    origTop = rect.top;
+                    document.addEventListener('mousemove', onMove2);
+                    document.addEventListener('mouseup', onUp2);
+                });
+
+                function onMove2(e) {
+                    if (!isDragging2) return;
+                    var dx = e.clientX - dragStartX3;
+                    var dy = e.clientY - dragStartY3;
+                    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) moved2 = true;
+                    var newX = origLeft + dx;
+                    var newY = origTop + dy;
+                    var winW = window.innerWidth;
+                    var winH = window.innerHeight;
+                    var w = player.offsetWidth || 80;
+                    var h = player.offsetHeight || 80;
+                    newX = Math.max(0, Math.min(winW - w, newX));
+                    newY = Math.max(0, Math.min(winH - h, newY));
+                    player.style.left = newX + 'px';
+                    player.style.top = newY + 'px';
+                    player.style.right = 'auto';
+                    player.style.bottom = 'auto';
+                }
+
+                function onUp2() {
+                    document.removeEventListener('mousemove', onMove2);
+                    document.removeEventListener('mouseup', onUp2);
+                    if (isDragging2 && moved2) {
+                        var rect2 = player.getBoundingClientRect();
+                        localStorage.setItem('music_player_position', JSON.stringify({ left: rect2.left,
+                            top: rect2.top }));
+                    } else if (isDragging2 && !moved2) {
+                        // 点击（未拖拽）切换面板
                         musicPanelOpen = !musicPanelOpen;
                         panel.classList.toggle('open', musicPanelOpen);
                     }
-                });
-                toggleBtn.addEventListener('click', function(e) {
-                    // 鼠标点击直接切换
-                    musicPanelOpen = !musicPanelOpen;
-                    panel.classList.toggle('open', musicPanelOpen);
-                });
+                    isDragging2 = false;
+                }
 
                 document.getElementById('musicPlayBtn').addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -2379,46 +2207,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                         musicPanelOpen = false;
                     }
                 });
-
-                // 拖拽（桌面端）
-                toggleBtn.addEventListener('mousedown', function(e) {
-                    var startX = e.clientX,
-                        startY = e.clientY;
-                    var rect = player.getBoundingClientRect();
-                    var origX = rect.left,
-                        origY = rect.top;
-                    var moved = false;
-
-                    function onMove(ev) {
-                        var dx = ev.clientX - startX;
-                        var dy = ev.clientY - startY;
-                        if (Math.abs(dx) > 5 || Math.abs(dy) > 5) moved = true;
-                        var newX = origX + dx;
-                        var newY = origY + dy;
-                        var winW = window.innerWidth;
-                        var winH = window.innerHeight;
-                        var w = player.offsetWidth || 80;
-                        var h = player.offsetHeight || 80;
-                        newX = Math.max(0, Math.min(winW - w, newX));
-                        newY = Math.max(0, Math.min(winH - h, newY));
-                        player.style.left = newX + 'px';
-                        player.style.top = newY + 'px';
-                        player.style.right = 'auto';
-                        player.style.bottom = 'auto';
-                    }
-
-                    function onUp() {
-                        document.removeEventListener('mousemove', onMove);
-                        document.removeEventListener('mouseup', onUp);
-                        if (moved) {
-                            var rect2 = player.getBoundingClientRect();
-                            localStorage.setItem('music_player_position', JSON.stringify({ left: rect2.left,
-                                top: rect2.top }));
-                        }
-                    }
-                    document.addEventListener('mousemove', onMove);
-                    document.addEventListener('mouseup', onUp);
-                });
             }
         }
 
@@ -2435,11 +2223,8 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  10. 渲染引擎（前台）
+        //  9. 渲染引擎（前台）
         // ============================================================
-        var currentPage = 'home';
-        var currentPostId = null;
-
         function renderPage(page, data) {
             var container = document.getElementById('mainContent');
             if (page === 'home') renderHome(container);
@@ -2536,8 +2321,10 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             container.innerHTML = html;
         }
 
+        // ============================================================
+        //  10. 互动页面（留言板 + 实时聊天）
+        // ============================================================
         function renderInteract(container) {
-            // 审核通过的留言
             var approved = messages.filter(function(m) { return m.status === 'approved'; });
             var featured = approved.filter(function(m) { return m.featured; });
             var normal = approved.filter(function(m) { return !m.featured; });
@@ -2571,7 +2358,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                     html += '</div>';
                 });
             }
-            // 发表留言表单
             html += '<div class="message-form">';
             html += '<h4 style="font-weight:normal;font-family:\'华文楷体\',\'KaiTi\',serif;letter-spacing:2px;margin-bottom:8px;">📝 发表留言</h4>';
             html += '<div class="form-row">';
@@ -2583,38 +2369,43 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             html += '<div class="form-group"><textarea id="msgContent" rows="3" placeholder="写下您的留言..."></textarea></div>';
             html += '<button class="btn btn-primary" onclick="submitMessage()">发表留言</button>';
             html += '<span style="font-size:12px;color:#8a7a6a;margin-left:12px;">💡 留言需后台审核通过后显示</span>';
-            html += '</div>';
-            html += '</div>';
+            html += '</div></div>';
 
-            // Tab2: 实时聊天（轮询）
+            // Tab2: 实时聊天（修复：增加输入框和发送功能）
             html += '<div class="interact-tab-content" id="tabChat">';
             html += '<p style="color:#8a7a6a;margin-bottom:12px;">💬 消息每5秒自动刷新，与留言板共享数据。</p>';
-            html += '<div id="chatMessages" style="max-height:400px;overflow-y:auto;border:1px solid #e8d5c0;border-radius:8px;padding:12px;background:#fefcf8;">';
+            html += '<div class="chat-area" id="chatMessages">';
             if (sorted.length === 0) {
                 html += '<p style="color:#8a7a6a;">暂无消息</p>';
             } else {
-                sorted.slice().reverse().forEach(function(m) {
-                    html += '<div style="padding:4px 0;border-bottom:1px dashed #f0e8e0;">';
-                    html += '<strong>' + escapeHtml(m.nickname) + '</strong> <span style="font-size:12px;color:#8a7a6a;">' +
-                        escapeHtml(m.time) + '</span>';
-                    html += '<div style="font-size:14px;margin-top:2px;">' + escapeHtml(m.content) + '</div>';
+                var chatList = sorted.slice().reverse();
+                chatList.forEach(function(m) {
+                    html += '<div class="chat-msg">';
+                    html += '<span class="chat-name">' + escapeHtml(m.nickname) + '</span>';
+                    html += '<span class="chat-time">' + escapeHtml(m.time) + '</span>';
+                    html += '<div class="chat-text">' + escapeHtml(m.content) + '</div>';
                     html += '</div>';
                 });
             }
             html += '</div>';
+            // ★ 聊天输入框
+            html += '<div class="chat-input-row">';
+            html += '<input type="text" id="chatInput" placeholder="输入消息..." onkeydown="if(event.key===\'Enter\')sendChatMessage()" />';
+            html += '<button onclick="sendChatMessage()">发送</button>';
+            html += '</div>';
+            html += '<div style="font-size:12px;color:#8a7a6a;margin-top:4px;">💡 消息将作为留言提交，审核后显示。</div>';
             html += '</div>';
 
             html += '</div>';
             container.innerHTML = html;
 
-            // 启动轮询（每5秒刷新聊天）
-            if (!window._chatInterval) {
-                window._chatInterval = setInterval(function() {
-                    if (currentPage === 'interact') {
-                        refreshChat();
-                    }
-                }, 5000);
-            }
+            // 启动轮询
+            if (chatInterval) clearInterval(chatInterval);
+            chatInterval = setInterval(function() {
+                if (currentPage === 'interact') {
+                    refreshChat();
+                }
+            }, 5000);
         }
 
         function switchInteractTab(btn, tab) {
@@ -2641,15 +2432,42 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                 return;
             }
             var html = '';
-            sorted.slice().reverse().forEach(function(m) {
-                html += '<div style="padding:4px 0;border-bottom:1px dashed #f0e8e0;">';
-                html += '<strong>' + escapeHtml(m.nickname) + '</strong> <span style="font-size:12px;color:#8a7a6a;">' +
-                    escapeHtml(m.time) + '</span>';
-                html += '<div style="font-size:14px;margin-top:2px;">' + escapeHtml(m.content) + '</div>';
+            var chatList = sorted.slice().reverse();
+            chatList.forEach(function(m) {
+                html += '<div class="chat-msg">';
+                html += '<span class="chat-name">' + escapeHtml(m.nickname) + '</span>';
+                html += '<span class="chat-time">' + escapeHtml(m.time) + '</span>';
+                html += '<div class="chat-text">' + escapeHtml(m.content) + '</div>';
                 html += '</div>';
             });
             container.innerHTML = html;
             container.scrollTop = container.scrollHeight;
+        }
+
+        // ★ 发送聊天消息
+        function sendChatMessage() {
+            var input = document.getElementById('chatInput');
+            if (!input) return;
+            var content = input.value.trim();
+            if (!content) { showToast('请输入消息', 'error'); return; }
+            var msg = {
+                id: Date.now(),
+                nickname: '访客',
+                email: '',
+                content: content,
+                time: getNowString(),
+                status: 'pending',
+                featured: false,
+                likes: 0
+            };
+            messages.push(msg);
+            saveMessagesData().then(function() {
+                input.value = '';
+                showToast('消息已发送，等待审核', 'success');
+                refreshChat();
+            }).catch(function(err) {
+                showToast('发送失败: ' + err.message, 'error');
+            });
         }
 
         // ============================================================
@@ -2677,7 +2495,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                 document.getElementById('msgNickname').value = '';
                 document.getElementById('msgEmail').value = '';
                 document.getElementById('msgContent').value = '';
-                // 如果当前在互动页面，刷新显示
                 if (currentPage === 'interact') {
                     renderInteract(document.getElementById('mainContent'));
                 }
@@ -2722,7 +2539,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             if (isConfigured()) {
                 saveFile('posts.txt', txt, '更新点赞').catch(function() {});
             }
-            // 刷新当前文章详情
             if (currentPage === 'post' && currentPostId === postId) {
                 renderPostDetail(document.getElementById('mainContent'), postId);
             }
@@ -2738,7 +2554,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                 return;
             }
             currentPostId = postId;
-            currentPostIdForComment = postId;
 
             if (!sessionStorage.getItem('viewed_' + post.id)) {
                 post.views = (post.views || 0) + 1;
@@ -2767,7 +2582,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             var rendered = marked.parse(post.content);
             html += '<div class="body">' + rendered + '</div>';
 
-            // 点赞区域
+            // 点赞
             var liked = likedPosts[post.id] || false;
             html += '<div class="like-area">';
             html += '<button class="like-btn' + (liked ? ' liked' : '') + '" onclick="togglePostLike(' + post.id + ')">❤️ ' +
@@ -2775,7 +2590,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             html += '<span class="like-count">' + (post.likes || 0) + ' 人喜欢</span>';
             html += '</div>';
 
-            // 分享区域
+            // 分享
             var url = window.location.origin + window.location.pathname + '#post-' + post.id;
             html += '<div class="share-area">';
             html += '<div class="share-title">📤 分享这篇文章</div>';
@@ -2808,7 +2623,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                 html += '</div>';
             }
 
-            // 评论区（Giscus）
+            // 评论区
             html += '<div class="comment-section" id="commentSection">';
             if (autoLoadComments && giscusConfig.repo) {
                 html += '<div id="giscusContainer" style="min-height:100px;"></div>';
@@ -2829,7 +2644,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                 window.history.pushState({}, '', '#post-' + post.id);
             }
 
-            // 如果自动加载评论且已配置
             if (autoLoadComments && giscusConfig.repo) {
                 setTimeout(function() {
                     renderGiscus();
@@ -2844,7 +2658,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             navigator.clipboard.writeText(url).then(function() {
                 showToast('链接已复制', 'success');
             }).catch(function() {
-                // 降级方案
                 var textarea = document.createElement('textarea');
                 textarea.value = url;
                 document.body.appendChild(textarea);
@@ -2856,9 +2669,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         function shareWechat(url, title) {
-            // 微信分享：显示二维码或提示
             showToast('请使用微信扫一扫或分享链接', 'info');
-            // 简单实现：复制链接并提示
             shareCopyLink(url);
         }
 
@@ -2898,7 +2709,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             script.setAttribute('data-lang', 'zh-CN');
             script.setAttribute('crossorigin', 'anonymous');
             script.async = true;
-            // 移除旧的脚本
             var oldScript = document.getElementById('giscusScript');
             if (oldScript) oldScript.remove();
             var newScript = document.createElement('div');
@@ -3010,7 +2820,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             });
         });
 
-        // 页脚管理入口
         document.getElementById('footerAdminTrigger').addEventListener('click', function() {
             if (sessionStorage.getItem('blog_admin_logged') === 'true') {
                 toggleAdmin(true);
@@ -3019,7 +2828,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             showLoginModal();
         });
 
-        // 返回按钮处理
         window.addEventListener('popstate', function() {
             var hash = window.location.hash;
             if (hash.startsWith('#post-')) {
@@ -3039,7 +2847,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         });
 
         // ============================================================
-        //  19. 回到顶部按钮
+        //  19. 回到顶部
         // ============================================================
         var backToTopBtn = document.getElementById('backToTop');
         window.addEventListener('scroll', function() {
@@ -3057,12 +2865,12 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         //  20. 登录 / 登出
         // ============================================================
         function showLoginModal() {
-            var html = '<h2 style="text-align:center;font-weight:normal;letter-spacing:4px;font-family:\'华文楷体\',\'KaiTi\',serif;">🔐 后台登录</h2>';
-            html += '<div style="text-align:center;color:#8a7a6a;margin-bottom:16px;">— 使用私钥验证 —</div>';
-            html += '<div class="form-group"><label>私钥 (PEM格式)</label><textarea id="loginPrivateKey" rows="4"></textarea></div>';
+            var html = '<h2 style="text-align:center;font-weight:normal;letter-spacing:6px;font-family:\'华文楷体\',\'KaiTi\',serif;">🔐 后台登录</h2>';
+            html += '<div class="login-sub">— 使用私钥验证身份 —</div>';
+            html += '<div class="form-group"><label>🔑 私钥</label><textarea id="loginPrivateKey" rows="4" placeholder="-----BEGIN PRIVATE KEY----- ... -----END PRIVATE KEY-----"></textarea></div>';
             html +=
-                '<button class="btn btn-primary" onclick="doLogin()" style="width:100%;padding:10px;background:#c23531;color:#fff;border:none;border-radius:6px;font-size:16px;cursor:pointer;">登录</button>';
-            html += '<div id="loginError" style="color:#c23531;text-align:center;margin-top:10px;display:none;"></div>';
+                '<button class="btn btn-primary" onclick="doLogin()" style="width:100%;padding:12px;background:#c23531;color:#fff;border:none;border-radius:6px;font-size:16px;cursor:pointer;letter-spacing:4px;">登录</button>';
+            html += '<div id="loginError" style="color:#c23531;text-align:center;margin-top:12px;display:none;"></div>';
             openModal(html);
         }
 
@@ -3097,6 +2905,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                     showToast('登录成功', 'success');
                     loadAllData().then(function() {
                         renderPage(currentPage);
+                        renderAdminPanel();
                         renderAdminList();
                         populateCategorySelect();
                         populateTagAdminList();
@@ -3129,9 +2938,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         function toggleAdmin(show) {
-            var panel = document.getElementById('adminPanel');
             if (show) {
-                panel.style.display = 'block';
                 document.getElementById('footerAdminTrigger').textContent = '⚙️ 管理 (退出)';
                 document.getElementById('footerAdminTrigger').onclick = function() {
                     if (confirm('确定退出后台吗？')) {
@@ -3139,6 +2946,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                     }
                 };
                 loadAllData().then(function() {
+                    renderAdminPanel();
                     renderAdminList();
                     populateCategorySelect();
                     populateTagAdminList();
@@ -3160,8 +2968,9 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                     document.getElementById('giscusCategory').value = giscusConfig.category || 'General';
                     document.getElementById('giscusCategoryId').value = giscusConfig.categoryId || '';
                 });
+                // 重新渲染当前页面，应用字体
+                renderPage(currentPage);
             } else {
-                panel.style.display = 'none';
                 document.getElementById('footerAdminTrigger').textContent = '⚙️ 管理';
                 document.getElementById('footerAdminTrigger').onclick = function() {
                     if (sessionStorage.getItem('blog_admin_logged') === 'true') {
@@ -3172,6 +2981,9 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                 };
                 sessionStorage.removeItem('blog_admin_logged');
                 showToast('已退出', 'info');
+                // 移除后台面板
+                document.getElementById('adminPanel').innerHTML = '';
+                document.getElementById('adminPanel').style.display = 'none';
                 renderPage(currentPage);
                 if (window.history && window.history.pushState) {
                     window.history.pushState(null, '', window.location.pathname);
@@ -3184,10 +2996,303 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  21. 后台管理功能
+        //  21. 后台管理面板渲染（移到主内容区）
+        // ============================================================
+        function renderAdminPanel() {
+            var container = document.getElementById('adminPanel');
+            if (!container) return;
+            container.style.display = 'block';
+            container.innerHTML = `
+                <div class="card">
+                    <div class="card-title">🔐 后台管理</div>
+
+                    <!-- 面板：站点设置 -->
+                    <div class="panel">
+                        <div class="panel-header" onclick="togglePanel(this)">
+                            ⚙️ 站点设置 <span class="arrow">▼</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="admin-form">
+                                <div class="form-group"><label>Logo 文字</label><input type="text" id="setLogo" /></div>
+                                <div class="form-group"><label>博客标题</label><input type="text" id="setTitle" /></div>
+                                <div class="form-group"><label>博客副标题</label><input type="text" id="setSub" /></div>
+                                <div class="form-group"><label>作者名</label><input type="text" id="setAuthor" /></div>
+                                <div class="form-group"><label>作者简介</label><textarea id="setAuthorDesc" rows="2"></textarea></div>
+                                <div class="btn-group"><button class="btn btn-primary" onclick="saveSiteSettings()">保存</button></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 面板：写新文章（独立面板，放在文章管理前面） -->
+                    <div class="panel" id="newPostPanel">
+                        <div class="panel-header" onclick="togglePanel(this)">
+                            ✏️ 写新文章 <span class="arrow">▼</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="admin-form">
+                                <div class="form-group"><label>标题</label><input type="text" id="editTitle" /></div>
+                                <div class="form-row" style="display:flex; gap:10px; flex-wrap:wrap;">
+                                    <div class="form-group" style="flex:1;"><label>分类</label>
+                                        <select id="editCategory"></select>
+                                        <div style="display:flex; gap:6px; margin-top:4px;">
+                                            <input type="text" id="newCategoryQuick" placeholder="新分类名称" style="flex:1;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:13px;min-height:38px;" />
+                                            <button class="btn btn-secondary" onclick="quickAddCategory()" style="padding:2px 12px;font-size:12px;min-height:38px;">+ 添加</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="flex:1;"><label>标签 (逗号分隔)</label><input type="text" id="editTags" /></div>
+                                </div>
+                                <div class="form-row" style="display:flex; gap:10px; flex-wrap:wrap;">
+                                    <div class="form-group" style="flex:1;"><label>作者</label><input type="text" id="editAuthor" /></div>
+                                    <div class="form-group" style="flex:1;"><label>日期</label><input type="date" id="editDate" /></div>
+                                    <div class="form-group" style="flex:0 0 100px;"><label>阅读数</label><input type="number" id="editViews" min="0" /></div>
+                                    <div class="form-group" style="flex:0 0 100px;"><label>点赞数</label><input type="number" id="editLikes" min="0" /></div>
+                                </div>
+                                <div class="form-group"><label>正文 (支持 Markdown)</label>
+                                    <div style="display:flex; gap:6px; margin-bottom:4px; flex-wrap:wrap;">
+                                        <button class="btn btn-secondary" onclick="insertMarkdown('image')">🖼️ 图片</button>
+                                        <button class="btn btn-secondary" onclick="insertMarkdown('link')">🔗 链接</button>
+                                        <button class="btn btn-secondary" onclick="insertMarkdown('video')">🎬 视频</button>
+                                        <button class="btn btn-secondary" onclick="insertMarkdown('flash')">📦 Flash</button>
+                                        <button class="btn btn-secondary" onclick="insertMarkdown('bold')">B</button>
+                                        <button class="btn btn-secondary" onclick="insertMarkdown('italic')">I</button>
+                                        <button class="btn btn-secondary" onclick="insertMarkdown('code')">&lt;/&gt;</button>
+                                    </div>
+                                    <textarea id="editContent" class="auto-grow" rows="4"></textarea>
+                                </div>
+                                <input type="hidden" id="editId" />
+                                <div class="btn-group">
+                                    <button class="btn btn-primary" onclick="savePost()">保存文章</button>
+                                    <button class="btn btn-secondary" onclick="clearEditForm()">清空表单</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 面板：文章管理 -->
+                    <div class="panel">
+                        <div class="panel-header" onclick="togglePanel(this)">
+                            📄 文章管理 <span class="arrow open">▼</span>
+                        </div>
+                        <div class="panel-body open">
+                            <div class="admin-list" id="adminPostList"></div>
+                        </div>
+                    </div>
+
+                    <!-- 面板：分类管理（加图标） -->
+                    <div class="panel">
+                        <div class="panel-header" onclick="togglePanel(this)">
+                            📂 分类管理 <span class="arrow">▼</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="admin-form">
+                                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                                    <input type="text" id="newCategoryName" placeholder="新分类名称" style="flex:1;min-height:38px;" />
+                                    <button class="btn btn-primary" onclick="addCategory()" style="min-height:38px;">添加</button>
+                                </div>
+                                <div class="admin-list" id="categoryAdminList"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 面板：标签管理 -->
+                    <div class="panel">
+                        <div class="panel-header" onclick="togglePanel(this)">
+                            🏷️ 标签管理 <span class="arrow">▼</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="admin-form">
+                                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                                    <input type="text" id="newTagName" placeholder="新标签名称" style="flex:1;min-height:38px;" />
+                                    <button class="btn btn-primary" onclick="addTag()" style="min-height:38px;">添加</button>
+                                </div>
+                                <div class="admin-list" id="tagAdminList"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 面板：字体管理 -->
+                    <div class="panel">
+                        <div class="panel-header" onclick="togglePanel(this)">
+                            🔤 字体管理 <span class="arrow">▼</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="admin-form">
+                                <div class="help-text">💡 支持系统字体名称（如 <code>楷体</code>），也支持自定义字体路径或网络字体 URL。</div>
+                                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
+                                    <input type="text" id="newFontName" placeholder="字体名称 / 路径 / URL" style="flex:1;min-height:38px;" />
+                                    <button class="btn btn-primary" onclick="addFont()" style="min-height:38px;">添加</button>
+                                </div>
+                                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
+                                    <label style="font-weight:bold;">默认字体</label>
+                                    <select id="defaultFontSelect" style="min-height:38px;padding:6px 10px;"></select>
+                                    <button class="btn btn-secondary" onclick="setDefaultFont()" style="min-height:38px;">设为默认</button>
+                                    <button class="btn btn-secondary" onclick="resetFonts()" style="min-height:38px;">重置默认列表</button>
+                                </div>
+                                <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+                                    <label style="font-weight:bold;">前台字体切换</label>
+                                    <input type="checkbox" id="fontSwitchCheck" onchange="saveFontSettings()" />
+                                    <span style="font-size:13px; color:#8a7a6a;">开启后用户可自定义字体</span>
+                                </div>
+                                <div class="admin-list" id="fontAdminList"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 面板：音乐管理 -->
+                    <div class="panel">
+                        <div class="panel-header" onclick="togglePanel(this)">
+                            🎵 音乐管理 <span class="arrow">▼</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="admin-form">
+                                <div class="help-text">💡 支持本地音乐路径或网络音乐链接。</div>
+                                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
+                                    <input type="text" id="newMusicName" placeholder="歌曲名" style="flex:1;min-height:38px;" />
+                                    <input type="text" id="newMusicUrl" placeholder="路径 / URL" style="flex:2;min-height:38px;" />
+                                    <button class="btn btn-primary" onclick="addMusic()" style="min-height:38px;">添加</button>
+                                </div>
+                                <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:10px;">
+                                    <label><input type="checkbox" id="musicEnabledCheck" onchange="saveMusicSettings()" /> 显示播放器</label>
+                                    <label><input type="checkbox" id="musicAutoPlayCheck" onchange="saveMusicSettings()" /> 自动播放</label>
+                                    <label>默认歌曲 <select id="musicDefaultSelect" style="min-height:38px;padding:6px 10px;"></select></label>
+                                </div>
+                                <div class="admin-list" id="musicAdminList"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 面板：关于页面 -->
+                    <div class="panel">
+                        <div class="panel-header" onclick="togglePanel(this)">
+                            📜 关于页面 <span class="arrow">▼</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="admin-form">
+                                <div class="form-group"><textarea id="aboutEditor" rows="6"></textarea></div>
+                                <button class="btn btn-primary" onclick="saveAbout()">保存关于</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 面板：安全设置 -->
+                    <div class="panel">
+                        <div class="panel-header" onclick="togglePanel(this)">
+                            🔐 安全设置 <span class="arrow">▼</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="admin-form">
+                                <div class="form-group"><label>公钥</label><textarea id="secPublicKey" rows="3" style="font-family:monospace;font-size:12px;"></textarea></div>
+                                <div class="form-group"><label>挑战码密文</label><textarea id="secChallengeCipher" rows="2" style="font-family:monospace;font-size:12px;"></textarea></div>
+                                <div class="form-group"><label>期望明文</label><input type="text" id="secExpectedPlain" style="min-height:38px;" /></div>
+                                <div class="btn-group">
+                                    <button class="btn btn-primary" onclick="saveSecuritySettings()">保存安全设置</button>
+                                    <button class="btn btn-secondary" onclick="resetSecuritySettings()">恢复默认</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 面板：GitHub 设置 -->
+                    <div class="panel" id="githubConfigPanel">
+                        <div class="panel-header" onclick="togglePanel(this)">
+                            ⚙️ GitHub 设置 <span class="arrow">▼</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="admin-form">
+                                <div class="help-text">💡 配置 GitHub Token 后，文章和配置才能保存到远程仓库。<a href="https://github.com/settings/tokens" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处生成 Token</a>（需勾选 <code>repo</code> 权限）。</div>
+                                <div class="form-group"><label>🔑 Personal Access Token</label><input type="password" id="githubTokenInput" placeholder="ghp_xxxxxxxxxxxx" style="min-height:38px;" /></div>
+                                <div class="form-group"><label>👤 GitHub 用户名</label><input type="text" id="githubUserInput" placeholder="你的用户名" style="min-height:38px;" /></div>
+                                <div class="form-group"><label>📁 仓库名</label><input type="text" id="githubRepoInput" placeholder="仓库名" style="min-height:38px;" /></div>
+                                <div class="btn-group">
+                                    <button class="btn btn-primary" onclick="saveGitHubConfig()">保存配置</button>
+                                    <button class="btn btn-secondary" onclick="clearGitHubConfig()">清空配置</button>
+                                </div>
+                                <div id="githubConfigStatus" style="margin-top:8px;font-size:13px;color:#8a7a6a;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 面板：备份设置（恢复单文件下载 + 批量压缩） -->
+                    <div class="panel" id="backupPanel">
+                        <div class="panel-header" onclick="togglePanel(this)">
+                            💾 备份设置 <span class="arrow">▼</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="admin-form">
+                                <div class="help-text">💡 备份当前文章、配置和留言数据。<br/>可下载单个文件，也可批量选择后压缩下载。</div>
+                                <!-- 单文件下载 -->
+                                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                                    <button class="btn btn-secondary" onclick="downloadSingleFile('posts')">📥 posts.txt</button>
+                                    <button class="btn btn-secondary" onclick="downloadSingleFile('config')">📥 config.json</button>
+                                    <button class="btn btn-secondary" onclick="downloadSingleFile('messages')">📥 messages.json</button>
+                                </div>
+                                <!-- 批量选择 -->
+                                <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                                    <label><input type="checkbox" id="backupPosts" checked /> posts.txt</label>
+                                    <label><input type="checkbox" id="backupConfig" checked /> config.json</label>
+                                    <label><input type="checkbox" id="backupMessages" checked /> messages.json</label>
+                                    <button class="btn btn-secondary" onclick="toggleAllBackup()">全选/取消</button>
+                                    <button class="btn btn-secondary" onclick="downloadBackup()">📦 下载选中 (ZIP)</button>
+                                    <button class="btn btn-primary" onclick="syncBackupToRepo()">📤 同步到仓库</button>
+                                    <button class="btn btn-secondary" onclick="document.getElementById('uploadBackupInput').click()">📤 上传文件</button>
+                                    <input type="file" id="uploadBackupInput" accept=".txt,.json" style="display:none;" onchange="uploadBackupFile(event)" />
+                                </div>
+                                <div id="backupStatus" style="font-size:13px;color:#8a7a6a;">
+                                    上次备份：<span id="lastBackupTime">暂无</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 面板：评论设置 -->
+                    <div class="panel">
+                        <div class="panel-header" onclick="togglePanel(this)">
+                            💬 评论设置 <span class="arrow">▼</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="admin-form">
+                                <div class="help-text">💡 使用 Giscus 评论系统（基于 GitHub Discussions）。<a href="https://giscus.app/zh-CN" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处获取配置</a></div>
+                                <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+                                    <label style="font-weight:bold;">自动加载评论</label>
+                                    <input type="checkbox" id="autoLoadComments" />
+                                    <span style="font-size:13px; color:#8a7a6a;">开启后文章页面自动加载评论区</span>
+                                </div>
+                                <div class="form-group"><label>仓库名</label><input type="text" id="giscusRepo" placeholder="用户名/仓库名" style="min-height:38px;" /></div>
+                                <div class="form-group"><label>Repo ID</label><input type="text" id="giscusRepoId" placeholder="R_xxxxxxxxxx" style="min-height:38px;" /></div>
+                                <div class="form-group"><label>分类</label><input type="text" id="giscusCategory" placeholder="General" style="min-height:38px;" /></div>
+                                <div class="form-group"><label>分类 ID</label><input type="text" id="giscusCategoryId" placeholder="DIC_xxxxxxx" style="min-height:38px;" /></div>
+                                <div class="btn-group"><button class="btn btn-primary" onclick="saveCommentSettings()">保存评论设置</button></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 面板：留言管理 -->
+                    <div class="panel">
+                        <div class="panel-header" onclick="togglePanel(this)">
+                            💬 留言管理 <span class="arrow">▼</span>
+                        </div>
+                        <div class="panel-body">
+                            <div class="admin-form">
+                                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
+                                    <input type="text" id="adminMsgNickname" placeholder="昵称" style="flex:1;min-height:38px;" />
+                                    <input type="text" id="adminMsgEmail" placeholder="邮箱" style="flex:1;min-height:38px;" />
+                                    <input type="text" id="adminMsgContent" placeholder="留言内容" style="flex:2;min-height:38px;" />
+                                    <button class="btn btn-primary" onclick="adminAddMessage()" style="min-height:38px;">添加留言</button>
+                                </div>
+                                <div class="admin-list" id="messageAdminList"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        //  22. 后台管理功能
         // ============================================================
         function renderAdminList() {
             var container = document.getElementById('adminPostList');
+            if (!container) return;
             var sorted = sortPosts(posts);
             var html = '';
             sorted.forEach(function(p) {
@@ -3204,6 +3309,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
 
         function populateCategorySelect() {
             var sel = document.getElementById('editCategory');
+            if (!sel) return;
             var cats = categories.length ? categories : ['随笔', '书评', '游记', '散文', '诗词', '其他'];
             var html = '';
             cats.forEach(function(c) { html += '<option value="' + escapeHtml(c) + '">' + escapeHtml(c) + '</option>'; });
@@ -3217,9 +3323,9 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             categories.push(name);
             saveConfigData().then(function() {
                 populateCategorySelect();
-                // 自动选中新分类
                 document.getElementById('editCategory').value = name;
                 document.getElementById('newCategoryQuick').value = '';
+                renderCategoryAdmin();
                 showToast('分类已添加', 'success');
             });
         }
@@ -3234,7 +3340,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             document.getElementById('editLikes').value = 0;
             document.getElementById('editAuthor').value = siteSettings.authorName || '';
             document.getElementById('editTitle').focus();
-            // 展开写新文章面板
             var panel = document.getElementById('newPostPanel');
             var body = panel.querySelector('.panel-body');
             var arrow = panel.querySelector('.arrow');
@@ -3248,9 +3353,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         function editPost(id) {
             var post = posts.find(function(p) { return p.id === id; });
             if (!post) return;
-            // 切换文章管理面板展开
-            var panel = document.querySelector('#adminPanel .panel:first-child .panel-body');
-            // 填充写新文章面板
             document.getElementById('editId').value = post.id;
             document.getElementById('editTitle').value = post.title;
             document.getElementById('editCategory').value = post.category;
@@ -3260,7 +3362,6 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             document.getElementById('editViews').value = post.views || 0;
             document.getElementById('editLikes').value = post.likes || 0;
             document.getElementById('editAuthor').value = post.author || siteSettings.authorName || '';
-            // 展开写新文章面板
             var np = document.getElementById('newPostPanel');
             var nb = np.querySelector('.panel-body');
             var na = np.querySelector('.arrow');
@@ -3353,7 +3454,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             showToast('表单已清空', 'info');
         }
 
-        // 自动增高文本框
+        // 自动增高
         document.addEventListener('input', function(e) {
             if (e.target.classList && e.target.classList.contains('auto-grow')) {
                 e.target.style.height = 'auto';
@@ -3362,7 +3463,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         });
 
         // ============================================================
-        //  22. 插入 Markdown
+        //  23. 插入 Markdown
         // ============================================================
         function insertMarkdown(type) {
             var textarea = document.getElementById('editContent');
@@ -3412,14 +3513,13 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                 var newPos = start + insert.length;
                 textarea.selectionStart = textarea.selectionEnd = newPos;
                 textarea.focus();
-                // 触发自动增高
                 textarea.style.height = 'auto';
                 textarea.style.height = textarea.scrollHeight + 'px';
             }
         }
 
         // ============================================================
-        //  23. 分类管理
+        //  24. 分类管理
         // ============================================================
         function addCategory() {
             var name = document.getElementById('newCategoryName').value.trim();
@@ -3446,6 +3546,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
 
         function renderCategoryAdmin() {
             var container = document.getElementById('categoryAdminList');
+            if (!container) return;
             var html = '';
             categories.forEach(function(c, idx) {
                 html += '<div class="item"><span>' + escapeHtml(c) +
@@ -3456,7 +3557,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  24. 标签管理
+        //  25. 标签管理
         // ============================================================
         function addTag() {
             var name = document.getElementById('newTagName').value.trim();
@@ -3527,6 +3628,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
 
         function populateTagAdminList() {
             var container = document.getElementById('tagAdminList');
+            if (!container) return;
             var html = '';
             tags.forEach(function(t, idx) {
                 html += '<div class="item"><span>' + escapeHtml(t) +
@@ -3538,7 +3640,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  25. 站点设置
+        //  26. 站点设置
         // ============================================================
         function loadSiteSettingsForm() {
             document.getElementById('setLogo').value = siteSettings.logo || '墨';
@@ -3561,7 +3663,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  26. 字体管理
+        //  27. 字体管理
         // ============================================================
         function loadFontSettingsForm() {
             document.getElementById('fontSwitchCheck').checked = fontSwitchEnabled;
@@ -3627,6 +3729,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
 
         function renderFontAdmin() {
             var container = document.getElementById('fontAdminList');
+            if (!container) return;
             var html = '';
             fonts.forEach(function(f, idx) {
                 html += '<div class="item"><span>' + escapeHtml(f) + (f === defaultFont ? ' <span style="color:#c23531;">(默认)</span>' :
@@ -3639,6 +3742,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
 
         function populateDefaultFontSelect() {
             var sel = document.getElementById('defaultFontSelect');
+            if (!sel) return;
             var html = '';
             fonts.forEach(function(f) {
                 html += '<option value="' + escapeHtml(f) + '"' + (f === defaultFont ? ' selected' : '') + '>' +
@@ -3648,7 +3752,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  27. 音乐管理
+        //  28. 音乐管理
         // ============================================================
         function loadMusicSettingsForm() {
             document.getElementById('musicEnabledCheck').checked = musicEnabled;
@@ -3701,6 +3805,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
 
         function renderMusicAdmin() {
             var container = document.getElementById('musicAdminList');
+            if (!container) return;
             var html = '';
             musicList.forEach(function(s, idx) {
                 html += '<div class="item"><span>' + escapeHtml(s.name) + ' <span style="color:#8a7a6a;font-size:12px;">' +
@@ -3714,6 +3819,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
 
         function populateMusicDefaultSelect() {
             var sel = document.getElementById('musicDefaultSelect');
+            if (!sel) return;
             var html = '';
             musicList.forEach(function(s) {
                 html += '<option value="' + escapeHtml(s.name) + '"' + (s.name === musicDefault ? ' selected' : '') +
@@ -3723,7 +3829,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  28. 关于页面
+        //  29. 关于页面
         // ============================================================
         function saveAbout() {
             aboutContent = document.getElementById('aboutEditor').value;
@@ -3733,7 +3839,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  29. 安全设置
+        //  30. 安全设置
         // ============================================================
         function loadSecuritySettings() {
             var stored = localStorage.getItem('security_config');
@@ -3772,7 +3878,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  30. GitHub 设置
+        //  31. GitHub 设置
         // ============================================================
         function saveGitHubConfig() {
             var token = document.getElementById('githubTokenInput').value.trim();
@@ -3832,8 +3938,51 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  31. 备份功能
+        //  32. 备份功能（单文件下载 + 批量压缩）
         // ============================================================
+        function downloadSingleFile(type) {
+            var ts = getTimestamp();
+            var content, filename;
+            if (type === 'posts') {
+                content = generatePostsTxt(posts);
+                filename = 'posts_' + ts + '.txt';
+            } else if (type === 'config') {
+                var data = {
+                    categories: categories,
+                    tags: tags,
+                    about: aboutContent,
+                    siteSettings: siteSettings,
+                    fonts: fonts,
+                    defaultFont: defaultFont,
+                    fontSwitchEnabled: fontSwitchEnabled,
+                    musicList: musicList,
+                    musicEnabled: musicEnabled,
+                    musicAutoPlay: musicAutoPlay,
+                    musicDefault: musicDefault,
+                    lastBackupTime: lastBackupTime,
+                    autoLoadComments: autoLoadComments,
+                    giscus: giscusConfig,
+                    security: JSON.parse(localStorage.getItem('security_config') || '{}')
+                };
+                content = JSON.stringify(data, null, 2);
+                filename = 'config_' + ts + '.json';
+            } else if (type === 'messages') {
+                var msgData = { messages: messages };
+                content = JSON.stringify(msgData, null, 2);
+                filename = 'messages_' + ts + '.json';
+            }
+            var blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('已下载: ' + filename, 'success');
+        }
+
         function toggleAllBackup() {
             var allChecked = document.getElementById('backupPosts').checked &&
                 document.getElementById('backupConfig').checked &&
@@ -3890,7 +4039,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-                showToast('已下载备份文件', 'success');
+                showToast('已下载备份压缩包', 'success');
             });
         }
 
@@ -3911,10 +4060,8 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
 
             var ts = getTimestamp();
             var promises = [];
-
             if (includePosts) {
-                var postsBackup = generatePostsTxt(posts);
-                promises.push(saveFile('backups/posts_' + ts + '.txt', postsBackup, '备份 posts.txt'));
+                promises.push(saveFile('backups/posts_' + ts + '.txt', generatePostsTxt(posts), '备份 posts.txt'));
             }
             if (includeConfig) {
                 var configData = {
@@ -3935,14 +4082,13 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
                     security: JSON.parse(localStorage.getItem('security_config') || '{}')
                 };
                 promises.push(saveFile('backups/config_' + ts + '.json', JSON.stringify(configData, null, 2),
-                '备份 config.json'));
+                    '备份 config.json'));
             }
             if (includeMessages) {
                 var msgData = { messages: messages };
                 promises.push(saveFile('backups/messages_' + ts + '.json', JSON.stringify(msgData, null, 2),
                     '备份 messages.json'));
             }
-
             Promise.all(promises).then(function() {
                 var updatePromises = [];
                 if (includePosts) {
@@ -3989,22 +4135,16 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             reader.onload = function(e) {
                 var content = e.target.result;
                 var filename = file.name;
-                var path = filename;
-                // 自动识别文件类型
                 var isPosts = filename.includes('posts') || filename.endsWith('.txt');
                 var isConfig = filename.includes('config') || filename.endsWith('.json');
                 var isMessages = filename.includes('messages') || filename.endsWith('.json');
-
                 if (!isPosts && !isConfig && !isMessages) {
                     showToast('无法识别文件类型，请上传 posts.txt、config.json 或 messages.json', 'error');
                     return;
                 }
-
-                var confirmMsg = '确定要上传 "' + filename + '" 并覆盖 ' +
-                    (isPosts ? 'posts.txt' : isConfig ? 'config.json' : 'messages.json') + ' 吗？';
-                if (!confirm(confirmMsg)) return;
-
                 var targetPath = isPosts ? 'posts.txt' : isConfig ? 'config.json' : 'messages.json';
+                var confirmMsg = '确定要上传 "' + filename + '" 并覆盖 ' + targetPath + ' 吗？';
+                if (!confirm(confirmMsg)) return;
                 saveFile(targetPath, content, '上传 ' + filename).then(function() {
                     showToast('文件上传成功', 'success');
                     loadAllData();
@@ -4017,7 +4157,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  32. 评论设置
+        //  33. 评论设置
         // ============================================================
         function saveCommentSettings() {
             autoLoadComments = document.getElementById('autoLoadComments').checked;
@@ -4031,10 +4171,11 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  33. 留言管理（后台）
+        //  34. 留言管理（后台）
         // ============================================================
         function renderMessageAdminList() {
             var container = document.getElementById('messageAdminList');
+            if (!container) return;
             var html = '';
             var sorted = messages.slice().reverse();
             sorted.forEach(function(m) {
@@ -4152,7 +4293,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  34. 折叠面板
+        //  35. 折叠面板
         // ============================================================
         function togglePanel(header) {
             var body = header.nextElementSibling;
@@ -4167,7 +4308,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  35. 模态框
+        //  36. 模态框
         // ============================================================
         function openModal(html) {
             document.getElementById('modalBody').innerHTML = html;
@@ -4183,7 +4324,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         });
 
         // ============================================================
-        //  36. 混合解密（登录用）
+        //  37. 混合解密
         // ============================================================
         function base64ToArrayBuffer(base64) {
             var binary = atob(base64);
@@ -4231,7 +4372,7 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
         }
 
         // ============================================================
-        //  37. 初始化
+        //  38. 初始化
         // ============================================================
         loadAllData().then(function() {
             var hash = window.location.hash;
@@ -4271,12 +4412,11 @@ content: 这里是一篇示例文章，您可以在后台添加或修改内容�
             }
         });
 
-        console.log('🏮 墨韵轩 · 古宅红木博客（最终完整版）已加载');
+        console.log('🏮 墨韵轩 · 古宅红木博客（修复版）已加载');
         console.log('📝 文章数:', posts.length);
         console.log('💬 留言数:', messages.length);
         console.log('🔐 登录状态:', sessionStorage.getItem('blog_admin_logged') === 'true' ? '已登录' : '未登录');
         console.log('⚙️ GitHub配置:', isConfigured() ? '已配置' : '未配置');
     </script>
-
 </body>
 </html>
