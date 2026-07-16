@@ -1,14 +1,4 @@
 ---
-title: 测试文章
-category: 随笔
-tags: 测试
-date: 2026-07-13
-author: 墨轩主
-views: 0
-content: 测试文章
-下载地址：https://xmli888.github.io/gdblog
-.
----
 title: 测试2
 category: 随笔
 tags: 测试2
@@ -74,3 +64,12 @@ author: 墨轩主: 强哥
 views: 0
 content: 文章加载失败
 请确认 posts.txt 文件存在于网站根目录
+---
+title: 人生不应该有改天
+category: 随笔
+tags: 感悟
+date: 2026-07-16
+author: 墨轩主: 强哥
+views: 50
+content: 改天是哪天，下次是哪次，以后是多久，去经历，去后悔。保持热爱，奔赴山海。我们都在奔赴各自不同的人生！！！
+[强哥博客](https://xmli888.github.io/gdblog)
