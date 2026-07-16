@@ -18,8 +18,8 @@
     "隶书",
     "方正"
   ],
-  "defaultFont": "行楷",
-  "fontSwitchEnabled": true,
+  "defaultFont": "楷体",
+  "fontSwitchEnabled": false,
   "musicList": [],
   "musicEnabled": true,
   "musicAutoPlay": false,
