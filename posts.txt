@@ -1,13 +1,4 @@
 ---
-title: 泉港馋嘴鱼
-category: 随笔
-tags: 美食
-date: 2026-07-16
-author: 墨轩主: 强哥
-views: 13
-content: 泉港馋嘴鱼
-[馋嘴鱼](https://xmli888.github.io/gdblog)
----
 title: 青砖檐下听雨声
 category: 随笔
 tags: 雨,青砖,静思
@@ -63,6 +54,6 @@ category: 随笔
 tags: 语录,马云
 date: 2026-07-16
 author: 墨轩主: 强哥
-views: 67
+views: 68
 content: ——马云在长城上对“赢在中国”108将的讲话
 如果你想成功，那么你要记住：遗产为零，诚实第一，学习第二，礼貌第三，刻苦第四，精明第五。完整的人生应有“三感”：使命感，失落感，危机感。
