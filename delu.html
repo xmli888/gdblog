@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>登录测试</title>
+</head>
+<body>
+    <h2>登录测试</h2>
+    <textarea id="key" rows="4" cols="50" placeholder="私钥"></textarea><br>
+    <button onclick="testLogin()">登录</button>
+    <div id="msg"></div>
+    <script src="common.js"></script>
+    <script>
+        function testLogin() {
+            var privKey = document.getElementById('key').value.trim();
+            var msg = document.getElementById('msg');
+            if (!privKey) { msg.textContent = '请输入私钥'; return; }
+            var stored = localStorage.getItem('security_config');
+            var security = stored ? JSON.parse(stored) : null;
+            if (!security || !security.challengeCipher || !security.expectedPlain) {
+                if (DEFAULT_CONFIG.security && DEFAULT_CONFIG.security.challengeCipher) {
+                    security = DEFAULT_CONFIG.security;
+                    localStorage.setItem('security_config', JSON.stringify(security));
+                } else {
+                    msg.textContent = '安全配置缺失';
+                    return;
+                }
+            }
+            hybridDecrypt(security.challengeCipher, privKey)
+                .then(function(plain) {
+                    if (plain === security.expectedPlain) {
+                        sessionStorage.setItem('blog_admin_logged', 'true');
+                        msg.textContent = '✅ 登录成功，即将跳转...';
+                        setTimeout(function() { location.href = 'admin.html'; }, 1000);
+                    } else {
+                        msg.textContent = '❌ 解密结果不匹配';
+                    }
+                })
+                .catch(function(err) {
+                    msg.textContent = '❌ 错误: ' + err.message;
+                });
+        }
+    </script>
+</body>
+</html>
