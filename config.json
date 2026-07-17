@@ -35,7 +35,7 @@
   "fontSwitchEnabled": false,
   "musicList": [],
   "musicEnabled": true,
-  "musicAutoPlay": false,
+  "musicAutoPlay": true,
   "musicDefault": "",
   "lastBackupTime": "",
   "autoLoadComments": true,
