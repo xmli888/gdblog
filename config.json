@@ -33,7 +33,7 @@
     "方正"
   ],
   "defaultFont": "行楷",
-  "fontSwitchEnabled": true,
+  "fontSwitchEnabled": false,
   "musicList": [
     {
       "name": "古典",
