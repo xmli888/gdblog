@@ -2,7 +2,6 @@
 //  公共模块：GitHub 操作、文章管理、全局状态、加密解密
 // ============================================================
 
-// ========== 全局配置 ==========
 var config = { token: '', user: '', repo: '', path: 'posts.json', configPath: 'config.json' };
 var posts = [];
 var categories = [];
@@ -72,7 +71,6 @@ var DEFAULT_POSTS = [
     }
 ];
 
-// ========== 工具函数 ==========
 function escapeHtml(str) {
     if (!str) return '';
     var div = document.createElement('div');
@@ -109,10 +107,7 @@ function getTimestamp() {
 
 function showToast(msg, type) {
     var el = document.getElementById('toastContainer');
-    if (!el) {
-        alert(msg);
-        return;
-    }
+    if (!el) { alert(msg); return; }
     el.textContent = msg;
     el.style.background = type === 'error' ? '#8b2500' : (type === 'success' ? '#4a5a6a' : '#3e2723');
     el.classList.add('show');
@@ -136,7 +131,6 @@ function loadLocalConfig() {
 
 function isConfigured() { return config.token && config.user && config.repo; }
 
-// ========== 文件读写 ==========
 function decodeBase64Utf8(base64) {
     var binary = atob(base64);
     var bytes = new Uint8Array(binary.length);
@@ -196,12 +190,10 @@ function saveFile(path, content, message) {
     });
 }
 
-// ========== 文章生成（JSON格式）==========
 function generatePostsJson(postsArray) {
     return JSON.stringify(postsArray, null, 2);
 }
 
-// ========== 配置应用 ==========
 function applyConfig(json) {
     categories = json.categories && json.categories.length ? json.categories : DEFAULT_CONFIG.categories.slice();
     tags = json.tags && json.tags.length ? json.tags.slice() : [];
@@ -265,7 +257,6 @@ function saveMessagesData() {
     return saveFile('messages.json', jsonStr, '更新留言');
 }
 
-// ========== 数据加载（使用 JSON）==========
 function loadAllData() {
     return fetchFileRaw('posts.json')
         .then(function(text) {
@@ -329,7 +320,6 @@ function loadAllData() {
         });
 }
 
-// ========== 点赞更新（JSON）==========
 function updatePostLikes(postId) {
     var jsonData = JSON.stringify(posts, null, 2);
     if (isConfigured()) {
@@ -337,7 +327,6 @@ function updatePostLikes(postId) {
     }
 }
 
-// ========== 加密解密（保留）==========
 function base64ToArrayBuffer(base64) {
     var binary = atob(base64);
     var bytes = new Uint8Array(binary.length);
@@ -383,5 +372,4 @@ function hybridDecrypt(base64Package, privateKeyPem) {
     });
 }
 
-// ========== 全局初始化 ==========
 loadLocalConfig();
