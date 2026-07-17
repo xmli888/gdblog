@@ -47,3 +47,12 @@ views: 8
 likes: 5
 content: 其实人真正想结束的是情绪，不是生命
 所以说得了绝症的病人，痛苦的时候想结束生命，不是真想死，是想结束痛苦
+---
+title: 测试文章2
+category: 随笔
+tags: 
+date: 2026-07-17
+author: 墨轩主
+views: 0
+likes: 0
+content: 测试文章二
