@@ -5,19 +5,18 @@
     "游记",
     "散文",
     "诗词",
-    "其他",
-    "技术"
+    "其他"
   ],
   "tags": [
-    "感悟",
-    "语录",
-    "马云",
-    "随记",
-    "技术"
+    "墨韵",
+    "古宅",
+    "红木",
+    "诗词",
+    "阅读"
   ],
-  "about": "关于墨韵轩...强哥博客",
+  "about": "墨韵轩，一处藏于青砖屋檐下的精神角落。",
   "siteSettings": {
-    "logo": "义",
+    "logo": "墨",
     "title": "墨韵轩",
     "subtitle": "— 青砖檐下 · 笔墨春秋 · 静观自得 —",
     "authorName": "墨轩主",
@@ -32,17 +31,12 @@
     "隶书",
     "方正"
   ],
-  "defaultFont": "行楷",
-  "fontSwitchEnabled": true,
-  "musicList": [
-    {
-      "name": "古典",
-      "url": "bj.yy"
-    }
-  ],
+  "defaultFont": "楷体",
+  "fontSwitchEnabled": false,
+  "musicList": [],
   "musicEnabled": true,
   "musicAutoPlay": false,
-  "musicDefault": "古典",
+  "musicDefault": "",
   "lastBackupTime": "",
   "autoLoadComments": true,
   "giscus": {
