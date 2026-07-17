@@ -3,7 +3,7 @@
 // ============================================================
 
 // ========== 全局配置 ==========
-var config = { token: '', user: '', repo: '', path: 'posts.txt', configPath: 'config.json' };
+var config = { token: '', user: '', repo: '', path: 'posts.json', configPath: 'config.json' };
 var posts = [];
 var categories = [];
 var tags = [];
@@ -58,16 +58,19 @@ var DEFAULT_CONFIG = {
 };
 
 var DEFAULT_MESSAGES = { messages: [] };
-var DEFAULT_POSTS = `---
-title: 欢迎来到墨韵轩
-category: 随笔
-tags: 墨韵,古宅,红木
-date: 2026-07-16
-author: 墨轩主
-views: 0
-likes: 0
-content: 这里是一篇示例文章，您可以在后台添加或修改内容。
-`;
+var DEFAULT_POSTS = [
+    {
+        "id": 1,
+        "title": "欢迎来到墨韵轩",
+        "category": "随笔",
+        "tags": ["墨韵", "古宅", "红木"],
+        "date": "2026-07-16",
+        "author": "墨轩主",
+        "views": 0,
+        "likes": 0,
+        "content": "这里是一篇示例文章，您可以在后台添加或修改内容。"
+    }
+];
 
 // ========== 工具函数 ==========
 function escapeHtml(str) {
@@ -125,7 +128,7 @@ function loadLocalConfig() {
             config.token = parsed.token || '';
             config.user = parsed.user || '';
             config.repo = parsed.repo || '';
-            config.path = parsed.path || 'posts.txt';
+            config.path = parsed.path || 'posts.json';
             config.configPath = parsed.configPath || 'config.json';
         } catch (e) {}
     }
@@ -193,76 +196,9 @@ function saveFile(path, content, message) {
     });
 }
 
-// ========== ★★★ 修复：文章解析（过滤空标签）★★★ ==========
-function parsePosts(text) {
-    if (!text || !text.trim()) return [];
-    if (text.charCodeAt(0) === 0xFEFF) text = text.substring(1);
-    var blocks = text.split(/---\s*/).filter(function(b) { return b.trim().length > 0; });
-    var result = [];
-    for (var i = 0; i < blocks.length; i++) {
-        var block = blocks[i].trim();
-        try {
-            var lines = block.split('\n');
-            var post = { title: '', category: '', tags: [], date: '', author: '', views: 0, likes: 0,
-                content: '', id: i + 1 };
-            var contentLines = [],
-                isContent = false;
-            for (var j = 0; j < lines.length; j++) {
-                var line = lines[j].trim();
-                if (!line) continue;
-                var match = line.match(/^(\w+):\s*(.*)/);
-                if (match && !isContent) {
-                    var key = match[1];
-                    var val = match[2];
-                    if (key === 'title') post.title = val;
-                    else if (key === 'category') post.category = val;
-                    else if (key === 'tags') {
-                        // ★ 修复：过滤掉空字符串标签
-                        post.tags = val.split(',').map(function(t) { return t.trim(); }).filter(function(t) { return t; });
-                    }
-                    else if (key === 'date') post.date = val;
-                    else if (key === 'author') post.author = val;
-                    else if (key === 'views') post.views = parseInt(val) || 0;
-                    else if (key === 'likes') post.likes = parseInt(val) || 0;
-                    else if (key === 'content') { isContent = true;
-                        contentLines.push(val); }
-                } else {
-                    if (isContent || line.startsWith('content:')) {
-                        if (line.startsWith('content:')) {
-                            contentLines.push(line.replace(/^content:\s*/, ''));
-                        } else {
-                            contentLines.push(line);
-                        }
-                    }
-                }
-            }
-            post.content = contentLines.join('\n').trim();
-            if (post.title || post.content) {
-                result.push(post);
-            }
-        } catch (e) {
-            console.warn('跳过格式错误的文章块:', block.substring(0, 50));
-        }
-    }
-    result.forEach(function(p, idx) { p.id = idx + 1; });
-    return result;
-}
-
-function generatePostsTxt(postsArray) {
-    var text = '';
-    for (var i = 0; i < postsArray.length; i++) {
-        var p = postsArray[i];
-        text += '---\n';
-        text += 'title: ' + p.title + '\n';
-        text += 'category: ' + (p.category || '随笔') + '\n';
-        text += 'tags: ' + (p.tags ? p.tags.join(',') : '') + '\n';
-        text += 'date: ' + (p.date || getToday()) + '\n';
-        text += 'author: ' + (p.author || siteSettings.authorName || '墨轩主') + '\n';
-        text += 'views: ' + (p.views || 0) + '\n';
-        text += 'likes: ' + (p.likes || 0) + '\n';
-        text += 'content: ' + p.content + '\n';
-    }
-    return text;
+// ========== 文章生成（JSON格式）==========
+function generatePostsJson(postsArray) {
+    return JSON.stringify(postsArray, null, 2);
 }
 
 // ========== 配置应用 ==========
@@ -329,27 +265,38 @@ function saveMessagesData() {
     return saveFile('messages.json', jsonStr, '更新留言');
 }
 
-// ========== 数据加载 ==========
+// ========== ★★★ 数据加载（使用 JSON）★★★ ==========
 function loadAllData() {
-    return fetchFileRaw('posts.txt')
+    return fetchFileRaw('posts.json')
         .then(function(text) {
             if (text) {
-                var parsed = parsePosts(text);
-                if (parsed.length > 0) {
-                    posts = parsed;
-                } else {
+                try {
+                    var parsed = JSON.parse(text);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        posts = parsed;
+                        posts.forEach(function(p, idx) { p.id = idx + 1; });
+                    } else {
+                        if (posts.length === 0) {
+                            posts = JSON.parse(JSON.stringify(DEFAULT_POSTS));
+                            if (isConfigured()) {
+                                saveFile('posts.json', JSON.stringify(DEFAULT_POSTS, null, 2), '创建默认文章').catch(function() {});
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.warn('JSON解析失败:', e);
                     if (posts.length === 0) {
-                        posts = parsePosts(DEFAULT_POSTS);
+                        posts = JSON.parse(JSON.stringify(DEFAULT_POSTS));
                         if (isConfigured()) {
-                            saveFile('posts.txt', DEFAULT_POSTS, '创建默认文章').catch(function() {});
+                            saveFile('posts.json', JSON.stringify(DEFAULT_POSTS, null, 2), '创建默认文章').catch(function() {});
                         }
                     }
                 }
             } else {
                 if (posts.length === 0) {
-                    posts = parsePosts(DEFAULT_POSTS);
+                    posts = JSON.parse(JSON.stringify(DEFAULT_POSTS));
                     if (isConfigured()) {
-                        saveFile('posts.txt', DEFAULT_POSTS, '创建默认文章').catch(function() {});
+                        saveFile('posts.json', JSON.stringify(DEFAULT_POSTS, null, 2), '创建默认文章').catch(function() {});
                     }
                 }
             }
@@ -382,7 +329,15 @@ function loadAllData() {
         });
 }
 
-// ========== 加密解密 ==========
+// ========== ★★★ 点赞更新（兼容 JSON）★★★ ==========
+function updatePostLikes(postId) {
+    var txt = generatePostsJson(posts);
+    if (isConfigured()) {
+        saveFile('posts.json', txt, '更新点赞').catch(function() {});
+    }
+}
+
+// ========== 加密解密（保留原有功能）==========
 function base64ToArrayBuffer(base64) {
     var binary = atob(base64);
     var bytes = new Uint8Array(binary.length);
