@@ -1,5 +1,5 @@
 // ============================================================
-//  公共模块：GitHub 操作、文章解析、全局状态、加密解密
+//  公共模块：GitHub 操作、文章管理、全局状态、加密解密
 // ============================================================
 
 // ========== 全局配置 ==========
@@ -265,7 +265,7 @@ function saveMessagesData() {
     return saveFile('messages.json', jsonStr, '更新留言');
 }
 
-// ========== ★★★ 数据加载（使用 JSON）★★★ ==========
+// ========== 数据加载（使用 JSON）==========
 function loadAllData() {
     return fetchFileRaw('posts.json')
         .then(function(text) {
@@ -329,15 +329,15 @@ function loadAllData() {
         });
 }
 
-// ========== ★★★ 点赞更新（兼容 JSON）★★★ ==========
+// ========== 点赞更新（JSON）==========
 function updatePostLikes(postId) {
-    var txt = generatePostsJson(posts);
+    var jsonData = JSON.stringify(posts, null, 2);
     if (isConfigured()) {
-        saveFile('posts.json', txt, '更新点赞').catch(function() {});
+        saveFile('posts.json', jsonData, '更新点赞').catch(function() {});
     }
 }
 
-// ========== 加密解密（保留原有功能）==========
+// ========== 加密解密（保留）==========
 function base64ToArrayBuffer(base64) {
     var binary = atob(base64);
     var bytes = new Uint8Array(binary.length);
@@ -383,5 +383,5 @@ function hybridDecrypt(base64Package, privateKeyPem) {
     });
 }
 
-// ========== 全局初始化配置加载 ==========
+// ========== 全局初始化 ==========
 loadLocalConfig();
