@@ -5,19 +5,18 @@
     "游记",
     "散文",
     "诗词",
-    "其他",
-    "技术"
+    "其他"
   ],
   "tags": [
-    "感悟",
-    "语录",
-    "马云",
-    "随记",
-    "技术"
+    "墨韵",
+    "古宅",
+    "红木",
+    "诗词",
+    "阅读"
   ],
-  "about": "关于墨韵轩...强哥博客",
+  "about": "墨韵轩，一处藏于青砖屋檐下的精神角落。",
   "siteSettings": {
-    "logo": "义",
+    "logo": "墨",
     "title": "墨韵轩",
     "subtitle": "— 青砖檐下 · 笔墨春秋 · 静观自得 —",
     "authorName": "墨轩主",
@@ -32,17 +31,12 @@
     "隶书",
     "方正"
   ],
-  "defaultFont": "行楷",
+  "defaultFont": "楷体",
   "fontSwitchEnabled": true,
-  "musicList": [
-    {
-      "name": "古典",
-      "url": "bj.yy"
-    }
-  ],
+  "musicList": [],
   "musicEnabled": true,
   "musicAutoPlay": false,
-  "musicDefault": "古典",
+  "musicDefault": "",
   "lastBackupTime": "",
   "autoLoadComments": true,
   "giscus": {
@@ -52,8 +46,8 @@
     "categoryId": ""
   },
   "security": {
-    "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3GujvExMjKhKErfk8yI\nfQIdZ5WTZ8krD4Q0m/b7cbOSaqwnwMMepsSDw2SonkAEEyOCVnKhX1NXoeX56yRJ\n7hdoe82RGDLZ3UDUGpdknUSCDeAjblsfzawbEMpNObo/e4TcSh8UKKBtKOdVXGHw\nHzfh6l8PByjsgvd7oi/jXPJ5iKC6PMeiiGKhK6VqAs7AexMviKtICi8ZOZseepSR\nolZEVm7zMathz/Mu0XOtSGztEopDeQjsFjIW3nhJnPYiJV+/BCmvn4WuJ9PQM1nW\nsjsd/6WGFE/kMuP1wZytb3m7vJLYuxhmOP5uKuwEFm4pa84FwosBInd5nOAtfweL\nHQIDAQAB\n-----END PUBLIC KEY-----",
-    "challengeCipher": "qlTYAKYrJa7XyyxhS6SaUrx0n/GCltGONPEeMSRYoqTY0eY3T7bJbvqK1bnop6d82YbFSjrmAv1bFf6jgYKefNS2yqe5NHW4ligkdQvXuqd6ZA3wCnR6JtrTLNwKr59n0LNzodyMWSpDIg0k0FvitZFPEnTr3TI1itVpxzUwg3Vso273Zd4GZ03wWdupWWteGquexDfYW1E+ZcCbuBURS3RURr/LzrzhPBaWMAGdgwmjsXZKtPULg2RO0vshns3sGWTuFOGCGvy96jiJshXI0PKUwf+TfYF7vVngyoHnv3P9lwiPuI1G17lDNR8lkjTuFO17W1vkRamfWdEZem1rc9BqfGg4yVZpFoPpjd8SdO0vLpfFtdZTNUIj14ZChBq3FwVzhJo6e7K3klo=",
-    "expectedPlain": "Temporary cache"
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w\n... (请替换为您实际的公钥)\n-----END PUBLIC KEY-----",
+    "challengeCipher": "... (替换为您实际的挑战码密文) ...",
+    "expectedPlain": "OK"
   }
 }
