@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>墨韵轩 · 强哥博客</title>
+    <title>墨韵轩 · 古宅红木博客</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
@@ -351,7 +351,7 @@
         }
         .font-switcher select:hover { border-color:#c23531; }
 
-        /* ★★★ 音乐播放器 - 左侧悬浮 ★★★ */
+        /* ★★★ 音乐播放器 - 左侧悬浮（已修复面板弹出）★★★ */
         .music-player {
             position:fixed;
             bottom: 30px;
@@ -649,6 +649,7 @@
         <footer style="text-align:center; padding:20px 0 30px; color:#8a7a6a; font-size:13px; border-top:1px solid #e8d5c0; margin-top:20px;">
             <span>© 2026 墨韵轩 · 以古典之心，行现代之事</span>
             <span style="margin:0 12px;">|</span>
+            <!-- ★★★ 管理链接（已修复跳转）★★★ -->
             <a href="admin.html" id="adminLink" style="color:#8a7a6a; text-decoration:none; display:inline-flex; align-items:center; gap:4px; padding:6px 12px; border-radius:4px;">⚙️ 管理</a>
         </footer>
     </div>
@@ -681,10 +682,11 @@
             if (authorDescEl && siteSettings.authorDesc) authorDescEl.innerHTML = siteSettings.authorDesc.replace(/\n/g, '<br>');
         }
 
-        // ★★★ 修复字体应用 ★★★
+        // ★★★ 字体应用（带说明）★★★
         function applyFontSettings() {
             var body = document.body;
             var storedFont = localStorage.getItem('user_selected_font');
+            // 如果前台字体切换开启且用户有选择，则使用用户选择，否则使用后台默认字体
             if (fontSwitchEnabled && storedFont && fonts.indexOf(storedFont) !== -1) {
                 body.style.fontFamily = storedFont + ', serif';
             } else if (defaultFont && fonts.indexOf(defaultFont) !== -1) {
@@ -730,7 +732,7 @@
             container.appendChild(wrapper);
         }
 
-        // ★★★ 音乐播放器（左侧 + 拖拽 + 面板弹出）★★★
+        // ★★★ 音乐播放器（已修复面板弹出）★★★
         function applyMusicSettings() {
             var player = document.getElementById('musicPlayer');
             if (!musicEnabled) {
@@ -744,8 +746,6 @@
                     var p = JSON.parse(pos);
                     if (p.left !== undefined) player.style.left = p.left + 'px';
                     if (p.top !== undefined) player.style.top = p.top + 'px';
-                    if (p.right !== undefined) player.style.right = p.right + 'px';
-                    if (p.bottom !== undefined) player.style.bottom = p.bottom + 'px';
                 } catch (e) {}
             }
             if (musicList.length > 0 && player) {
@@ -767,31 +767,22 @@
                 var songNameEl = document.getElementById('musicSongName');
                 if (songNameEl) songNameEl.textContent = '无歌曲';
             }
-            // 绑定事件（只绑定一次）
             if (!window._musicBound) {
                 window._musicBound = true;
                 var toggleBtn = document.getElementById('musicToggle');
                 var panel = document.getElementById('musicPanel');
 
-                // 点击切换面板
+                // ★★★ 点击切换面板（click 事件在移动端也能触发）★★★
                 toggleBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     musicPanelOpen = !musicPanelOpen;
                     panel.classList.toggle('open', musicPanelOpen);
                 });
-                // 点击面板外部关闭
-                document.addEventListener('click', function(e) {
-                    if (!panel || !panel.classList.contains('open')) return;
-                    var isInside = panel.contains(e.target) || (toggleBtn && toggleBtn.contains(e.target));
-                    if (!isInside) {
-                        panel.classList.remove('open');
-                        musicPanelOpen = false;
-                    }
-                });
 
                 // ★★★ 拖拽功能（支持鼠标和触摸）★★★
                 var isDragging = false;
                 var dragOffsetX = 0, dragOffsetY = 0;
+                var moved = false;
 
                 function startDrag(e) {
                     var clientX = e.clientX || (e.touches && e.touches[0].clientX);
@@ -801,8 +792,9 @@
                     dragOffsetX = clientX - rect.left;
                     dragOffsetY = clientY - rect.top;
                     isDragging = true;
+                    moved = false;
                     player.style.cursor = 'grabbing';
-                    e.preventDefault();
+                    // 不在此处 preventDefault，避免阻止 click
                 }
 
                 function moveDrag(e) {
@@ -822,6 +814,7 @@
                     player.style.top = newY + 'px';
                     player.style.right = 'auto';
                     player.style.bottom = 'auto';
+                    moved = true;
                     e.preventDefault();
                 }
 
@@ -829,11 +822,14 @@
                     if (isDragging) {
                         isDragging = false;
                         player.style.cursor = 'grab';
-                        var rect = player.getBoundingClientRect();
-                        localStorage.setItem('music_player_position', JSON.stringify({
-                            left: rect.left,
-                            top: rect.top
-                        }));
+                        if (moved) {
+                            var rect = player.getBoundingClientRect();
+                            localStorage.setItem('music_player_position', JSON.stringify({
+                                left: rect.left,
+                                top: rect.top
+                            }));
+                        }
+                        // 移动后不触发点击，点击事件单独处理
                     }
                 }
 
@@ -841,11 +837,21 @@
                 document.addEventListener('mousemove', moveDrag);
                 document.addEventListener('mouseup', endDrag);
 
-                toggleBtn.addEventListener('touchstart', startDrag, { passive: false });
+                toggleBtn.addEventListener('touchstart', startDrag, { passive: true });
                 document.addEventListener('touchmove', moveDrag, { passive: false });
                 document.addEventListener('touchend', endDrag);
 
-                // 播放控制
+                // 面板外点击关闭
+                document.addEventListener('click', function(e) {
+                    if (!panel || !panel.classList.contains('open')) return;
+                    var isInside = panel.contains(e.target) || (toggleBtn && toggleBtn.contains(e.target));
+                    if (!isInside) {
+                        panel.classList.remove('open');
+                        musicPanelOpen = false;
+                    }
+                });
+
+                // 播放控制（保持不变）
                 var playBtn = document.getElementById('musicPlayBtn');
                 if (playBtn) {
                     playBtn.addEventListener('click', function(e) {
@@ -1166,7 +1172,7 @@
             if (currentPage === 'post' && currentPostId === postId) renderPostDetail(document.getElementById('mainContent'), postId);
         }
 
-        // ========== ★★★ 文章详情（带 marked 容错）★★★ ==========
+        // ========== ★★★ 文章详情（修复阅读计数器 + marked 容错）★★★ ==========
         function renderPostDetail(container, postId) {
             var post = posts.find(function(p) { return p.id === postId; });
             if (!post) {
@@ -1175,6 +1181,16 @@
             }
             currentPostId = postId;
 
+            // ★★★ 每次访问都增加阅读数（移除 sessionStorage 限制）★★★
+            post.views = (post.views || 0) + 1;
+            var jsonData = JSON.stringify(posts, null, 2);
+            if (isConfigured()) {
+                saveFile('posts.json', jsonData, '更新阅读数').catch(function(err) {
+                    console.warn('阅读数更新失败:', err);
+                });
+            }
+
+            // marked 容错
             if (typeof marked === 'undefined') {
                 var script = document.createElement('script');
                 script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
