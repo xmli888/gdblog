@@ -258,7 +258,7 @@
     <script src="common.js"></script>
     <script>
         // ============================================================
-        //  后台专用脚本
+        //  后台专用脚本（完整版）
         // ============================================================
 
         var currentPage = 'admin';
@@ -555,19 +555,19 @@
                         <div class="admin-form">
                             <div class="help-text">💡 备份当前文章、配置和留言数据。<br/>可下载单个文件，也可批量选择后压缩下载。</div>
                             <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-                                <button class="btn btn-secondary" onclick="downloadSingleFile('posts')">📥 posts.txt</button>
+                                <button class="btn btn-secondary" onclick="downloadSingleFile('posts')">📥 posts.json</button>
                                 <button class="btn btn-secondary" onclick="downloadSingleFile('config')">📥 config.json</button>
                                 <button class="btn btn-secondary" onclick="downloadSingleFile('messages')">📥 messages.json</button>
                             </div>
                             <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-                                <label><input type="checkbox" id="backupPosts" checked /> posts.txt</label>
+                                <label><input type="checkbox" id="backupPosts" checked /> posts.json</label>
                                 <label><input type="checkbox" id="backupConfig" checked /> config.json</label>
                                 <label><input type="checkbox" id="backupMessages" checked /> messages.json</label>
                                 <button class="btn btn-secondary" onclick="toggleAllBackup()">全选/取消</button>
                                 <button class="btn btn-secondary" onclick="downloadBackup()">📦 下载选中 (ZIP)</button>
                                 <button class="btn btn-primary" onclick="syncBackupToRepo()">📤 同步到仓库</button>
                                 <button class="btn btn-secondary" onclick="document.getElementById('uploadBackupInput').click()">📤 上传文件</button>
-                                <input type="file" id="uploadBackupInput" accept=".txt,.json" style="display:none;" onchange="uploadBackupFile(event)" />
+                                <input type="file" id="uploadBackupInput" accept=".json" style="display:none;" onchange="uploadBackupFile(event)" />
                             </div>
                             <div id="backupStatus" style="font-size:13px;color:#8a7a6a;">
                                 上次备份：<span id="lastBackupTime">暂无</span>
@@ -623,7 +623,6 @@
 
         // ========== 加载后台数据 ==========
         function loadAdminData() {
-            // 先确保数据已加载
             loadAllData().then(function() {
                 populateCategorySelect();
                 populateTagAdminList();
@@ -787,9 +786,9 @@
                     p.tags = p.tags.filter(function(t) { return t !== tag; });
                 }
             });
-            var txt = generatePostsTxt(posts);
+            var jsonData = JSON.stringify(posts, null, 2);
             if (isConfigured()) {
-                saveFile('posts.txt', txt, '删除标签').then(function() {
+                saveFile('posts.json', jsonData, '删除标签').then(function() {
                     saveConfigData().then(function() {
                         populateTagAdminList();
                         renderAdminList();
@@ -815,9 +814,9 @@
                         if (idx !== -1) p.tags[idx] = newTrim;
                     }
                 });
-                var txt = generatePostsTxt(posts);
+                var jsonData = JSON.stringify(posts, null, 2);
                 if (isConfigured()) {
-                    saveFile('posts.txt', txt, '更新标签').then(function() {
+                    saveFile('posts.json', jsonData, '更新标签').then(function() {
                         saveConfigData().then(function() {
                             populateTagAdminList();
                             renderAdminList();
@@ -871,6 +870,7 @@
             showToast('已加载文章，可编辑', 'info');
         }
 
+        // ========== ★★★ 保存文章（JSON）★★★ ==========
         function savePost() {
             var id = document.getElementById('editId').value;
             var title = document.getElementById('editTitle').value.trim();
@@ -881,9 +881,14 @@
             var views = parseInt(document.getElementById('editViews').value) || 0;
             var likes = parseInt(document.getElementById('editLikes').value) || 0;
             var author = document.getElementById('editAuthor').value.trim() || siteSettings.authorName || '墨轩主';
-            if (!title || !content) { showToast('标题和正文不能为空', 'error'); return; }
-            var tags = tagsRaw ? tagsRaw.split(',').map(function(t) { return t.trim(); }).filter(function(t) { return t; }) :
-            [];
+            
+            if (!title || !content) {
+                showToast('标题和正文不能为空', 'error');
+                return;
+            }
+            
+            var tags = tagsRaw ? tagsRaw.split(',').map(function(t) { return t.trim(); }).filter(function(t) { return t; }) : [];
+            
             if (id) {
                 var post = posts.find(function(p) { return p.id === parseInt(id); });
                 if (post) {
@@ -898,39 +903,57 @@
                 }
             } else {
                 var newId = posts.length ? Math.max.apply(null, posts.map(function(p) { return p.id; })) + 1 : 1;
-                posts.push({ id: newId, title: title, category: category, tags: tags, content: content, date: date,
-                    views: views, likes: likes, author: author });
-            }
-            tags.forEach(function(t) { if (tags.indexOf(t) === -1) tags.push(t); });
-            var txt = generatePostsTxt(posts);
-            if (isConfigured()) {
-                saveFile('posts.txt', txt, '更新文章').then(function() {
-                    showToast('保存成功', 'success');
-                    clearEditForm();
-                    renderAdminList();
-                    populateCategorySelect();
-                    saveConfigData().catch(function() {});
-                }).catch(function(err) {
-                    showToast('保存失败: ' + err.message, 'error');
+                posts.push({
+                    id: newId,
+                    title: title,
+                    category: category,
+                    tags: tags,
+                    content: content,
+                    date: date,
+                    views: views,
+                    likes: likes,
+                    author: author
                 });
+            }
+            
+            // ★★★ 使用 JSON 格式保存 ★★★
+            var jsonData = JSON.stringify(posts, null, 2);
+            if (isConfigured()) {
+                saveFile('posts.json', jsonData, '更新文章')
+                    .then(function() {
+                        showToast('保存成功', 'success');
+                        clearEditForm();
+                        renderAdminList();
+                        // 更新全局标签列表（如果有新标签）
+                        tags.forEach(function(t) {
+                            if (tags.indexOf(t) === -1) tags.push(t);
+                        });
+                        saveConfigData().catch(function() {});
+                    })
+                    .catch(function(err) {
+                        showToast('保存失败: ' + err.message, 'error');
+                    });
             } else {
                 showToast('请先配置GitHub', 'error');
                 focusGitHubConfig();
             }
         }
 
+        // ========== ★★★ 删除文章（JSON）★★★ ==========
         function deletePost(id) {
             if (!confirm('确定删除此文章？')) return;
             posts = posts.filter(function(p) { return p.id !== id; });
-            var txt = generatePostsTxt(posts);
+            var jsonData = JSON.stringify(posts, null, 2);
             if (isConfigured()) {
-                saveFile('posts.txt', txt, '删除文章').then(function() {
-                    showToast('已删除', 'success');
-                    renderAdminList();
-                    populateCategorySelect();
-                }).catch(function(err) {
-                    showToast('删除失败: ' + err.message, 'error');
-                });
+                saveFile('posts.json', jsonData, '删除文章')
+                    .then(function() {
+                        showToast('已删除', 'success');
+                        renderAdminList();
+                        populateCategorySelect();
+                    })
+                    .catch(function(err) {
+                        showToast('删除失败: ' + err.message, 'error');
+                    });
             } else {
                 showToast('请先配置GitHub', 'error');
                 focusGitHubConfig();
@@ -1181,8 +1204,8 @@
                 token: token,
                 user: user,
                 repo: repo,
-                path: config.path || 'posts.txt',
-                configPath: config.configPath || 'config.json'
+                path: 'posts.json',
+                configPath: 'config.json'
             }));
             var statusEl = document.getElementById('githubConfigStatus');
             if (statusEl) statusEl.textContent = '✅ 配置已保存';
@@ -1227,8 +1250,8 @@
             var ts = getTimestamp();
             var content, filename;
             if (type === 'posts') {
-                content = generatePostsTxt(posts);
-                filename = 'posts_' + ts + '.txt';
+                content = JSON.stringify(posts, null, 2);
+                filename = 'posts_' + ts + '.json';
             } else if (type === 'config') {
                 var data = {
                     categories: categories,
@@ -1254,7 +1277,7 @@
                 content = JSON.stringify(msgData, null, 2);
                 filename = 'messages_' + ts + '.json';
             }
-            var blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            var blob = new Blob([content], { type: 'application/json;charset=utf-8' });
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
             a.href = url;
@@ -1290,7 +1313,7 @@
             var ts = getTimestamp();
             var zip = new JSZip();
             if (includePosts) {
-                zip.file('posts_' + ts + '.txt', generatePostsTxt(posts));
+                zip.file('posts_' + ts + '.json', JSON.stringify(posts, null, 2));
             }
             if (includeConfig) {
                 var configData = {
@@ -1348,7 +1371,8 @@
             var ts = getTimestamp();
             var promises = [];
             if (includePosts) {
-                promises.push(saveFile('backups/posts_' + ts + '.txt', generatePostsTxt(posts), '备份 posts.txt'));
+                promises.push(saveFile('backups/posts_' + ts + '.json', JSON.stringify(posts, null, 2),
+                    '备份 posts.json'));
             }
             if (includeConfig) {
                 var configData = {
@@ -1379,7 +1403,7 @@
             Promise.all(promises).then(function() {
                 var updatePromises = [];
                 if (includePosts) {
-                    updatePromises.push(saveFile('posts.txt', generatePostsTxt(posts), '同步文章'));
+                    updatePromises.push(saveFile('posts.json', JSON.stringify(posts, null, 2), '同步文章'));
                 }
                 if (includeConfig) {
                     var configData2 = {
@@ -1423,14 +1447,14 @@
             reader.onload = function(e) {
                 var content = e.target.result;
                 var filename = file.name;
-                var isPosts = filename.includes('posts') || filename.endsWith('.txt');
-                var isConfig = filename.includes('config') || filename.endsWith('.json');
-                var isMessages = filename.includes('messages') || filename.endsWith('.json');
+                var isPosts = filename.includes('posts') && filename.endsWith('.json');
+                var isConfig = filename.includes('config') && filename.endsWith('.json');
+                var isMessages = filename.includes('messages') && filename.endsWith('.json');
                 if (!isPosts && !isConfig && !isMessages) {
-                    showToast('无法识别文件类型，请上传 posts.txt、config.json 或 messages.json', 'error');
+                    showToast('请上传 posts.json、config.json 或 messages.json', 'error');
                     return;
                 }
-                var targetPath = isPosts ? 'posts.txt' : isConfig ? 'config.json' : 'messages.json';
+                var targetPath = isPosts ? 'posts.json' : isConfig ? 'config.json' : 'messages.json';
                 var confirmMsg = '确定要上传 "' + filename + '" 并覆盖 ' + targetPath + ' 吗？';
                 if (!confirm(confirmMsg)) return;
                 saveFile(targetPath, content, '上传 ' + filename).then(function() {
