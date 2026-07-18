@@ -685,22 +685,21 @@
         }
 
         function deleteFont(index, isSystem) {
-            var font = fonts[index];
-            if (!font) return;
-            var msg = isSystem ?
-                '确定删除系统字体“‘ + font.name + '”吗？删除后可通过“恢复默认列表”还原。' :
-                '确定删除自定义字体“‘ + font.name + '”吗？';
-            if (!confirm(msg)) return;
-            fonts.splice(index, 1);
-            // 如果删除的是默认字体，重新设置默认
-            if (defaultFont === font.name) {
-                defaultFont = fonts.length > 0 ? fonts[0].name : '';
-            }
-            saveConfigData().then(function() {
-                loadFontAdminList();
-                showToast('已删除: ' + font.name, 'success');
-            }).catch(function(err) { showToast('删除失败: ' + err.message, 'error'); });
-        }
+    var font = fonts[index];
+    if (!font) return;
+    var msg = isSystem ?
+        '确定删除系统字体 "' + font.name + '" 吗？删除后可通过"恢复默认列表"还原。' :
+        '确定删除自定义字体 "' + font.name + '" 吗？';
+    if (!confirm(msg)) return;
+    fonts.splice(index, 1);
+    if (defaultFont === font.name) {
+        defaultFont = fonts.length > 0 ? fonts[0].name : '';
+    }
+    saveConfigData().then(function() {
+        loadFontAdminList();
+        showToast('已删除: ' + font.name, 'success');
+    }).catch(function(err) { showToast('删除失败: ' + err.message, 'error'); });
+}
 
         function loadFontSettingsForm() {
             var switchCheck = document.getElementById('fontSwitchCheck');
