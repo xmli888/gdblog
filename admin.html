@@ -648,8 +648,8 @@
             var font = fonts[index];
             if (!font) return;
             var msg = isSystem ?
-                '确定删除系统字体“‘ + font.name + '”吗？删除后可通过“恢复默认列表”还原。' :
-                '确定删除自定义字体“‘ + font.name + '”吗？';
+                '确定删除系统字体“' + font.name + '”吗？删除后可通过“恢复默认列表”还原。' :
+                '确定删除自定义字体“' + font.name + '”吗？';
             if (!confirm(msg)) return;
             fonts.splice(index, 1);
             if (defaultFont === font.name) {
