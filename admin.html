@@ -100,7 +100,28 @@
         .footer-admin { display:inline-flex; align-items:center; gap:4px; color:#8a7a6a; cursor:pointer; transition:0.2s; font-size:13px; font-family:'SimSun','宋体',serif; padding:6px 12px; border-radius:4px; -webkit-touch-callout:none; }
         .footer-admin:hover { color:#c23531; background:rgba(194,53,49,0.05); }
         .footer-admin:active { transform:scale(0.95); }
-        @media (max-width:600px) { .card { padding:16px; } .admin-form .btn-group .btn { flex:1 1 100%; } }
+        .font-item { display:flex; justify-content:space-between; align-items:center; padding:8px 12px; border-bottom:1px dashed #e8d5c0; flex-wrap:wrap; gap:8px; border-radius:4px; }
+        .font-item:hover { background:#f8f0e8; }
+        .font-item .font-name { font-size:15px; font-weight:normal; font-family:'华文楷体','KaiTi',serif; }
+        .font-item .font-path { font-size:12px; color:#8a7a6a; font-family:'SimSun','宋体',serif; margin-left:12px; }
+        .font-item .font-source { font-size:11px; padding:2px 10px; border-radius:12px; background:#efe4d8; color:#6b5a4a; margin-left:8px; }
+        .font-item .font-source.system { background:#d4c5b0; color:#4d281b; }
+        .font-item .font-source.custom { background:#c23531; color:#fff; }
+        .font-item .font-default-badge { font-size:11px; padding:2px 12px; border-radius:12px; background:#c23531; color:#fff; margin-left:8px; }
+        .font-item .actions { display:flex; gap:4px; flex-wrap:wrap; }
+        .font-item .actions button { margin-left:4px; padding:2px 12px; border:1px solid #ddd0c0; border-radius:4px; background:transparent; cursor:pointer; font-size:12px; transition:0.2s; }
+        .font-item .actions .set-default { background:#2a7a4a; color:#fff; border-color:#2a7a4a; }
+        .font-item .actions .set-default:hover { background:#1a5a3a; }
+        .font-item .actions .unset-default { background:#8a7a6a; color:#fff; border-color:#8a7a6a; }
+        .font-item .actions .unset-default:hover { background:#6a5a4a; }
+        .font-item .actions .del-system { background:#8b2500; color:#fff; border-color:#8b2500; }
+        .font-item .actions .del-system:hover { background:#6b1a00; }
+        .font-item .actions .del-custom { background:#c23531; color:#fff; border-color:#c23531; }
+        .font-item .actions .del-custom:hover { background:#a02a26; }
+        .font-controls { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:12px; }
+        .font-controls .default-selector { flex:1; min-width:150px; }
+        .font-controls .default-selector select { width:100%; padding:6px 10px; border:1px solid #ddd0c0; border-radius:4px; background:#fefcf8; font-size:14px; min-height:38px; }
+        @media (max-width:600px) { .card { padding:16px; } .admin-form .btn-group .btn { flex:1 1 100%; } .font-item { flex-direction:column; align-items:flex-start; } .font-item .actions { width:100%; justify-content:flex-start; } }
     </style>
 </head>
 <body>
@@ -114,104 +135,14 @@
     <script>
         var currentPage = 'admin';
 
+        // ============================================================
+        //  登录界面
+        // ============================================================
         function showLogin() {
             var html = '<div class="login-box"><h2>🔐 后台登录</h2><div class="login-sub">— 使用私钥验证身份 —</div><div class="form-group"><label>🔑 私钥 (PEM 格式)</label><textarea id="loginPrivateKey" rows="4" placeholder="-----BEGIN PRIVATE KEY----- ... -----END PRIVATE KEY-----"></textarea></div><button class="btn" onclick="doLogin()">登录</button><div id="loginError" class="error-msg"></div><div id="loginSuccess" class="success-msg"></div><div id="loginInfo" class="info-msg"></div><div style="margin-top:20px;font-size:13px;color:#8a7a6a;"><a href="index.html" style="color:#c23531;text-decoration:underline;">← 返回首页</a></div></div>';
             document.getElementById('app').innerHTML = html;
         }
 
-        // ============================================================
-        //  工具函数：检测字符串是否为有效的 Base64
-        // ============================================================
-        function isValidBase64(str) {
-            if (!str || typeof str !== 'string') return false;
-            var cleaned = str.replace(/[\s\n\r]/g, '');
-            if (cleaned.length < 10) return false;
-            return /^[A-Za-z0-9+\/=]+$/.test(cleaned);
-        }
-
-        // ============================================================
-        //  工具函数：检测是否为有效的 PEM 公钥
-        // ============================================================
-        function isValidPublicKey(pubKey) {
-            if (!pubKey || typeof pubKey !== 'string') return false;
-            var trimmed = pubKey.trim();
-            if (!trimmed.includes('-----BEGIN PUBLIC KEY-----')) return false;
-            if (!trimmed.includes('-----END PUBLIC KEY-----')) return false;
-            var body = trimmed.replace(/-----BEGIN PUBLIC KEY-----/, '')
-                              .replace(/-----END PUBLIC KEY-----/, '')
-                              .replace(/[\s\n\r]/g, '');
-            if (body.length < 200 || body.length > 600) return false;
-            return isValidBase64(body);
-        }
-
-        // ============================================================
-        //  工具函数：检测是否为有效的 PEM 私钥
-        // ============================================================
-        function isValidPrivateKey(privKey) {
-            if (!privKey || typeof privKey !== 'string') return false;
-            var trimmed = privKey.trim();
-            if (!trimmed.includes('-----BEGIN PRIVATE KEY-----')) return false;
-            if (!trimmed.includes('-----END PRIVATE KEY-----')) return false;
-            var body = trimmed.replace(/-----BEGIN PRIVATE KEY-----/, '')
-                              .replace(/-----END PRIVATE KEY-----/, '')
-                              .replace(/[\s\n\r]/g, '');
-            if (body.length < 200 || body.length > 2000) return false;
-            return isValidBase64(body);
-        }
-
-        // ============================================================
-        //  工具函数：检测挑战码密文是否合法
-        // ============================================================
-        function isValidCipher(cipher) {
-            if (!cipher || typeof cipher !== 'string') return false;
-            var trimmed = cipher.trim();
-            if (trimmed.length < 50 || trimmed.length > 1000) return false;
-            return isValidBase64(trimmed);
-        }
-
-        // ============================================================
-        //  工具函数：检查安全配置是否完整且格式正确
-        //  返回: { valid: true/false, reason: 'ok' | 'empty' | 'invalid' }
-        // ============================================================
-        function checkSecurityConfig(security) {
-            // 1. 检查 security 对象是否存在
-            if (!security || typeof security !== 'object') {
-                return { valid: false, reason: 'empty' };
-            }
-
-            // 2. 检查三个字段是否都存在
-            var hasPubKey = security.publicKey && typeof security.publicKey === 'string' && security.publicKey.trim().length > 0;
-            var hasCipher = security.challengeCipher && typeof security.challengeCipher === 'string' && security.challengeCipher.trim().length > 0;
-            var hasPlain = security.expectedPlain && typeof security.expectedPlain === 'string' && security.expectedPlain.trim().length > 0;
-
-            // 3. 如果三个字段都为空，说明管理员清空了配置，使用默认配置
-            if (!hasPubKey && !hasCipher && !hasPlain) {
-                return { valid: false, reason: 'empty' };
-            }
-
-            // 4. 如果有任何一个字段为空，说明配置不完整，判定为损坏
-            if (!hasPubKey || !hasCipher || !hasPlain) {
-                return { valid: false, reason: 'invalid' };
-            }
-
-            // 5. 检查公钥格式
-            if (!isValidPublicKey(security.publicKey)) {
-                return { valid: false, reason: 'invalid' };
-            }
-
-            // 6. 检查密文格式
-            if (!isValidCipher(security.challengeCipher)) {
-                return { valid: false, reason: 'invalid' };
-            }
-
-            // 7. 验证明文存在（已经确保有值）
-            // 所有检查通过
-            return { valid: true, reason: 'ok' };
-        }
-
-        // ============================================================
-        //  登录验证
-        // ============================================================
         function doLogin() {
             var privKey = document.getElementById('loginPrivateKey').value.trim();
             var errorEl = document.getElementById('loginError');
@@ -232,7 +163,7 @@
                 return;
             }
 
-            if (!isValidPrivateKey(privKey)) {
+            if (!privKey.includes('-----BEGIN PRIVATE KEY-----') || !privKey.includes('-----END PRIVATE KEY-----')) {
                 errorEl.textContent = '❌ 安全密钥格式不正确，请检查后重试';
                 errorEl.className = 'error-msg show';
                 errorEl.style.display = 'block';
@@ -243,130 +174,21 @@
             infoEl.className = 'info-msg show';
             infoEl.style.display = 'block';
 
-            // ---- 获取安全配置 ----
             var stored = localStorage.getItem('security_config');
-            var security = null;
-            var configSource = null;
+            var security = stored ? JSON.parse(stored) : null;
 
-            if (stored) {
-                try {
-                    var parsed = JSON.parse(stored);
-                    var check = checkSecurityConfig(parsed);
-                    if (check.valid) {
-                        security = parsed;
-                        configSource = 'localStorage';
-                    } else {
-                        // localStorage 配置无效，清除它
-                        localStorage.removeItem('security_config');
-                        console.log('localStorage 安全配置无效，已清除');
-                    }
-                } catch (e) {
-                    localStorage.removeItem('security_config');
-                    console.log('localStorage 安全配置解析失败，已清除');
-                }
-            }
-
-            // ---- 如果 localStorage 没有有效配置，从网络读取 config.json ----
-            if (!security) {
-                infoEl.textContent = '⏳ 正在获取安全配置...';
-                infoEl.className = 'info-msg show';
-                infoEl.style.display = 'block';
-
-                fetch('config.json')
-                    .then(function(res) {
-                        if (!res.ok) {
-                            throw new Error('网络请求失败');
-                        }
-                        return res.json();
-                    })
-                    .then(function(json) {
-                        var check = checkSecurityConfig(json && json.security ? json.security : null);
-                        if (check.valid) {
-                            security = json.security;
-                            configSource = 'config.json';
-                            localStorage.setItem('security_config', JSON.stringify(security));
-                            performDecrypt(privKey, security, errorEl, successEl, infoEl);
-                        } else {
-                            // config.json 配置无效（空或不完整）
-                            infoEl.style.display = 'none';
-                            if (check.reason === 'empty') {
-                                // 三个字段都为空，使用默认配置
-                                console.log('config.json security 字段为空，使用默认配置');
-                                useDefaultConfig(privKey, errorEl, successEl, infoEl);
-                            } else {
-                                // 配置不完整或格式错误
-                                errorEl.textContent = '❌ 安全验证数据损坏，请联系网络安全管理员处理。';
-                                errorEl.className = 'error-msg show';
-                                errorEl.style.display = 'block';
-                            }
-                        }
-                    })
-                    .catch(function(err) {
-                        console.warn('读取 config.json 失败:', err);
-                        infoEl.style.display = 'none';
-                        // 网络错误，尝试使用默认配置
-                        console.log('网络错误，尝试使用默认配置');
-                        useDefaultConfig(privKey, errorEl, successEl, infoEl);
-                    });
-                return;
-            }
-
-            // ---- localStorage 有有效配置，直接解密 ----
-            performDecrypt(privKey, security, errorEl, successEl, infoEl);
-        }
-
-        // ============================================================
-        //  使用默认配置登录（从 DEFAULT_CONFIG.security 读取）
-        // ============================================================
-        function useDefaultConfig(privKey, errorEl, successEl, infoEl) {
-            var defaultSecurity = DEFAULT_CONFIG.security;
-            if (!defaultSecurity || !defaultSecurity.publicKey || !defaultSecurity.challengeCipher || !defaultSecurity.expectedPlain) {
-                infoEl.style.display = 'none';
-                errorEl.textContent = '❌ 系统安全配置缺失，请联系管理员';
-                errorEl.className = 'error-msg show';
-                errorEl.style.display = 'block';
-                return;
-            }
-
-            // 验证默认配置是否有效
-            var check = checkSecurityConfig(defaultSecurity);
-            if (!check.valid) {
-                infoEl.style.display = 'none';
-                errorEl.textContent = '❌ 系统安全配置损坏，请联系管理员';
-                errorEl.className = 'error-msg show';
-                errorEl.style.display = 'block';
-                return;
-            }
-
-            // 将默认配置存入 localStorage 以便下次使用
-            localStorage.setItem('security_config', JSON.stringify(defaultSecurity));
-            console.log('使用默认安全配置');
-
-            performDecrypt(privKey, defaultSecurity, errorEl, successEl, infoEl);
-        }
-
-        // ============================================================
-        //  执行解密
-        // ============================================================
-        function performDecrypt(privKey, security, errorEl, successEl, infoEl) {
-            // 再次检查配置有效性（安全兜底）
-            var check = checkSecurityConfig(security);
-            if (!check.valid) {
-                infoEl.style.display = 'none';
-                if (check.reason === 'empty') {
-                    // 空配置，尝试使用默认配置
-                    useDefaultConfig(privKey, errorEl, successEl, infoEl);
+            if (!security || !security.challengeCipher || !security.expectedPlain) {
+                if (DEFAULT_CONFIG.security && DEFAULT_CONFIG.security.challengeCipher) {
+                    security = DEFAULT_CONFIG.security;
+                    localStorage.setItem('security_config', JSON.stringify(security));
                 } else {
-                    errorEl.textContent = '❌ 安全验证数据损坏，请联系网络安全管理员处理。';
+                    infoEl.style.display = 'none';
+                    errorEl.textContent = '❌ 安全配置缺失，请检查 config.json';
                     errorEl.className = 'error-msg show';
                     errorEl.style.display = 'block';
+                    return;
                 }
-                return;
             }
-
-            infoEl.textContent = '⏳ 正在验证安全密钥...';
-            infoEl.className = 'info-msg show';
-            infoEl.style.display = 'block';
 
             hybridDecrypt(security.challengeCipher, privKey)
                 .then(function(plain) {
@@ -376,9 +198,7 @@
                         successEl.className = 'success-msg show';
                         successEl.style.display = 'block';
                         sessionStorage.setItem('blog_admin_logged', 'true');
-                        setTimeout(function() {
-                            renderAdmin();
-                        }, 500);
+                        setTimeout(function() { renderAdmin(); }, 500);
                     } else {
                         infoEl.style.display = 'none';
                         errorEl.textContent = '❌ 安全验证失败，请检查您输入的密钥是否正确。';
@@ -387,14 +207,8 @@
                     }
                 })
                 .catch(function(err) {
-                    console.warn('解密异常:', err);
                     infoEl.style.display = 'none';
-                    var errMsg = err.message || '';
-                    if (errMsg.includes('bad decrypt') || errMsg.includes('decrypt') || errMsg.includes('private key')) {
-                        errorEl.textContent = '❌ 安全验证失败，请检查您输入的密钥是否正确。';
-                    } else {
-                        errorEl.textContent = '❌ 安全验证数据损坏，请联系网络安全管理员处理。';
-                    }
+                    errorEl.textContent = '❌ 安全验证失败，请检查您输入的密钥是否正确。';
                     errorEl.className = 'error-msg show';
                     errorEl.style.display = 'block';
                 });
@@ -408,6 +222,9 @@
             }
         }
 
+        // ============================================================
+        //  渲染管理面板（包含字体管理面板）
+        // ============================================================
         function renderAdmin() {
             var container = document.getElementById('app');
             container.innerHTML = '<div class="card"><div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;"><div class="card-title" style="border-bottom:none; margin-bottom:0;">🔐 后台管理</div><div><span style="color:#8a7a6a;font-size:14px;margin-right:16px;">已登录</span><button class="footer-admin" onclick="logout()" style="border:1px solid #c23531;border-radius:6px;padding:6px 16px;background:transparent;color:#c23531;cursor:pointer;">退出</button><a href="index.html" style="margin-left:12px;color:#8a7a6a;text-decoration:underline;">← 返回首页</a></div></div></div>' +
@@ -416,18 +233,30 @@
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">📄 文章管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-list" id="adminPostList"></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">📂 分类管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;"><input type="text" id="newCategoryName" placeholder="新分类名称" style="flex:1;min-height:38px;" /><button class="btn btn-primary" onclick="addCategory()" style="min-height:38px;">添加</button></div><div class="admin-list" id="categoryAdminList"></div></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🏷️ 标签管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;"><input type="text" id="newTagName" placeholder="新标签名称" style="flex:1;min-height:38px;" /><button class="btn btn-primary" onclick="addTag()" style="min-height:38px;">添加</button></div><div class="admin-list" id="tagAdminList"></div></div></div></div>' +
-                '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🔤 字体管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 支持系统字体名称（如 <code>楷体</code>），也支持自定义字体路径或网络字体 URL。</div><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;"><input type="text" id="newFontName" placeholder="字体名称 / 路径 / URL" style="flex:1;min-height:38px;" /><button class="btn btn-primary" onclick="addFont()" style="min-height:38px;">添加</button></div><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;"><label style="font-weight:bold;">默认字体</label><select id="defaultFontSelect" style="min-height:38px;padding:6px 10px;"></select><button class="btn btn-secondary" onclick="setDefaultFont()" style="min-height:38px;">设为默认</button><button class="btn btn-secondary" onclick="resetFonts()" style="min-height:38px;">重置默认列表</button></div><div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;"><label style="font-weight:bold;">前台字体切换</label><input type="checkbox" id="fontSwitchCheck" onchange="saveFontSettings()" /><span style="font-size:13px; color:#8a7a6a;">开启后用户可自定义字体</span></div><div class="admin-list" id="fontAdminList"></div></div></div></div>' +
+                // ★★★ 字体管理面板 ★★★
+                '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🔤 字体管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 系统字体（楷体、宋体等）由操作系统提供，无需上传文件。<br/>自定义字体需要上传字体文件（.ttf/.woff/.woff2）并填写正确的路径。</div>' +
+                // 添加字体表单
+                '<div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px;"><div style="flex:2; min-width:150px;"><label style="font-weight:bold; display:block; font-size:13px; margin-bottom:2px;">字体名称</label><input type="text" id="newFontName" placeholder="如：禹卫书法行书" style="width:100%;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:14px;min-height:38px;" /></div><div style="flex:3; min-width:200px;"><label style="font-weight:bold; display:block; font-size:13px; margin-bottom:2px;">字体文件路径</label><input type="text" id="newFontPath" placeholder="如：myzt/禹卫书法行书.ttf" style="width:100%;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:14px;min-height:38px;" /></div><div style="flex:0 0 auto; align-self:flex-end;"><button class="btn btn-primary" onclick="addFont()" style="min-height:38px;padding:0 24px;">添加</button></div></div>' +
+                // 默认字体选择 + 重置按钮
+                '<div class="font-controls"><div class="default-selector"><label style="font-weight:bold; font-size:13px;">默认字体</label><select id="defaultFontSelect" onchange="setDefaultFontFromSelect()"></select></div><div><button class="btn btn-secondary" onclick="resetDefaultFont()" style="min-height:38px;">重置默认</button><button class="btn btn-secondary" onclick="resetFontList()" style="min-height:38px;margin-left:8px;">恢复默认列表</button></div></div>' +
+                // 字体列表
+                '<div class="admin-list" id="fontAdminList"></div></div></div></div>' +
+                // ★★★ 其他面板 ★★★
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🎵 音乐管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 支持本地音乐路径或网络音乐链接。</div><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;"><input type="text" id="newMusicName" placeholder="歌曲名" style="flex:1;min-height:38px;" /><input type="text" id="newMusicUrl" placeholder="路径 / URL" style="flex:2;min-height:38px;" /><button class="btn btn-primary" onclick="addMusic()" style="min-height:38px;">添加</button></div><div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:10px;"><label><input type="checkbox" id="musicEnabledCheck" onchange="saveMusicSettings()" /> 显示播放器</label><label><input type="checkbox" id="musicAutoPlayCheck" onchange="saveMusicSettings()" /> 自动播放</label><label>默认歌曲 <select id="musicDefaultSelect" style="min-height:38px;padding:6px 10px;"></select></label></div><div class="admin-list" id="musicAdminList"></div></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">📜 关于页面 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="form-group"><textarea id="aboutEditor" rows="6"></textarea></div><button class="btn btn-primary" onclick="saveAbout()">保存关于</button></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🔐 安全设置 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="form-group"><label>公钥</label><textarea id="secPublicKey" rows="3" style="font-family:monospace;font-size:12px;"></textarea></div><div class="form-group"><label>挑战码密文</label><textarea id="secChallengeCipher" rows="2" style="font-family:monospace;font-size:12px;"></textarea></div><div class="form-group"><label>期望明文</label><input type="text" id="secExpectedPlain" style="min-height:38px;" /></div><div class="btn-group"><button class="btn btn-primary" onclick="saveSecuritySettings()">保存安全设置</button><button class="btn btn-secondary" onclick="resetSecuritySettings()">恢复默认</button></div></div></div></div>' +
                 '<div class="panel" id="githubConfigPanel"><div class="panel-header" onclick="togglePanel(this)">⚙️ GitHub 设置 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 配置 GitHub Token 后，文章和配置才能保存到远程仓库。<a href="https://github.com/settings/tokens" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处生成 Token</a>（需勾选 <code>repo</code> 权限）。</div><div class="form-group"><label>🔑 Personal Access Token</label><input type="password" id="githubTokenInput" placeholder="ghp_xxxxxxxxxxxx" style="min-height:38px;" /></div><div class="form-group"><label>👤 GitHub 用户名</label><input type="text" id="githubUserInput" placeholder="你的用户名" style="min-height:38px;" /></div><div class="form-group"><label>📁 仓库名</label><input type="text" id="githubRepoInput" placeholder="仓库名" style="min-height:38px;" /></div><div class="btn-group"><button class="btn btn-primary" onclick="saveGitHubConfig()">保存配置</button><button class="btn btn-secondary" onclick="clearGitHubConfig()">清空配置</button></div><div id="githubConfigStatus" style="margin-top:8px;font-size:13px;color:#8a7a6a;"></div></div></div></div>' +
                 '<div class="panel" id="backupPanel"><div class="panel-header" onclick="togglePanel(this)">💾 备份设置 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 备份当前文章、配置和留言数据。<br/>可下载单个文件，也可批量选择后压缩下载。</div><div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;"><button class="btn btn-secondary" onclick="downloadSingleFile(\'posts\')">📥 posts.json</button><button class="btn btn-secondary" onclick="downloadSingleFile(\'config\')">📥 config.json</button><button class="btn btn-secondary" onclick="downloadSingleFile(\'messages\')">📥 messages.json</button></div><div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;"><label><input type="checkbox" id="backupPosts" checked /> posts.json</label><label><input type="checkbox" id="backupConfig" checked /> config.json</label><label><input type="checkbox" id="backupMessages" checked /> messages.json</label><button class="btn btn-secondary" onclick="toggleAllBackup()">全选/取消</button><button class="btn btn-secondary" onclick="downloadBackup()">📦 下载选中 (ZIP)</button><button class="btn btn-primary" onclick="syncBackupToRepo()">📤 同步到仓库</button><button class="btn btn-secondary" onclick="document.getElementById(\'uploadBackupInput\').click()">📤 上传文件</button><input type="file" id="uploadBackupInput" accept=".json" style="display:none;" onchange="uploadBackupFile(event)" /></div><div id="backupStatus" style="font-size:13px;color:#8a7a6a;">上次备份：<span id="lastBackupTime">暂无</span></div></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">💬 评论设置 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 使用 Giscus 评论系统（基于 GitHub Discussions）。<a href="https://giscus.app/zh-CN" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处获取配置</a></div><div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;"><label style="font-weight:bold;">自动加载评论</label><input type="checkbox" id="autoLoadComments" /><span style="font-size:13px; color:#8a7a6a;">开启后文章页面自动加载评论区</span></div><div class="form-group"><label>仓库名</label><input type="text" id="giscusRepo" placeholder="用户名/仓库名" style="min-height:38px;" /></div><div class="form-group"><label>Repo ID</label><input type="text" id="giscusRepoId" placeholder="R_xxxxxxxxxx" style="min-height:38px;" /></div><div class="form-group"><label>分类</label><input type="text" id="giscusCategory" placeholder="General" style="min-height:38px;" /></div><div class="form-group"><label>分类 ID</label><input type="text" id="giscusCategoryId" placeholder="DIC_xxxxxxx" style="min-height:38px;" /></div><div class="btn-group"><button class="btn btn-primary" onclick="saveCommentSettings()">保存评论设置</button></div></div></div></div>' +
+                // ★★★ 留言管理面板（已完整保留）★★★
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">💬 留言管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;"><input type="text" id="adminMsgNickname" placeholder="昵称" style="flex:1;min-height:38px;" /><input type="text" id="adminMsgEmail" placeholder="邮箱" style="flex:1;min-height:38px;" /><input type="text" id="adminMsgContent" placeholder="留言内容" style="flex:2;min-height:38px;" /><button class="btn btn-primary" onclick="adminAddMessage()" style="min-height:38px;">添加留言</button></div><div class="admin-list" id="messageAdminList"></div></div></div></div>';
 
             loadAdminData();
         }
 
+        // ============================================================
+        //  加载数据
+        // ============================================================
         function loadAdminData() {
             loadAllData().then(function() {
                 populateCategorySelect();
@@ -440,8 +269,8 @@
                 loadSecuritySettings();
                 loadCommentSettings();
                 renderCategoryAdmin();
-                renderFontAdmin();
                 renderMusicAdmin();
+                loadFontAdminList();
 
                 var aboutEditor = document.getElementById('aboutEditor');
                 if (aboutEditor) aboutEditor.value = aboutContent;
@@ -467,6 +296,9 @@
             else { body.classList.add('open'); if (arrow) arrow.classList.add('open'); }
         }
 
+        // ============================================================
+        //  站点设置
+        // ============================================================
         function loadSiteSettingsForm() {
             var logoEl = document.getElementById('setLogo');
             var titleEl = document.getElementById('setTitle');
@@ -489,6 +321,9 @@
             saveConfigData().then(function() { showToast('站点设置已保存', 'success'); });
         }
 
+        // ============================================================
+        //  分类管理
+        // ============================================================
         function renderCategoryAdmin() {
             var container = document.getElementById('categoryAdminList');
             if (!container) return;
@@ -545,6 +380,9 @@
             sel.innerHTML = html;
         }
 
+        // ============================================================
+        //  标签管理
+        // ============================================================
         function populateTagAdminList() {
             var container = document.getElementById('tagAdminList');
             if (!container) return;
@@ -620,6 +458,9 @@
             }
         }
 
+        // ============================================================
+        //  文章管理
+        // ============================================================
         function renderAdminList() {
             var container = document.getElementById('adminPostList');
             if (!container) return;
@@ -721,21 +562,45 @@
             showToast('表单已清空', 'info');
         }
 
-        function renderFontAdmin() {
+        // ============================================================
+        //  ★★★ 字体管理（核心）★★★
+        // ============================================================
+        function loadFontAdminList() {
             var container = document.getElementById('fontAdminList');
             if (!container) return;
+
+            // 填充默认字体下拉框
+            populateDefaultFontSelect();
+
             var html = '';
             fonts.forEach(function(f, idx) {
-                html += '<div class="item"><span>' + escapeHtml(f) + (f === defaultFont ? ' <span style="color:#c23531;">(默认)</span>' : '') + '</span><div class="actions"><button class="del" onclick="deleteFont(' + idx + ')">删除</button></div></div>';
+                var isDefault = (f.name === defaultFont);
+                var isSystem = (f.source === 'system');
+                var sourceLabel = isSystem ? '系统' : '自定义';
+                var sourceClass = isSystem ? 'system' : 'custom';
+                var pathDisplay = f.path ? ' <span class="font-path">' + escapeHtml(f.path) + '</span>' : '';
+
+                html += '<div class="font-item">';
+                html += '<div><span class="font-name">' + escapeHtml(f.name) + '</span>' + pathDisplay;
+                html += '<span class="font-source ' + sourceClass + '">' + sourceLabel + '</span>';
+                if (isDefault) {
+                    html += '<span class="font-default-badge">✅ 当前默认</span>';
+                }
+                html += '</div>';
+                html += '<div class="actions">';
+                if (isDefault) {
+                    html += '<button class="unset-default" onclick="unsetDefaultFont()">取消默认</button>';
+                } else {
+                    html += '<button class="set-default" onclick="setDefaultFont(\'' + escapeHtml(f.name) + '\')">设为默认</button>';
+                }
+                if (isSystem) {
+                    html += '<button class="del-system" onclick="deleteFont(' + idx + ', true)">删除</button>';
+                } else {
+                    html += '<button class="del-custom" onclick="deleteFont(' + idx + ', false)">删除</button>';
+                }
+                html += '</div></div>';
             });
             container.innerHTML = html || '<p style="color:#8a7a6a;">暂无字体</p>';
-        }
-
-        function loadFontSettingsForm() {
-            var switchCheck = document.getElementById('fontSwitchCheck');
-            if (switchCheck) switchCheck.checked = fontSwitchEnabled;
-            populateDefaultFontSelect();
-            renderFontAdmin();
         }
 
         function populateDefaultFontSelect() {
@@ -743,53 +608,104 @@
             if (!sel) return;
             var html = '';
             fonts.forEach(function(f) {
-                html += '<option value="' + escapeHtml(f) + '"' + (f === defaultFont ? ' selected' : '') + '>' + escapeHtml(f) + '</option>';
+                var selected = (f.name === defaultFont) ? ' selected' : '';
+                html += '<option value="' + escapeHtml(f.name) + '"' + selected + '>' + escapeHtml(f.name) + '</option>';
             });
             sel.innerHTML = html;
         }
 
-        function addFont() {
-            var name = document.getElementById('newFontName').value.trim();
-            if (!name) { showToast('请输入字体名称', 'error'); return; }
-            if (fonts.indexOf(name) !== -1) { showToast('字体已存在', 'error'); return; }
-            fonts.push(name);
-            saveConfigData().then(function() {
-                renderFontAdmin();
-                populateDefaultFontSelect();
-                showToast('字体已添加', 'success');
-                document.getElementById('newFontName').value = '';
-            });
-        }
-
-        function deleteFont(index) {
-            if (!confirm('确定删除字体？')) return;
-            var f = fonts[index];
-            fonts.splice(index, 1);
-            if (defaultFont === f) defaultFont = fonts.length ? fonts[0] : '';
-            saveConfigData().then(function() {
-                renderFontAdmin();
-                populateDefaultFontSelect();
-                showToast('字体已删除', 'success');
-            });
-        }
-
-        function setDefaultFont() {
+        function setDefaultFontFromSelect() {
             var sel = document.getElementById('defaultFontSelect');
-            if (sel) {
-                defaultFont = sel.value;
-                saveConfigData().then(function() { showToast('默认字体已设置', 'success'); });
+            if (!sel) return;
+            var name = sel.value;
+            if (name) {
+                setDefaultFont(name);
             }
         }
 
-        function resetFonts() {
-            if (!confirm('重置字体列表为默认？')) return;
-            fonts = ['楷体', '宋体', '黑体', '仿宋', '行楷', '隶书', '方正'];
+        function setDefaultFont(name) {
+            var exists = fonts.some(function(f) { return f.name === name; });
+            if (!exists) { showToast('字体不存在', 'error'); return; }
+            defaultFont = name;
+            saveConfigData().then(function() {
+                loadFontAdminList();
+                showToast('默认字体已设为: ' + name, 'success');
+            }).catch(function(err) { showToast('保存失败: ' + err.message, 'error'); });
+        }
+
+        function unsetDefaultFont() {
+            if (fonts.length === 0) { showToast('没有字体可设置', 'error'); return; }
+            defaultFont = fonts[0].name;
+            saveConfigData().then(function() {
+                loadFontAdminList();
+                showToast('已取消默认，回退到: ' + defaultFont, 'info');
+            }).catch(function(err) { showToast('保存失败: ' + err.message, 'error'); });
+        }
+
+        function resetDefaultFont() {
             defaultFont = '楷体';
             saveConfigData().then(function() {
-                renderFontAdmin();
-                populateDefaultFontSelect();
-                showToast('字体已重置', 'success');
-            });
+                loadFontAdminList();
+                showToast('默认字体已重置为: 楷体', 'success');
+            }).catch(function(err) { showToast('保存失败: ' + err.message, 'error'); });
+        }
+
+        function resetFontList() {
+            if (!confirm('确定恢复默认字体列表吗？将删除所有自定义字体，系统字体恢复为初始7个。')) return;
+            fonts = SYSTEM_FONTS.slice();
+            defaultFont = '楷体';
+            saveConfigData().then(function() {
+                loadFontAdminList();
+                showToast('字体列表已恢复默认', 'success');
+            }).catch(function(err) { showToast('保存失败: ' + err.message, 'error'); });
+        }
+
+        function addFont() {
+            var name = document.getElementById('newFontName').value.trim();
+            var path = document.getElementById('newFontPath').value.trim();
+            if (!name) { showToast('请输入字体名称', 'error'); return; }
+            // 检查是否已存在
+            var exists = fonts.some(function(f) { return f.name === name; });
+            if (exists) { showToast('字体 "' + name + '" 已存在', 'error'); return; }
+            // 判断是否为系统字体（与系统字体名称冲突）
+            var isSystem = SYSTEM_FONTS.some(function(sf) { return sf.name === name; });
+            if (isSystem) {
+                showToast('"' + name + '" 是系统字体，无需添加', 'error');
+                return;
+            }
+            fonts.push({ name: name, source: 'custom', path: path || '' });
+            // 如果没有默认字体，设为当前
+            if (!defaultFont) { defaultFont = name; }
+            saveConfigData().then(function() {
+                document.getElementById('newFontName').value = '';
+                document.getElementById('newFontPath').value = '';
+                loadFontAdminList();
+                showToast('字体已添加: ' + name, 'success');
+            }).catch(function(err) { showToast('保存失败: ' + err.message, 'error'); });
+        }
+
+        function deleteFont(index, isSystem) {
+            var font = fonts[index];
+            if (!font) return;
+            var msg = isSystem ?
+                '确定删除系统字体 "' + font.name + '" 吗？删除后可通过"恢复默认列表"还原。' :
+                '确定删除自定义字体 "' + font.name + '" 吗？';
+            if (!confirm(msg)) return;
+            fonts.splice(index, 1);
+            if (defaultFont === font.name) {
+                defaultFont = fonts.length > 0 ? fonts[0].name : '';
+            }
+            saveConfigData().then(function() {
+                loadFontAdminList();
+                showToast('已删除: ' + font.name, 'success');
+            }).catch(function(err) { showToast('删除失败: ' + err.message, 'error'); });
+        }
+
+        function loadFontSettingsForm() {
+            var switchCheck = document.getElementById('fontSwitchCheck');
+            if (switchCheck) switchCheck.checked = fontSwitchEnabled;
+            // 现在字体管理由新的 loadFontAdminList 负责
+            loadFontAdminList();
         }
 
         function saveFontSettings() {
@@ -798,6 +714,14 @@
             saveConfigData().then(function() { showToast('字体设置已保存', 'success'); });
         }
 
+        // 恢复默认字体设置（兼容旧版）
+        function resetFonts() {
+            resetFontList();
+        }
+
+        // ============================================================
+        //  音乐管理
+        // ============================================================
         function renderMusicAdmin() {
             var container = document.getElementById('musicAdminList');
             if (!container) return;
@@ -869,9 +793,7 @@
                     renderMusicAdmin();
                     populateMusicDefaultSelect();
                 });
-            }).catch(function(err) {
-                showToast('保存失败: ' + err.message, 'error');
-            });
+            }).catch(function(err) { showToast('保存失败: ' + err.message, 'error'); });
         }
 
         function saveAbout() {
@@ -882,6 +804,9 @@
             }
         }
 
+        // ============================================================
+        //  安全设置
+        // ============================================================
         function loadSecuritySettings() {
             var stored = localStorage.getItem('security_config');
             var sec = stored ? JSON.parse(stored) : null;
@@ -898,38 +823,28 @@
             var pub = document.getElementById('secPublicKey').value.trim();
             var cipher = document.getElementById('secChallengeCipher').value.trim();
             var plain = document.getElementById('secExpectedPlain').value.trim();
-            if (!pub || !cipher || !plain) {
-                showToast('所有字段都必须填写', 'error');
-                return;
-            }
+            if (!pub || !cipher || !plain) { showToast('所有字段都必须填写', 'error'); return; }
             var sec = { publicKey: pub, challengeCipher: cipher, expectedPlain: plain };
             localStorage.setItem('security_config', JSON.stringify(sec));
             DEFAULT_CONFIG.security = sec;
-            saveConfigData().then(function() {
-                showToast('安全设置已保存', 'success');
-            }).catch(function(err) {
-                showToast('保存到 config.json 失败: ' + err.message, 'error');
-            });
+            saveConfigData().then(function() { showToast('安全设置已保存', 'success'); });
         }
 
         function resetSecuritySettings() {
             if (!confirm('恢复默认安全设置？')) return;
-            var sec = {
-                publicKey: YOUR_PUBLIC_KEY,
-                challengeCipher: YOUR_CHALLENGE_CIPHER,
-                expectedPlain: YOUR_EXPECTED_PLAIN
-            };
-            localStorage.setItem('security_config', JSON.stringify(sec));
-            DEFAULT_CONFIG.security = sec;
+            localStorage.removeItem('security_config');
             var pubEl = document.getElementById('secPublicKey');
             var cipherEl = document.getElementById('secChallengeCipher');
             var plainEl = document.getElementById('secExpectedPlain');
-            if (pubEl) pubEl.value = sec.publicKey;
-            if (cipherEl) cipherEl.value = sec.challengeCipher;
-            if (plainEl) plainEl.value = sec.expectedPlain;
-            showToast('已恢复默认安全设置', 'info');
+            if (pubEl) pubEl.value = DEFAULT_CONFIG.security.publicKey;
+            if (cipherEl) cipherEl.value = DEFAULT_CONFIG.security.challengeCipher;
+            if (plainEl) plainEl.value = DEFAULT_CONFIG.security.expectedPlain;
+            showToast('已恢复默认', 'info');
         }
 
+        // ============================================================
+        //  GitHub 设置
+        // ============================================================
         function saveGitHubConfig() {
             var token = document.getElementById('githubTokenInput').value.trim();
             var user = document.getElementById('githubUserInput').value.trim();
@@ -974,6 +889,9 @@
             }, 600);
         }
 
+        // ============================================================
+        //  备份功能
+        // ============================================================
         function downloadSingleFile(type) {
             var ts = getTimestamp();
             var content, filename;
@@ -1087,6 +1005,9 @@
             event.target.value = '';
         }
 
+        // ============================================================
+        //  评论设置
+        // ============================================================
         function loadCommentSettings() {
             var autoLoadEl = document.getElementById('autoLoadComments');
             var repoEl = document.getElementById('giscusRepo');
@@ -1114,6 +1035,9 @@
             saveConfigData().then(function() { showToast('评论设置已保存', 'success'); });
         }
 
+        // ============================================================
+        //  ★★★ 留言管理功能（完整保留）★★★
+        // ============================================================
         function renderMessageAdminList() {
             var container = document.getElementById('messageAdminList');
             if (!container) return;
@@ -1185,6 +1109,9 @@
             });
         }
 
+        // ============================================================
+        //  Markdown 辅助
+        // ============================================================
         function insertMarkdown(type) {
             var textarea = document.getElementById('editContent');
             var start = textarea.selectionStart;
