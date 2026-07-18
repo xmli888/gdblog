@@ -6,6 +6,7 @@
     <title>墨韵轩 · 古宅红木博客</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
     <style>
+        /* ===== 全局重置与基础 ===== */
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             background-color: #f6efe8;
@@ -140,6 +141,7 @@
             border-bottom:2px solid #c23531;
         }
 
+        /* ===== 主体 ===== */
         .main {
             display: flex;
             flex-direction: column;
@@ -341,6 +343,7 @@
             color:#8a7a6a; font-family:'SimSun','宋体',serif;
         }
 
+        /* ===== 字体切换 ===== */
         .font-switcher {
             display:inline-block; margin-left:12px; position:relative;
         }
@@ -351,6 +354,7 @@
         }
         .font-switcher select:hover { border-color:#c23531; }
 
+        /* ===== 音乐播放器 - 左侧定位 ===== */
         .music-player {
             position:fixed;
             bottom: 30px;
@@ -395,6 +399,9 @@
             position:absolute;
             z-index:1;
             pointer-events:auto;
+            /* 默认向右展开，JS会动态调整方向 */
+            left: 70px;
+            top: -10px;
         }
         .music-panel.open { display:block; }
         .music-panel .song-name {
@@ -652,7 +659,7 @@
     <script src="common.js"></script>
     <script>
         // ============================================================
-        //  前台专用脚本（完整修复版）
+        //  前台专用脚本
         // ============================================================
 
         var currentPage = 'home';
@@ -677,59 +684,67 @@
             if (authorDescEl && siteSettings.authorDesc) authorDescEl.innerHTML = siteSettings.authorDesc.replace(/\n/g, '<br>');
         }
 
-        // ★★★ 字体应用（修复版）★★★
+        // ========== ★★★ 修复字体应用（三层逻辑 + 自定义字体加载）★★★ ==========
         function applyFontSettings() {
             var body = document.body;
+
+            // 1. 获取用户本地选择（如果有）
             var storedFont = localStorage.getItem('user_selected_font');
+
+            // 2. 确定最终使用的字体名称
             var selectedFontName = null;
 
             if (fontSwitchEnabled) {
+                // 开关开启：用户选择优先，未选则用默认
                 if (storedFont && fonts.some(function(f) { return f.name === storedFont; })) {
                     selectedFontName = storedFont;
                 } else if (defaultFont && fonts.some(function(f) { return f.name === defaultFont; })) {
                     selectedFontName = defaultFont;
                 }
             } else {
+                // 开关关闭：强制所有用户使用后台默认字体
                 if (defaultFont && fonts.some(function(f) { return f.name === defaultFont; })) {
                     selectedFontName = defaultFont;
                 }
+                // 如果用户之前有选择，但开关关闭了，清除本地存储
                 if (storedFont) {
                     localStorage.removeItem('user_selected_font');
                 }
             }
 
+            // 3. 查找字体条目
             var fontEntry = null;
             if (selectedFontName) {
                 fontEntry = fonts.find(function(f) { return f.name === selectedFontName; });
             }
 
+            // 4. 加载自定义字体（如果有路径）
             if (fontEntry && fontEntry.source === 'custom' && fontEntry.path) {
+                // 生成唯一的 @font-face 名称（避免冲突）
                 var safeFontName = fontEntry.name.replace(/\s/g, '_');
                 var fontFamilyName = 'CustomFont_' + safeFontName;
 
+                // 检查是否已存在该 @font-face 规则
                 var existingStyle = document.getElementById('custom-font-' + safeFontName);
                 if (!existingStyle) {
+                    // 创建 @font-face 规则
                     var style = document.createElement('style');
                     style.id = 'custom-font-' + safeFontName;
                     style.textContent = '@font-face { font-family: "' + fontFamilyName + '"; src: url("' + fontEntry.path + '") format("truetype"); font-weight: normal; font-style: normal; }';
                     document.head.appendChild(style);
                 }
 
+                // 应用字体
                 body.style.fontFamily = fontFamilyName + ', serif';
-                var select = document.getElementById('fontSwitcherSelect');
-                if (select) {
-                    select.value = fontEntry.name;
-                }
             } else if (fontEntry) {
+                // 系统字体：直接使用名称
                 body.style.fontFamily = fontEntry.name + ', serif';
-                var select = document.getElementById('fontSwitcherSelect');
-                if (select) {
-                    select.value = fontEntry.name;
-                }
             } else {
+                // 兜底
                 body.style.fontFamily = 'serif';
             }
 
+            // 渲染字体下拉菜单
             renderFontSwitcher();
         }
 
@@ -768,7 +783,7 @@
             container.appendChild(wrapper);
         }
 
-        // ★★★ 音乐播放器（智能磁吸面板）★★★
+        // ========== ★★★ 修复音乐播放器：左侧定位 + 完整拖拽 + 智能面板方向 ★★★ ==========
         function applyMusicSettings() {
             var player = document.getElementById('musicPlayer');
             if (!musicEnabled) {
@@ -777,6 +792,7 @@
             }
             if (player) player.style.display = 'flex';
 
+            // 恢复拖拽位置（如有）
             var pos = localStorage.getItem('music_player_position');
             if (pos && player) {
                 try {
@@ -786,6 +802,7 @@
                 } catch (e) {}
             }
 
+            // 如果歌曲列表不为空，初始化第一首或默认歌曲
             if (musicList.length > 0 && player) {
                 var defaultSong = musicDefault || musicList[0].name;
                 var idx = musicList.findIndex(function(s) { return s.name === defaultSong; });
@@ -806,43 +823,62 @@
                 if (songNameEl) songNameEl.textContent = '无歌曲';
             }
 
+            // ========== 事件绑定（只执行一次） ==========
             if (!window._musicBound) {
                 window._musicBound = true;
                 var toggleBtn = document.getElementById('musicToggle');
                 var panel = document.getElementById('musicPanel');
 
+                // ★★★ 智能面板方向函数 ★★★
                 function updatePanelDirection() {
                     var rect = player.getBoundingClientRect();
                     var winW = window.innerWidth;
                     var winH = window.innerHeight;
                     var btnW = 56;
                     var btnH = 56;
+                    var panelW = 280;
+                    var panelH = 180;
 
-                    var leftDir = (rect.left + btnW/2) > winW/2;
-                    var topDir = (rect.top + btnH/2) > winH/2;
+                    // 判断悬浮球中心位置
+                    var centerX = rect.left + btnW / 2;
+                    var centerY = rect.top + btnH / 2;
 
+                    // 水平方向：如果在右半屏，面板向左展开；否则向右
+                    var leftDir = centerX > winW / 2;
+                    // 垂直方向：如果在下半屏，面板向上展开；否则向下
+                    var topDir = centerY > winH / 2;
+
+                    // 重置样式
                     panel.style.left = '';
                     panel.style.right = '';
                     panel.style.top = '';
                     panel.style.bottom = '';
 
                     if (leftDir) {
+                        // 向左展开：面板右边缘对齐按钮左边缘
                         panel.style.right = (winW - rect.left + 10) + 'px';
                         panel.style.left = 'auto';
                     } else {
+                        // 向右展开：面板左边缘对齐按钮右边缘
                         panel.style.left = (rect.left + btnW + 10) + 'px';
                         panel.style.right = 'auto';
                     }
 
                     if (topDir) {
+                        // 向上展开：面板下边缘对齐按钮上边缘
                         panel.style.bottom = (winH - rect.top + 10) + 'px';
                         panel.style.top = 'auto';
                     } else {
+                        // 向下展开：面板上边缘对齐按钮下边缘
                         panel.style.top = (rect.top + btnH + 10) + 'px';
                         panel.style.bottom = 'auto';
                     }
+
+                    // 确保面板不超出屏幕边界（微调）
+                    // 由于无法精确获取面板实际尺寸，使用CSS左/右/上/下定位已经能自适应
                 }
 
+                // 点击切换面板
                 toggleBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     musicPanelOpen = !musicPanelOpen;
@@ -852,9 +888,10 @@
                     }
                 });
 
-                // 拖拽
+                // --- 拖拽功能（鼠标+触摸） ---
                 var isDragging = false;
-                var dragOffsetX = 0, dragOffsetY = 0;
+                var dragOffsetX = 0,
+                    dragOffsetY = 0;
                 var moved = false;
 
                 function startDrag(e) {
@@ -900,6 +937,7 @@
                                 left: rect.left,
                                 top: rect.top
                             }));
+                            // 如果面板已打开，重新调整方向
                             if (panel.classList.contains('open')) {
                                 updatePanelDirection();
                             }
@@ -914,6 +952,7 @@
                 document.addEventListener('touchmove', moveDrag, { passive: false });
                 document.addEventListener('touchend', endDrag);
 
+                // 面板外点击关闭
                 document.addEventListener('click', function(e) {
                     if (!panel || !panel.classList.contains('open')) return;
                     var isInside = panel.contains(e.target) || (toggleBtn && toggleBtn.contains(e.target));
@@ -923,13 +962,14 @@
                     }
                 });
 
+                // 窗口大小变化时重新调整面板方向
                 window.addEventListener('resize', function() {
                     if (panel.classList.contains('open')) {
                         updatePanelDirection();
                     }
                 });
 
-                // 播放控制
+                // --- 播放控制 ---
                 var playBtn = document.getElementById('musicPlayBtn');
                 if (playBtn) {
                     playBtn.addEventListener('click', function(e) {
@@ -946,6 +986,7 @@
                         }
                     });
                 }
+
                 var prevBtn = document.getElementById('musicPrev');
                 if (prevBtn) {
                     prevBtn.addEventListener('click', function(e) {
@@ -955,6 +996,7 @@
                         playSong(currentSongIndex);
                     });
                 }
+
                 var nextBtn = document.getElementById('musicNext');
                 if (nextBtn) {
                     nextBtn.addEventListener('click', function(e) {
@@ -964,11 +1006,13 @@
                         playSong(currentSongIndex);
                     });
                 }
+
                 audio.addEventListener('timeupdate', function() {
                     var percent = (audio.currentTime / audio.duration) * 100;
                     var progressBar = document.getElementById('progressBar');
                     if (progressBar) progressBar.style.width = percent + '%';
                 });
+
                 var progressWrap = document.getElementById('progressWrap');
                 if (progressWrap) {
                     progressWrap.addEventListener('click', function(e) {
@@ -977,6 +1021,7 @@
                         audio.currentTime = pos * audio.duration;
                     });
                 }
+
                 audio.addEventListener('ended', function() {
                     if (musicList.length > 1) {
                         currentSongIndex = (currentSongIndex + 1) % musicList.length;
@@ -1003,7 +1048,7 @@
             }).catch(function() {});
         }
 
-        // ========== 渲染引擎 ==========
+        // ========== 渲染引擎（与之前相同） ==========
         function renderPage(page, data) {
             var container = document.getElementById('mainContent');
             if (!container) return;
@@ -1023,7 +1068,8 @@
                 setTimeout(renderFontSwitcher, 50);
             } catch (err) {
                 console.error('渲染页面出错:', err);
-                container.innerHTML = '<div class="card"><div class="card-title">⚠️ 渲染错误</div><p>' + err.message + '</p></div>';
+                container.innerHTML = '<div class="card"><div class="card-title">⚠️ 渲染错误</div><p>' + err.message +
+                    '</p></div>';
             }
         }
 
@@ -1087,8 +1133,11 @@
                 html += '<p style="color:#8a7a6a;">暂无分类。</p>';
             } else {
                 for (var cat in map) {
-                    html += '<div style="padding:6px 0; border-bottom:1px dashed #e8d5c0; cursor:pointer;" onclick="filterByCategory(\'' + cat + '\')">';
-                    html += '<span>' + escapeHtml(cat) + '</span> <span style="color:#8a7a6a;float:right;">' + map[cat] + ' 篇</span>';
+                    html +=
+                        '<div style="padding:6px 0; border-bottom:1px dashed #e8d5c0; cursor:pointer;" onclick="filterByCategory(\'' +
+                        cat + '\')">';
+                    html += '<span>' + escapeHtml(cat) + '</span> <span style="color:#8a7a6a;float:right;">' + map[
+                        cat] + ' 篇</span>';
                     html += '</div>';
                 }
             }
@@ -1103,7 +1152,7 @@
             container.innerHTML = html;
         }
 
-        // ========== 互动 ==========
+        // ========== 互动页面 ==========
         function renderInteract(container) {
             var approved = messages.filter(function(m) { return m.status === 'approved'; });
             var featured = approved.filter(function(m) { return m.featured; });
@@ -1124,13 +1173,15 @@
                 sorted.forEach(function(m) {
                     html += '<div class="message-item">';
                     html += '<div class="msg-header">';
-                    html += '<span class="nickname">' + escapeHtml(m.nickname) + (m.featured ? ' ⭐ 精选' : '') + '</span>';
+                    html += '<span class="nickname">' + escapeHtml(m.nickname) + (m.featured ?
+                        ' ⭐ 精选' : '') + '</span>';
                     html += '<span class="time">' + escapeHtml(m.time) + '</span>';
                     html += '</div>';
                     html += '<div class="msg-content">' + escapeHtml(m.content) + '</div>';
                     html += '<div class="msg-actions">';
                     var liked = likedMessages[m.id] || false;
-                    html += '<button class="like-msg-btn' + (liked ? ' liked' : '') + '" onclick="toggleMessageLike(' + m.id + ')">❤️ ' + (m.likes || 0) + '</button>';
+                    html += '<button class="like-msg-btn' + (liked ? ' liked' : '') +
+                        '" onclick="toggleMessageLike(' + m.id + ')">❤️ ' + (m.likes || 0) + '</button>';
                     html += '</div>';
                     html += '</div>';
                 });
@@ -1138,8 +1189,10 @@
             html += '<div class="message-form">';
             html += '<h4 style="font-weight:normal;font-family:\'华文楷体\',\'KaiTi\',serif;letter-spacing:2px;margin-bottom:8px;">📝 发表留言</h4>';
             html += '<div class="form-row">';
-            html += '<div class="form-group"><label>昵称 *</label><input type="text" id="msgNickname" placeholder="您的昵称" /></div>';
-            html += '<div class="form-group"><label>邮箱</label><input type="email" id="msgEmail" placeholder="邮箱（可选）" /></div>';
+            html +=
+                '<div class="form-group"><label>昵称 *</label><input type="text" id="msgNickname" placeholder="您的昵称" /></div>';
+            html +=
+                '<div class="form-group"><label>邮箱</label><input type="email" id="msgEmail" placeholder="邮箱（可选）" /></div>';
             html += '</div>';
             html += '<div class="form-group"><textarea id="msgContent" rows="3" placeholder="写下您的留言..."></textarea></div>';
             html += '<button class="btn btn-primary" onclick="submitMessage()">发表留言</button>';
@@ -1289,7 +1342,7 @@
             }).catch(function() {});
         }
 
-        // ========== 点赞 ==========
+        // ========== 文章点赞 ==========
         function togglePostLike(postId) {
             var post = posts.find(function(p) { return p.id === postId; });
             if (!post) return;
@@ -1310,7 +1363,7 @@
             }
         }
 
-        // ========== 文章详情（阅读数保留原逻辑） ==========
+        // ========== 文章详情（含阅读数统计） ==========
         function renderPostDetail(container, postId) {
             var post = posts.find(function(p) { return p.id === postId; });
             if (!post) {
@@ -1319,6 +1372,7 @@
             }
             currentPostId = postId;
 
+            // 阅读数统计
             if (!sessionStorage.getItem('viewed_' + post.id)) {
                 post.views = (post.views || 0) + 1;
                 sessionStorage.setItem('viewed_' + post.id, '1');
@@ -1340,14 +1394,16 @@
             html += '<span>✍️ ' + escapeHtml(post.author || siteSettings.authorName || '墨轩主') + '</span>';
             html += '<span>👁️ ' + (post.views || 0) + '</span>';
             html += '<span>❤️ ' + (post.likes || 0) + '</span>';
-            if (post.tags && post.tags.length) html += '<span>🏷️ ' + post.tags.map(function(t) { return '#' + escapeHtml(t); }).join(' ') + '</span>';
+            if (post.tags && post.tags.length) html += '<span>🏷️ ' + post.tags.map(function(t) { return '#' + escapeHtml(
+                t); }).join(' ') + '</span>';
             html += '</div>';
             var rendered = marked.parse(post.content);
             html += '<div class="body">' + rendered + '</div>';
 
             var liked = likedPosts[post.id] || false;
             html += '<div class="like-area">';
-            html += '<button class="like-btn' + (liked ? ' liked' : '') + '" onclick="togglePostLike(' + post.id + ')">❤️ ' + (liked ? '已赞' : '点赞') + '</button>';
+            html += '<button class="like-btn' + (liked ? ' liked' : '') + '" onclick="togglePostLike(' + post.id + ')">❤️ ' +
+                (liked ? '已赞' : '点赞') + '</button>';
             html += '<span class="like-count">' + (post.likes || 0) + ' 人喜欢</span>';
             html += '</div>';
 
@@ -1356,9 +1412,12 @@
             html += '<div class="share-title">📤 分享这篇文章</div>';
             html += '<div class="share-buttons">';
             html += '<button onclick="shareCopyLink(\'' + url + '\')">📋 复制链接</button>';
-            html += '<button class="btn-wechat" onclick="shareWechat(\'' + url + '\', \'' + escapeHtml(post.title) + '\')">💬 微信</button>';
-            html += '<button class="btn-weibo" onclick="shareWeibo(\'' + url + '\', \'' + escapeHtml(post.title) + '\')">🐦 微博</button>';
-            html += '<button class="btn-qq" onclick="shareQQ(\'' + url + '\', \'' + escapeHtml(post.title) + '\')">💬 QQ</button>';
+            html += '<button class="btn-wechat" onclick="shareWechat(\'' + url + '\', \'' + escapeHtml(post.title) +
+                '\')">💬 微信</button>';
+            html += '<button class="btn-weibo" onclick="shareWeibo(\'' + url + '\', \'' + escapeHtml(post.title) +
+                '\')">🐦 微博</button>';
+            html += '<button class="btn-qq" onclick="shareQQ(\'' + url + '\', \'' + escapeHtml(post.title) +
+                '\')">💬 QQ</button>';
             html += '</div></div>';
 
             html += '<div class="nav-links">';
@@ -1372,7 +1431,8 @@
             if (recommend.length > 0) {
                 html += '<div class="recommend"><h4>📌 推荐阅读</h4>';
                 recommend.slice(0, 5).forEach(function(p) {
-                    html += '<div class="rec-item" onclick="navigateToPost(' + p.id + ')">' + escapeHtml(p.title) + ' <span style="color:#8a7a6a;font-size:12px;">(' + p.date + ')</span></div>';
+                    html += '<div class="rec-item" onclick="navigateToPost(' + p.id + ')">' + escapeHtml(p
+                        .title) + ' <span style="color:#8a7a6a;font-size:12px;">(' + p.date + ')</span></div>';
                 });
                 html += '</div>';
             }
@@ -1382,7 +1442,8 @@
                 html += '<div id="giscusContainer" style="min-height:100px;"></div>';
                 html += '<div id="giscusScript"></div>';
             } else if (!autoLoadComments) {
-                html += '<button class="comment-toggle" onclick="loadGiscusComments()">💬 查看评论</button>';
+                html +=
+                    '<button class="comment-toggle" onclick="loadGiscusComments()">💬 查看评论</button>';
                 html += '<div id="giscusContainer" style="display:none;min-height:100px;margin-top:12px;"></div>';
             } else {
                 html += '<div class="giscus-placeholder">💬 请先在后台配置 Giscus 评论系统</div>';
@@ -1392,6 +1453,7 @@
             html += '</div>';
             container.innerHTML = html;
 
+            // 返回键处理：pushState 添加历史记录
             if (window.history && window.history.pushState) {
                 window.history.pushState({}, '', '#post-' + post.id);
             }
@@ -1408,7 +1470,8 @@
             var container = document.getElementById('giscusContainer');
             if (!container) return;
             if (!giscusConfig.repo || !giscusConfig.repoId) {
-                container.innerHTML = '<p style="color:#8a7a6a;">💬 请先配置 Giscus（仓库名和Repo ID）</p>';
+                container.innerHTML =
+                '<p style="color:#8a7a6a;">💬 请先配置 Giscus（仓库名和Repo ID）</p>';
                 return;
             }
             var script = document.createElement('script');
@@ -1447,7 +1510,7 @@
             }
         }
 
-        // ========== 分享 ==========
+        // ========== 分享功能 ==========
         function shareCopyLink(url) {
             navigator.clipboard.writeText(url).then(function() {
                 showToast('链接已复制', 'success');
@@ -1489,7 +1552,8 @@
                 sorted.forEach(function(p) {
                     html += '<div class="post-item" onclick="navigateToPost(' + p.id + ')">';
                     html += '<div class="title">' + escapeHtml(p.title) + '</div>';
-                    html += '<div class="meta"><span>📅 ' + p.date + '</span><span>👁️ ' + (p.views || 0) + '</span><span>❤️ ' + (p.likes || 0) + '</span></div>';
+                    html += '<div class="meta"><span>📅 ' + p.date + '</span><span>👁️ ' + (p.views || 0) +
+                        '</span><span>❤️ ' + (p.likes || 0) + '</span></div>';
                     html += '</div>';
                 });
             }
@@ -1516,7 +1580,8 @@
             posts.forEach(function(p) { if (map[p.category]) map[p.category]++; else map[p.category] = 1; });
             var html = '';
             for (var cat in map) {
-                html += '<li onclick="filterByCategory(\'' + cat + '\')"><span>' + escapeHtml(cat) + '</span><span class="count">' + map[cat] + ' 篇</span></li>';
+                html += '<li onclick="filterByCategory(\'' + cat +
+                    '\')"><span>' + escapeHtml(cat) + '</span><span class="count">' + map[cat] + ' 篇</span></li>';
             }
             container.innerHTML = html || '<li style="color:#8a7a6a;cursor:default;">暂无分类</li>';
         }
@@ -1560,7 +1625,7 @@
             });
         });
 
-        // ========== 修复返回键导航 ==========
+        // ========== ★★★ 修复返回键导航（popstate 事件）★★★ ==========
         window.addEventListener('popstate', function() {
             var hash = window.location.hash;
             if (hash.startsWith('#post-')) {
@@ -1604,7 +1669,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // ========== 初始化 ==========
+        // ========== ★★★ 修复初始化路由 ★★★ ==========
         function initFrontend() {
             applySiteSettings();
             applyFontSettings();
@@ -1637,6 +1702,7 @@
                 renderPage('home');
             }
 
+            // 页面可见时刷新数据
             document.addEventListener('visibilitychange', function() {
                 if (!document.hidden) {
                     loadAllData().then(function() {
@@ -1654,6 +1720,7 @@
             });
         }
 
+        // 先加载数据再初始化
         loadAllData().then(function() {
             initFrontend();
         }).catch(function(err) {
