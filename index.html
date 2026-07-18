@@ -351,7 +351,6 @@
         }
         .font-switcher select:hover { border-color:#c23531; }
 
-        /* ===== 音乐播放器 - 智能磁吸效果 ===== */
         .music-player {
             position:fixed;
             bottom: 30px;
@@ -664,6 +663,7 @@
         var isPlaying = false;
         var musicPanelOpen = false;
 
+        // ========== 应用设置 ==========
         function applySiteSettings() {
             var logoEl = document.getElementById('heroLogo');
             var titleEl = document.getElementById('heroTitle');
@@ -677,7 +677,7 @@
             if (authorDescEl && siteSettings.authorDesc) authorDescEl.innerHTML = siteSettings.authorDesc.replace(/\n/g, '<br>');
         }
 
-        // ★★★ 修复字体应用（三层逻辑 + 自定义字体加载 + 下拉菜单同步）★★★
+        // ★★★ 字体应用（修复版）★★★
         function applyFontSettings() {
             var body = document.body;
             var storedFont = localStorage.getItem('user_selected_font');
@@ -716,7 +716,6 @@
                 }
 
                 body.style.fontFamily = fontFamilyName + ', serif';
-                // 同步下拉菜单
                 var select = document.getElementById('fontSwitcherSelect');
                 if (select) {
                     select.value = fontEntry.name;
@@ -769,7 +768,7 @@
             container.appendChild(wrapper);
         }
 
-        // ★★★ 音乐播放器：智能磁吸面板 ★★★
+        // ★★★ 音乐播放器（智能磁吸面板）★★★
         function applyMusicSettings() {
             var player = document.getElementById('musicPlayer');
             if (!musicEnabled) {
@@ -1004,7 +1003,7 @@
             }).catch(function() {});
         }
 
-        // ========== 渲染引擎（完整保留，未改动） ==========
+        // ========== 渲染引擎 ==========
         function renderPage(page, data) {
             var container = document.getElementById('mainContent');
             if (!container) return;
@@ -1104,10 +1103,506 @@
             container.innerHTML = html;
         }
 
-        // 互动、点赞、文章详情等函数与原版完全相同，此处省略（实际代码中包含）
-        // 由于篇幅限制，以下为占位示意，实际部署时需完整包含所有功能
+        // ========== 互动 ==========
+        function renderInteract(container) {
+            var approved = messages.filter(function(m) { return m.status === 'approved'; });
+            var featured = approved.filter(function(m) { return m.featured; });
+            var normal = approved.filter(function(m) { return !m.featured; });
+            var sorted = featured.concat(normal).reverse();
 
-        // ...（其他所有函数保持原样，未做任何改动）
+            var html = '<div class="card">';
+            html += '<div class="card-title">💬 互动中心</div>';
+            html += '<div class="interact-tabs">';
+            html += '<button class="tab-btn active" onclick="switchInteractTab(this, \'board\')">📝 留言板</button>';
+            html += '<button class="tab-btn" onclick="switchInteractTab(this, \'chat\')">💬 实时聊天</button>';
+            html += '</div>';
+
+            html += '<div class="interact-tab-content active" id="tabBoard">';
+            if (sorted.length === 0) {
+                html += '<p style="color:#8a7a6a;">暂无留言，快来发表第一条留言吧！</p>';
+            } else {
+                sorted.forEach(function(m) {
+                    html += '<div class="message-item">';
+                    html += '<div class="msg-header">';
+                    html += '<span class="nickname">' + escapeHtml(m.nickname) + (m.featured ? ' ⭐ 精选' : '') + '</span>';
+                    html += '<span class="time">' + escapeHtml(m.time) + '</span>';
+                    html += '</div>';
+                    html += '<div class="msg-content">' + escapeHtml(m.content) + '</div>';
+                    html += '<div class="msg-actions">';
+                    var liked = likedMessages[m.id] || false;
+                    html += '<button class="like-msg-btn' + (liked ? ' liked' : '') + '" onclick="toggleMessageLike(' + m.id + ')">❤️ ' + (m.likes || 0) + '</button>';
+                    html += '</div>';
+                    html += '</div>';
+                });
+            }
+            html += '<div class="message-form">';
+            html += '<h4 style="font-weight:normal;font-family:\'华文楷体\',\'KaiTi\',serif;letter-spacing:2px;margin-bottom:8px;">📝 发表留言</h4>';
+            html += '<div class="form-row">';
+            html += '<div class="form-group"><label>昵称 *</label><input type="text" id="msgNickname" placeholder="您的昵称" /></div>';
+            html += '<div class="form-group"><label>邮箱</label><input type="email" id="msgEmail" placeholder="邮箱（可选）" /></div>';
+            html += '</div>';
+            html += '<div class="form-group"><textarea id="msgContent" rows="3" placeholder="写下您的留言..."></textarea></div>';
+            html += '<button class="btn btn-primary" onclick="submitMessage()">发表留言</button>';
+            html += '<span style="font-size:12px;color:#8a7a6a;margin-left:12px;">💡 留言需后台审核通过后显示</span>';
+            html += '</div></div>';
+
+            html += '<div class="interact-tab-content" id="tabChat">';
+            html += '<p style="color:#8a7a6a;margin-bottom:12px;">💬 消息每5秒自动刷新，与留言板共享数据。</p>';
+            html += '<div class="chat-area" id="chatMessages">';
+            if (sorted.length === 0) {
+                html += '<p style="color:#8a7a6a;">暂无消息</p>';
+            } else {
+                var chatList = sorted.slice().reverse();
+                chatList.forEach(function(m) {
+                    html += '<div class="chat-msg">';
+                    html += '<span class="chat-name">' + escapeHtml(m.nickname) + '</span>';
+                    html += '<span class="chat-time">' + escapeHtml(m.time) + '</span>';
+                    html += '<div class="chat-text">' + escapeHtml(m.content) + '</div>';
+                    html += '</div>';
+                });
+            }
+            html += '</div>';
+            html += '<div class="chat-input-row">';
+            html += '<input type="text" id="chatInput" placeholder="输入消息..." onkeydown="if(event.key===\'Enter\')sendChatMessage()" />';
+            html += '<button onclick="sendChatMessage()">发送</button>';
+            html += '</div>';
+            html += '<div style="font-size:12px;color:#8a7a6a;margin-top:4px;">💡 消息将作为留言提交，审核后显示。</div>';
+            html += '</div>';
+
+            html += '</div>';
+            container.innerHTML = html;
+
+            if (chatInterval) clearInterval(chatInterval);
+            chatInterval = setInterval(function() {
+                if (currentPage === 'interact') {
+                    refreshChat();
+                }
+            }, 5000);
+        }
+
+        function switchInteractTab(btn, tab) {
+            document.querySelectorAll('.interact-tabs .tab-btn').forEach(function(b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            document.querySelectorAll('.interact-tab-content').forEach(function(c) { c.classList.remove('active'); });
+            if (tab === 'board') {
+                document.getElementById('tabBoard').classList.add('active');
+            } else if (tab === 'chat') {
+                document.getElementById('tabChat').classList.add('active');
+                refreshChat();
+            }
+        }
+
+        function refreshChat() {
+            var container = document.getElementById('chatMessages');
+            if (!container) return;
+            var approved = messages.filter(function(m) { return m.status === 'approved'; });
+            var featured = approved.filter(function(m) { return m.featured; });
+            var normal = approved.filter(function(m) { return !m.featured; });
+            var sorted = featured.concat(normal).reverse();
+            if (sorted.length === 0) {
+                container.innerHTML = '<p style="color:#8a7a6a;">暂无消息</p>';
+                return;
+            }
+            var html = '';
+            var chatList = sorted.slice().reverse();
+            chatList.forEach(function(m) {
+                html += '<div class="chat-msg">';
+                html += '<span class="chat-name">' + escapeHtml(m.nickname) + '</span>';
+                html += '<span class="chat-time">' + escapeHtml(m.time) + '</span>';
+                html += '<div class="chat-text">' + escapeHtml(m.content) + '</div>';
+                html += '</div>';
+            });
+            container.innerHTML = html;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendChatMessage() {
+            var input = document.getElementById('chatInput');
+            if (!input) return;
+            var content = input.value.trim();
+            if (!content) { showToast('请输入消息', 'error'); return; }
+            var msg = {
+                id: Date.now(),
+                nickname: '访客',
+                email: '',
+                content: content,
+                time: getNowString(),
+                status: 'pending',
+                featured: false,
+                likes: 0
+            };
+            messages.push(msg);
+            saveMessagesData().then(function() {
+                input.value = '';
+                showToast('消息已发送，等待审核', 'success');
+                refreshChat();
+            }).catch(function(err) {
+                showToast('发送失败: ' + err.message, 'error');
+            });
+        }
+
+        function submitMessage() {
+            var nickname = document.getElementById('msgNickname').value.trim();
+            var email = document.getElementById('msgEmail').value.trim();
+            var content = document.getElementById('msgContent').value.trim();
+            if (!nickname) { showToast('请输入昵称', 'error'); return; }
+            if (!content) { showToast('请输入留言内容', 'error'); return; }
+            var msg = {
+                id: Date.now(),
+                nickname: nickname,
+                email: email,
+                content: content,
+                time: getNowString(),
+                status: 'pending',
+                featured: false,
+                likes: 0
+            };
+            messages.push(msg);
+            saveMessagesData().then(function() {
+                showToast('留言已提交，等待审核', 'success');
+                document.getElementById('msgNickname').value = '';
+                document.getElementById('msgEmail').value = '';
+                document.getElementById('msgContent').value = '';
+                if (currentPage === 'interact') {
+                    renderInteract(document.getElementById('mainContent'));
+                }
+            }).catch(function(err) {
+                showToast('提交失败: ' + err.message, 'error');
+            });
+        }
+
+        function toggleMessageLike(id) {
+            var msg = messages.find(function(m) { return m.id === id; });
+            if (!msg) return;
+            if (likedMessages[id]) {
+                msg.likes = (msg.likes || 0) - 1;
+                likedMessages[id] = false;
+            } else {
+                msg.likes = (msg.likes || 0) + 1;
+                likedMessages[id] = true;
+            }
+            localStorage.setItem('liked_messages', JSON.stringify(likedMessages));
+            saveMessagesData().then(function() {
+                if (currentPage === 'interact') {
+                    renderInteract(document.getElementById('mainContent'));
+                }
+            }).catch(function() {});
+        }
+
+        // ========== 点赞 ==========
+        function togglePostLike(postId) {
+            var post = posts.find(function(p) { return p.id === postId; });
+            if (!post) return;
+            if (likedPosts[postId]) {
+                post.likes = (post.likes || 0) - 1;
+                likedPosts[postId] = false;
+            } else {
+                post.likes = (post.likes || 0) + 1;
+                likedPosts[postId] = true;
+            }
+            localStorage.setItem('liked_posts', JSON.stringify(likedPosts));
+            var jsonData = JSON.stringify(posts, null, 2);
+            if (isConfigured()) {
+                saveFile('posts.json', jsonData, '更新点赞').catch(function() {});
+            }
+            if (currentPage === 'post' && currentPostId === postId) {
+                renderPostDetail(document.getElementById('mainContent'), postId);
+            }
+        }
+
+        // ========== 文章详情（阅读数保留原逻辑） ==========
+        function renderPostDetail(container, postId) {
+            var post = posts.find(function(p) { return p.id === postId; });
+            if (!post) {
+                container.innerHTML = '<div class="card"><div class="card-title">文章未找到</div><p>请返回首页。</p></div>';
+                return;
+            }
+            currentPostId = postId;
+
+            if (!sessionStorage.getItem('viewed_' + post.id)) {
+                post.views = (post.views || 0) + 1;
+                sessionStorage.setItem('viewed_' + post.id, '1');
+                var txt = JSON.stringify(posts, null, 2);
+                if (isConfigured()) {
+                    saveFile('posts.json', txt, '更新阅读数').catch(function() {});
+                }
+            }
+
+            var idx = posts.indexOf(post);
+            var prev = idx > 0 ? posts[idx - 1] : null;
+            var next = idx < posts.length - 1 ? posts[idx + 1] : null;
+
+            var html = '<div class="card post-detail">';
+            html += '<div class="title">' + escapeHtml(post.title) + '</div>';
+            html += '<div class="meta">';
+            html += '<span>📅 ' + post.date + '</span>';
+            html += '<span>📂 ' + escapeHtml(post.category) + '</span>';
+            html += '<span>✍️ ' + escapeHtml(post.author || siteSettings.authorName || '墨轩主') + '</span>';
+            html += '<span>👁️ ' + (post.views || 0) + '</span>';
+            html += '<span>❤️ ' + (post.likes || 0) + '</span>';
+            if (post.tags && post.tags.length) html += '<span>🏷️ ' + post.tags.map(function(t) { return '#' + escapeHtml(t); }).join(' ') + '</span>';
+            html += '</div>';
+            var rendered = marked.parse(post.content);
+            html += '<div class="body">' + rendered + '</div>';
+
+            var liked = likedPosts[post.id] || false;
+            html += '<div class="like-area">';
+            html += '<button class="like-btn' + (liked ? ' liked' : '') + '" onclick="togglePostLike(' + post.id + ')">❤️ ' + (liked ? '已赞' : '点赞') + '</button>';
+            html += '<span class="like-count">' + (post.likes || 0) + ' 人喜欢</span>';
+            html += '</div>';
+
+            var url = window.location.origin + window.location.pathname + '#post-' + post.id;
+            html += '<div class="share-area">';
+            html += '<div class="share-title">📤 分享这篇文章</div>';
+            html += '<div class="share-buttons">';
+            html += '<button onclick="shareCopyLink(\'' + url + '\')">📋 复制链接</button>';
+            html += '<button class="btn-wechat" onclick="shareWechat(\'' + url + '\', \'' + escapeHtml(post.title) + '\')">💬 微信</button>';
+            html += '<button class="btn-weibo" onclick="shareWeibo(\'' + url + '\', \'' + escapeHtml(post.title) + '\')">🐦 微博</button>';
+            html += '<button class="btn-qq" onclick="shareQQ(\'' + url + '\', \'' + escapeHtml(post.title) + '\')">💬 QQ</button>';
+            html += '</div></div>';
+
+            html += '<div class="nav-links">';
+            if (prev) html += '<a onclick="navigateToPost(' + prev.id + ')">← ' + escapeHtml(prev.title) + '</a>';
+            else html += '<span></span>';
+            if (next) html += '<a onclick="navigateToPost(' + next.id + ')">' + escapeHtml(next.title) + ' →</a>';
+            else html += '<span></span>';
+            html += '</div>';
+
+            var recommend = posts.filter(function(p) { return p.id !== post.id && p.category === post.category; });
+            if (recommend.length > 0) {
+                html += '<div class="recommend"><h4>📌 推荐阅读</h4>';
+                recommend.slice(0, 5).forEach(function(p) {
+                    html += '<div class="rec-item" onclick="navigateToPost(' + p.id + ')">' + escapeHtml(p.title) + ' <span style="color:#8a7a6a;font-size:12px;">(' + p.date + ')</span></div>';
+                });
+                html += '</div>';
+            }
+
+            html += '<div class="comment-section" id="commentSection">';
+            if (autoLoadComments && giscusConfig.repo) {
+                html += '<div id="giscusContainer" style="min-height:100px;"></div>';
+                html += '<div id="giscusScript"></div>';
+            } else if (!autoLoadComments) {
+                html += '<button class="comment-toggle" onclick="loadGiscusComments()">💬 查看评论</button>';
+                html += '<div id="giscusContainer" style="display:none;min-height:100px;margin-top:12px;"></div>';
+            } else {
+                html += '<div class="giscus-placeholder">💬 请先在后台配置 Giscus 评论系统</div>';
+            }
+            html += '</div>';
+
+            html += '</div>';
+            container.innerHTML = html;
+
+            if (window.history && window.history.pushState) {
+                window.history.pushState({}, '', '#post-' + post.id);
+            }
+
+            if (autoLoadComments && giscusConfig.repo) {
+                setTimeout(function() {
+                    renderGiscus();
+                }, 300);
+            }
+        }
+
+        // ========== Giscus ==========
+        function renderGiscus() {
+            var container = document.getElementById('giscusContainer');
+            if (!container) return;
+            if (!giscusConfig.repo || !giscusConfig.repoId) {
+                container.innerHTML = '<p style="color:#8a7a6a;">💬 请先配置 Giscus（仓库名和Repo ID）</p>';
+                return;
+            }
+            var script = document.createElement('script');
+            script.src = 'https://giscus.app/client.js';
+            script.setAttribute('data-repo', giscusConfig.repo);
+            script.setAttribute('data-repo-id', giscusConfig.repoId);
+            script.setAttribute('data-category', giscusConfig.category || 'General');
+            script.setAttribute('data-category-id', giscusConfig.categoryId || '');
+            script.setAttribute('data-mapping', 'title');
+            script.setAttribute('data-strict', '0');
+            script.setAttribute('data-reactions-enabled', '1');
+            script.setAttribute('data-emit-metadata', '0');
+            script.setAttribute('data-input-position', 'bottom');
+            script.setAttribute('data-theme', 'light');
+            script.setAttribute('data-lang', 'zh-CN');
+            script.setAttribute('crossorigin', 'anonymous');
+            script.async = true;
+            var oldScript = document.getElementById('giscusScript');
+            if (oldScript) oldScript.remove();
+            var newScript = document.createElement('div');
+            newScript.id = 'giscusScript';
+            newScript.appendChild(script);
+            container.appendChild(newScript);
+        }
+
+        function loadGiscusComments() {
+            var container = document.getElementById('giscusContainer');
+            var btn = document.querySelector('.comment-toggle');
+            if (!container) return;
+            if (btn) btn.style.display = 'none';
+            container.style.display = 'block';
+            if (giscusConfig.repo) {
+                renderGiscus();
+            } else {
+                container.innerHTML = '<p style="color:#8a7a6a;">💬 请先在后台配置 Giscus 评论系统</p>';
+            }
+        }
+
+        // ========== 分享 ==========
+        function shareCopyLink(url) {
+            navigator.clipboard.writeText(url).then(function() {
+                showToast('链接已复制', 'success');
+            }).catch(function() {
+                var textarea = document.createElement('textarea');
+                textarea.value = url;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('链接已复制', 'success');
+            });
+        }
+
+        function shareWechat(url, title) {
+            showToast('请使用微信扫一扫或分享链接', 'info');
+            shareCopyLink(url);
+        }
+
+        function shareWeibo(url, title) {
+            var text = encodeURIComponent(title + ' ' + url);
+            window.open('https://service.weibo.com/share/share.php?title=' + text, '_blank');
+        }
+
+        function shareQQ(url, title) {
+            var text = encodeURIComponent(title + ' ' + url);
+            window.open('https://connect.qq.com/widget/shareqq/index.html?title=' + text, '_blank');
+        }
+
+        // ========== 分类筛选 / 导航 ==========
+        function filterByCategory(cat) {
+            var filtered = posts.filter(function(p) { return p.category === cat; });
+            var container = document.getElementById('mainContent');
+            var html = '<div class="card"><div class="card-title">📂 分类：' + escapeHtml(cat) + '</div>';
+            if (filtered.length === 0) {
+                html += '<p style="color:#8a7a6a;">该分类暂无文章。</p>';
+            } else {
+                var sorted = sortPosts(filtered);
+                sorted.forEach(function(p) {
+                    html += '<div class="post-item" onclick="navigateToPost(' + p.id + ')">';
+                    html += '<div class="title">' + escapeHtml(p.title) + '</div>';
+                    html += '<div class="meta"><span>📅 ' + p.date + '</span><span>👁️ ' + (p.views || 0) + '</span><span>❤️ ' + (p.likes || 0) + '</span></div>';
+                    html += '</div>';
+                });
+            }
+            html += '</div>';
+            container.innerHTML = html;
+            document.querySelectorAll('#mainNav a').forEach(function(a) { a.classList.remove('active'); });
+            var navHome = document.querySelector('#mainNav a[data-page="home"]');
+            if (navHome) navHome.classList.add('active');
+            setTimeout(renderFontSwitcher, 50);
+        }
+
+        function navigateToPost(id) {
+            currentPage = 'post';
+            currentPostId = id;
+            renderPage('post', id);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ========== 侧边栏分类 ==========
+        function renderSidebarCategories() {
+            var container = document.getElementById('categoryList');
+            if (!container) return;
+            var map = {};
+            posts.forEach(function(p) { if (map[p.category]) map[p.category]++; else map[p.category] = 1; });
+            var html = '';
+            for (var cat in map) {
+                html += '<li onclick="filterByCategory(\'' + cat + '\')"><span>' + escapeHtml(cat) + '</span><span class="count">' + map[cat] + ' 篇</span></li>';
+            }
+            container.innerHTML = html || '<li style="color:#8a7a6a;cursor:default;">暂无分类</li>';
+        }
+
+        // ========== 导航事件 ==========
+        document.querySelectorAll('#mainNav a').forEach(function(a) {
+            a.addEventListener('click', function(e) {
+                e.preventDefault();
+                var page = this.dataset.page;
+                if (page === 'home') {
+                    currentPage = 'home';
+                    renderPage('home');
+                    if (window.history && window.history.pushState) {
+                        window.history.pushState(null, '', window.location.pathname);
+                    }
+                } else if (page === 'archive') {
+                    currentPage = 'archive';
+                    renderPage('archive');
+                    if (window.history && window.history.pushState) {
+                        window.history.pushState(null, '', window.location.pathname + '#archive');
+                    }
+                } else if (page === 'categories') {
+                    currentPage = 'categories';
+                    renderPage('categories');
+                    if (window.history && window.history.pushState) {
+                        window.history.pushState(null, '', window.location.pathname + '#categories');
+                    }
+                } else if (page === 'about') {
+                    currentPage = 'about';
+                    renderPage('about');
+                    if (window.history && window.history.pushState) {
+                        window.history.pushState(null, '', window.location.pathname + '#about');
+                    }
+                } else if (page === 'interact') {
+                    currentPage = 'interact';
+                    renderPage('interact');
+                    if (window.history && window.history.pushState) {
+                        window.history.pushState(null, '', window.location.pathname + '#interact');
+                    }
+                }
+            });
+        });
+
+        // ========== 修复返回键导航 ==========
+        window.addEventListener('popstate', function() {
+            var hash = window.location.hash;
+            if (hash.startsWith('#post-')) {
+                var id = parseInt(hash.replace('#post-', ''));
+                if (!isNaN(id)) {
+                    currentPage = 'post';
+                    currentPostId = id;
+                    renderPage('post', id);
+                } else {
+                    currentPage = 'home';
+                    renderPage('home');
+                }
+            } else if (hash === '#about') {
+                currentPage = 'about';
+                renderPage('about');
+            } else if (hash === '#archive') {
+                currentPage = 'archive';
+                renderPage('archive');
+            } else if (hash === '#categories') {
+                currentPage = 'categories';
+                renderPage('categories');
+            } else if (hash === '#interact') {
+                currentPage = 'interact';
+                renderPage('interact');
+            } else {
+                currentPage = 'home';
+                renderPage('home');
+            }
+        });
+
+        // ========== 回到顶部 ==========
+        var backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
 
         // ========== 初始化 ==========
         function initFrontend() {
