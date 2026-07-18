@@ -1,8 +1,23 @@
 // ============================================================
-//  公共模块：GitHub 操作、文章管理、全局状态、加密解密
+//  ★★★ 登录三件套（硬编码默认值）★★★
 // ============================================================
+var YOUR_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3GujvExMjKhKErfk8yI
+fQIdZ5WTZ8krD4Q0m/b7cbOSaqwnwMMepsSDw2SonkAEEyOCVnKhX1NXoeX56yRJ
+7hdoe82RGDLZ3UDUGpdknUSCDeAjblsfzawbEMpNObo/e4TcSh8UKKBtKOdVXGHw
+Hzfh6l8PByjsgvd7oi/jXPJ5iKC6PMeiiGKhK6VqAs7AexMviKtICi8ZOZseepSR
+olZEVm7zMathz/Mu0XOtSGztEopDeQjsFjIW3nhJnPYiJV+/BCmvn4WuJ9PQM1nW
+sjsd/6WGFE/kMuP1wZytb3m7vJLYuxhmOP5uKuwEFm4pa84FwosBInd5nOAtfweL
+HQIDAQAB
+-----END PUBLIC KEY-----`;
 
-// ========== 全局配置 ==========
+var YOUR_CHALLENGE_CIPHER = `zpXm+kPYtfPIDaaRCufSMrIuJ8//3LlbJEjmOyZA86W9HDJTNlU8lCO/GbOPv/+yQS4S7jlFOLbl3w+1G5EzCuvVKUl1KUzpzXRqUDSpVIZixwxqPY4C90tjlXI5XnzkrdZdpz3FR6ufZdZV9kSp9Av1K+hwOib0qdcDJkS6ETLMwG7fia6V3Enhed6Xwb7jiaR9uLGijvEQlTaUw8V3V1t2A2x7NMczCWxDLT2efgL26IDIBipP51TtqO1cQwE0NQSfrx9siKsPe0xDUkl2aIE0qx0DezZ/5qDNnckM/zIB5fVyHdUbzM+zWBNJ9DRKHNwGiYo64uIrDUXYAnADaMNPZ16AEWeHa6yGyOl1nqiY8B3GRG/NvmM3uQ9uD0itsc0=`;
+
+var YOUR_EXPECTED_PLAIN = '888999';
+
+// ============================================================
+//  全局配置
+// ============================================================
 var config = { token: '', user: '', repo: '', path: 'posts.json', configPath: 'config.json' };
 var posts = [];
 var categories = [];
@@ -24,7 +39,6 @@ var messages = [];
 var likedPosts = JSON.parse(localStorage.getItem('liked_posts') || '{}');
 var likedMessages = JSON.parse(localStorage.getItem('liked_messages') || '{}');
 
-// ★★★ 初始系统字体列表（不可删除，用于重置）★★★
 var SYSTEM_FONTS = [
     { name: '楷体', source: 'system' },
     { name: '宋体', source: 'system' },
@@ -46,7 +60,6 @@ var DEFAULT_CONFIG = {
         authorName: '墨轩主',
         authorDesc: '闲来读书，兴至写文。\n以文会友，以友辅仁。'
     },
-    // ★★★ 字体列表（系统字体 + 自定义字体）★★★
     fonts: SYSTEM_FONTS.slice(),
     defaultFont: '楷体',
     fontSwitchEnabled: true,
@@ -63,9 +76,9 @@ var DEFAULT_CONFIG = {
         categoryId: ''
     },
     security: {
-        publicKey: '-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w\n... (请替换为您实际的公钥)\n-----END PUBLIC KEY-----',
-        challengeCipher: '... (替换为您实际的挑战码密文) ...',
-        expectedPlain: 'OK'
+        publicKey: YOUR_PUBLIC_KEY,
+        challengeCipher: YOUR_CHALLENGE_CIPHER,
+        expectedPlain: YOUR_EXPECTED_PLAIN
     }
 };
 
@@ -226,18 +239,15 @@ function applyConfig(json) {
     aboutContent = json.about || DEFAULT_CONFIG.about;
     siteSettings = json.siteSettings || DEFAULT_CONFIG.siteSettings;
 
-    // ★★★ 字体列表兼容处理：兼容旧版（纯字符串数组）和 JSON 版 ★★★
+    // 字体列表兼容：旧格式→新格式
     if (json.fonts && json.fonts.length) {
         var first = json.fonts[0];
         if (typeof first === 'string') {
-            // 旧版：["楷体", "宋体", ...] → 转为新结构
             fonts = json.fonts.map(function(name) {
-                // 判断是否为系统字体
                 var isSystem = SYSTEM_FONTS.some(function(sf) { return sf.name === name; });
                 return { name: name, source: isSystem ? 'system' : 'custom' };
             });
         } else if (first && typeof first === 'object' && first.name) {
-            // 新版：[{name:"楷体", source:"system"}, ...]
             fonts = json.fonts.slice();
         } else {
             fonts = SYSTEM_FONTS.slice();
@@ -247,7 +257,6 @@ function applyConfig(json) {
     }
 
     defaultFont = json.defaultFont || DEFAULT_CONFIG.defaultFont;
-    // 确保默认字体在列表中，如果不在则回退到第一个
     var defaultExists = fonts.some(function(f) { return f.name === defaultFont; });
     if (!defaultExists && fonts.length > 0) {
         defaultFont = fonts[0].name;
@@ -362,14 +371,13 @@ function loadAllData() {
         });
 }
 
-// ========== ★★★ 重置字体列表为系统默认 ★★★ ==========
 function resetFontsToSystem() {
     fonts = SYSTEM_FONTS.slice();
     defaultFont = '楷体';
     return saveConfigData();
 }
 
-// ========== 加密解密（保留） ==========
+// ========== 加密解密 ==========
 function base64ToArrayBuffer(base64) {
     var binary = atob(base64);
     var bytes = new Uint8Array(binary.length);
