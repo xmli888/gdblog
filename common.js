@@ -1,14 +1,19 @@
 // ============================================================
-//  登录三件套（硬编码默认值，用于首次部署/兜底）
-//  注意：请将 YOUR_PUBLIC_KEY 和 YOUR_CHALLENGE_CIPHER 替换为您的真实值
+//  ★★★ 登录三件套（硬编码默认值，用于首次部署/兜底）★★★
 // ============================================================
 var YOUR_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
-... (请替换为您的真实公钥)
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3GujvExMjKhKErfk8yI
+fQIdZ5WTZ8krD4Q0m/b7cbOSaqwnwMMepsSDw2SonkAEEyOCVnKhX1NXoeX56yRJ
+7hdoe82RGDLZ3UDUGpdknUSCDeAjblsfzawbEMpNObo/e4TcSh8UKKBtKOdVXGHw
+Hzfh6l8PByjsgvd7oi/jXPJ5iKC6PMeiiGKhK6VqAs7AexMviKtICi8ZOZseepSR
+olZEVm7zMathz/Mu0XOtSGztEopDeQjsFjIW3nhJnPYiJV+/BCmvn4WuJ9PQM1nW
+sjsd/6WGFE/kMuP1wZytb3m7vJLYuxhmOP5uKuwEFm4pa84FwosBInd5nOAtfweL
+HQIDAQAB
 -----END PUBLIC KEY-----`;
 
-var YOUR_CHALLENGE_CIPHER = '... (请替换为您的真实挑战码密文) ...';
-var YOUR_EXPECTED_PLAIN = 'OK';
+var YOUR_CHALLENGE_CIPHER = 'zpXm+kPYtfPIDaaRCufSMrIuJ8//3LlbJEjmOyZA86W9HDJTNlU8lCO/GbOPv/+yQS4S7jlFOLbl3w+1G5EzCuvVKUl1KUzpzXRqUDSpVIZixwxqPY4C90tjlXI5XnzkrdZdpz3FR6ufZdZV9kSp9Av1K+hwOib0qdcDJkS6ETLMwG7fia6V3Enhed6Xwb7jiaR9uLGijvEQlTaUw8V3V1t2A2x7NMczCWxDLT2efgL26IDIBipP51TtqO1cQwE0NQSfrx9siKsPe0xDUkl2aIE0qx0DezZ/5qDNnckM/zIB5fVyHdUbzM+zWBNJ9DRKHNwGiYo64uIrDUXYAnADaMNPZ16AEWeHa6yGyOl1nqiY8B3GRG/NvmM3uQ9uD0itsc0=';
+
+var YOUR_EXPECTED_PLAIN = '888999';
 
 // ============================================================
 //  全局配置
