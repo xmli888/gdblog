@@ -1,7 +1,18 @@
 // ============================================================
-//  公共模块：GitHub 操作、文章管理、全局状态、加密解密
+//  登录三件套（硬编码默认值，用于首次部署/兜底）
+//  注意：请将 YOUR_PUBLIC_KEY 和 YOUR_CHALLENGE_CIPHER 替换为您的真实值
 // ============================================================
+var YOUR_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w
+... (请替换为您的真实公钥)
+-----END PUBLIC KEY-----`;
 
+var YOUR_CHALLENGE_CIPHER = '... (请替换为您的真实挑战码密文) ...';
+var YOUR_EXPECTED_PLAIN = 'OK';
+
+// ============================================================
+//  全局配置
+// ============================================================
 var config = { token: '', user: '', repo: '', path: 'posts.json', configPath: 'config.json' };
 var posts = [];
 var categories = [];
@@ -49,10 +60,13 @@ var DEFAULT_CONFIG = {
         category: 'General',
         categoryId: ''
     },
+    // ============================================================
+    //  ★★★ 您的登录三件套（作为默认配置）★★★
+    // ============================================================
     security: {
-        publicKey: '-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu7d4XxEfYz5zNjxR+W+w\n... (请替换为您实际的公钥)\n-----END PUBLIC KEY-----',
-        challengeCipher: '... (替换为您实际的挑战码密文) ...',
-        expectedPlain: 'OK'
+        publicKey: YOUR_PUBLIC_KEY,
+        challengeCipher: YOUR_CHALLENGE_CIPHER,
+        expectedPlain: YOUR_EXPECTED_PLAIN
     }
 };
 
@@ -71,6 +85,9 @@ var DEFAULT_POSTS = [
     }
 ];
 
+// ============================================================
+//  工具函数
+// ============================================================
 function escapeHtml(str) {
     if (!str) return '';
     var div = document.createElement('div');
@@ -131,6 +148,9 @@ function loadLocalConfig() {
 
 function isConfigured() { return config.token && config.user && config.repo; }
 
+// ============================================================
+//  文件读写
+// ============================================================
 function decodeBase64Utf8(base64) {
     var binary = atob(base64);
     var bytes = new Uint8Array(binary.length);
@@ -190,10 +210,9 @@ function saveFile(path, content, message) {
     });
 }
 
-function generatePostsJson(postsArray) {
-    return JSON.stringify(postsArray, null, 2);
-}
-
+// ============================================================
+//  配置应用
+// ============================================================
 function applyConfig(json) {
     categories = json.categories && json.categories.length ? json.categories : DEFAULT_CONFIG.categories.slice();
     tags = json.tags && json.tags.length ? json.tags.slice() : [];
@@ -220,6 +239,7 @@ function applyConfig(json) {
     lastBackupTime = json.lastBackupTime || '';
     autoLoadComments = json.autoLoadComments !== undefined ? json.autoLoadComments : true;
     giscusConfig = json.giscus || { repo: '', repoId: '', category: 'General', categoryId: '' };
+    // ★★★ 您的登录三件套：优先从 config.json 读取，如果没有则用硬编码默认值 ★★★
     if (json.security) {
         securityConfig = json.security;
         localStorage.setItem('security_config', JSON.stringify(json.security));
@@ -245,6 +265,7 @@ function saveConfigData() {
         lastBackupTime: lastBackupTime,
         autoLoadComments: autoLoadComments,
         giscus: giscusConfig,
+        // ★★★ 保存登录三件套到 config.json ★★★
         security: JSON.parse(localStorage.getItem('security_config') || '{}')
     };
     var jsonStr = JSON.stringify(data, null, 2);
@@ -257,6 +278,9 @@ function saveMessagesData() {
     return saveFile('messages.json', jsonStr, '更新留言');
 }
 
+// ============================================================
+//  数据加载
+// ============================================================
 function loadAllData() {
     return fetchFileRaw('posts.json')
         .then(function(text) {
@@ -320,13 +344,9 @@ function loadAllData() {
         });
 }
 
-function updatePostLikes(postId) {
-    var jsonData = JSON.stringify(posts, null, 2);
-    if (isConfigured()) {
-        saveFile('posts.json', jsonData, '更新点赞').catch(function() {});
-    }
-}
-
+// ============================================================
+//  ★★★ 您的登录解密函数（原封不动）★★★
+// ============================================================
 function base64ToArrayBuffer(base64) {
     var binary = atob(base64);
     var bytes = new Uint8Array(binary.length);
