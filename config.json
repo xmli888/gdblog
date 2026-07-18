@@ -40,7 +40,7 @@
       "url": "bj.yy"
     }
   ],
-  "musicEnabled": true,
+  "musicEnabled": false,
   "musicAutoPlay": false,
   "musicDefault": "古典",
   "lastBackupTime": "",
