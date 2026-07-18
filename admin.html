@@ -100,7 +100,6 @@
         .footer-admin { display:inline-flex; align-items:center; gap:4px; color:#8a7a6a; cursor:pointer; transition:0.2s; font-size:13px; font-family:'SimSun','宋体',serif; padding:6px 12px; border-radius:4px; -webkit-touch-callout:none; }
         .footer-admin:hover { color:#c23531; background:rgba(194,53,49,0.05); }
         .footer-admin:active { transform:scale(0.95); }
-        /* 字体管理列表样式 */
         .font-item { display:flex; justify-content:space-between; align-items:center; padding:8px 12px; border-bottom:1px dashed #e8d5c0; flex-wrap:wrap; gap:8px; border-radius:4px; }
         .font-item:hover { background:#f8f0e8; }
         .font-item .font-name { font-size:15px; font-weight:normal; font-family:'华文楷体','KaiTi',serif; }
@@ -136,9 +135,6 @@
     <script>
         var currentPage = 'admin';
 
-        // ============================================================
-        //  登录界面
-        // ============================================================
         function showLogin() {
             var html = '<div class="login-box"><h2>🔐 后台登录</h2><div class="login-sub">— 使用私钥验证身份 —</div><div class="form-group"><label>🔑 私钥 (PEM 格式)</label><textarea id="loginPrivateKey" rows="4" placeholder="-----BEGIN PRIVATE KEY----- ... -----END PRIVATE KEY-----"></textarea></div><button class="btn" onclick="doLogin()">登录</button><div id="loginError" class="error-msg"></div><div id="loginSuccess" class="success-msg"></div><div id="loginInfo" class="info-msg"></div><div style="margin-top:20px;font-size:13px;color:#8a7a6a;"><a href="index.html" style="color:#c23531;text-decoration:underline;">← 返回首页</a></div></div>';
             document.getElementById('app').innerHTML = html;
@@ -223,9 +219,6 @@
             }
         }
 
-        // ============================================================
-        //  渲染管理面板（包含字体管理面板）
-        // ============================================================
         function renderAdmin() {
             var container = document.getElementById('app');
             container.innerHTML = '<div class="card"><div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;"><div class="card-title" style="border-bottom:none; margin-bottom:0;">🔐 后台管理</div><div><span style="color:#8a7a6a;font-size:14px;margin-right:16px;">已登录</span><button class="footer-admin" onclick="logout()" style="border:1px solid #c23531;border-radius:6px;padding:6px 16px;background:transparent;color:#c23531;cursor:pointer;">退出</button><a href="index.html" style="margin-left:12px;color:#8a7a6a;text-decoration:underline;">← 返回首页</a></div></div></div>' +
@@ -234,15 +227,7 @@
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">📄 文章管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-list" id="adminPostList"></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">📂 分类管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;"><input type="text" id="newCategoryName" placeholder="新分类名称" style="flex:1;min-height:38px;" /><button class="btn btn-primary" onclick="addCategory()" style="min-height:38px;">添加</button></div><div class="admin-list" id="categoryAdminList"></div></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🏷️ 标签管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;"><input type="text" id="newTagName" placeholder="新标签名称" style="flex:1;min-height:38px;" /><button class="btn btn-primary" onclick="addTag()" style="min-height:38px;">添加</button></div><div class="admin-list" id="tagAdminList"></div></div></div></div>' +
-                // ★★★ 字体管理面板 ★★★
-                '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🔤 字体管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 系统字体（楷体、宋体等）由操作系统提供，无需上传文件。<br/>自定义字体需要上传字体文件（.ttf/.woff/.woff2）并填写正确的路径。</div>' +
-                // 添加字体表单
-                '<div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px;"><div style="flex:2; min-width:150px;"><label style="font-weight:bold; display:block; font-size:13px; margin-bottom:2px;">字体名称</label><input type="text" id="newFontName" placeholder="如：禹卫书法行书" style="width:100%;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:14px;min-height:38px;" /></div><div style="flex:3; min-width:200px;"><label style="font-weight:bold; display:block; font-size:13px; margin-bottom:2px;">字体文件路径</label><input type="text" id="newFontPath" placeholder="如：myzt/禹卫书法行书.ttf" style="width:100%;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:14px;min-height:38px;" /></div><div style="flex:0 0 auto; align-self:flex-end;"><button class="btn btn-primary" onclick="addFont()" style="min-height:38px;padding:0 24px;">添加</button></div></div>' +
-                // 默认字体选择 + 重置按钮
-                '<div class="font-controls"><div class="default-selector"><label style="font-weight:bold; font-size:13px;">默认字体</label><select id="defaultFontSelect" onchange="setDefaultFontFromSelect()"></select></div><div><button class="btn btn-secondary" onclick="resetDefaultFont()" style="min-height:38px;">重置默认</button><button class="btn btn-secondary" onclick="resetFontList()" style="min-height:38px;margin-left:8px;">恢复默认列表</button></div></div>' +
-                // 字体列表
-                '<div class="admin-list" id="fontAdminList"></div></div></div></div>' +
-                // ★★★ 其他面板 ★★★
+                '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🔤 字体管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 系统字体（楷体、宋体等）由操作系统提供，无需上传文件。<br/>自定义字体需要上传字体文件（.ttf/.woff/.woff2）并填写正确的路径。</div><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px;"><div style="flex:2; min-width:150px;"><label style="font-weight:bold; display:block; font-size:13px; margin-bottom:2px;">字体名称</label><input type="text" id="newFontName" placeholder="如：禹卫书法行书" style="width:100%;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:14px;min-height:38px;" /></div><div style="flex:3; min-width:200px;"><label style="font-weight:bold; display:block; font-size:13px; margin-bottom:2px;">字体文件路径</label><input type="text" id="newFontPath" placeholder="如：myzt/禹卫书法行书.ttf" style="width:100%;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:14px;min-height:38px;" /></div><div style="flex:0 0 auto; align-self:flex-end;"><button class="btn btn-primary" onclick="addFont()" style="min-height:38px;padding:0 24px;">添加</button></div></div><div class="font-controls"><div class="default-selector"><label style="font-weight:bold; font-size:13px;">默认字体</label><select id="defaultFontSelect" onchange="setDefaultFontFromSelect()"></select></div><div><button class="btn btn-secondary" onclick="resetDefaultFont()" style="min-height:38px;">重置默认</button><button class="btn btn-secondary" onclick="resetFontList()" style="min-height:38px;margin-left:8px;">恢复默认列表</button></div></div><div style="display:flex; gap:10px; align-items:center; margin:12px 0;"><label style="font-weight:bold; font-size:13px;">前台字体切换</label><input type="checkbox" id="fontSwitchCheck" onchange="saveFontSettings()" /><span style="font-size:13px; color:#8a7a6a;">开启后用户可自定义字体</span></div><div class="admin-list" id="fontAdminList"></div></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🎵 音乐管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 支持本地音乐路径或网络音乐链接。</div><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;"><input type="text" id="newMusicName" placeholder="歌曲名" style="flex:1;min-height:38px;" /><input type="text" id="newMusicUrl" placeholder="路径 / URL" style="flex:2;min-height:38px;" /><button class="btn btn-primary" onclick="addMusic()" style="min-height:38px;">添加</button></div><div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:10px;"><label><input type="checkbox" id="musicEnabledCheck" onchange="saveMusicSettings()" /> 显示播放器</label><label><input type="checkbox" id="musicAutoPlayCheck" onchange="saveMusicSettings()" /> 自动播放</label><label>默认歌曲 <select id="musicDefaultSelect" style="min-height:38px;padding:6px 10px;"></select></label></div><div class="admin-list" id="musicAdminList"></div></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">📜 关于页面 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="form-group"><textarea id="aboutEditor" rows="6"></textarea></div><button class="btn btn-primary" onclick="saveAbout()">保存关于</button></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🔐 安全设置 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="form-group"><label>公钥</label><textarea id="secPublicKey" rows="3" style="font-family:monospace;font-size:12px;"></textarea></div><div class="form-group"><label>挑战码密文</label><textarea id="secChallengeCipher" rows="2" style="font-family:monospace;font-size:12px;"></textarea></div><div class="form-group"><label>期望明文</label><input type="text" id="secExpectedPlain" style="min-height:38px;" /></div><div class="btn-group"><button class="btn btn-primary" onclick="saveSecuritySettings()">保存安全设置</button><button class="btn btn-secondary" onclick="resetSecuritySettings()">恢复默认</button></div></div></div></div>' +
@@ -254,9 +239,6 @@
             loadAdminData();
         }
 
-        // ============================================================
-        //  加载数据
-        // ============================================================
         function loadAdminData() {
             loadAllData().then(function() {
                 populateCategorySelect();
@@ -296,9 +278,6 @@
             else { body.classList.add('open'); if (arrow) arrow.classList.add('open'); }
         }
 
-        // ============================================================
-        //  站点设置
-        // ============================================================
         function loadSiteSettingsForm() {
             var logoEl = document.getElementById('setLogo');
             var titleEl = document.getElementById('setTitle');
@@ -321,9 +300,6 @@
             saveConfigData().then(function() { showToast('站点设置已保存', 'success'); });
         }
 
-        // ============================================================
-        //  分类管理
-        // ============================================================
         function renderCategoryAdmin() {
             var container = document.getElementById('categoryAdminList');
             if (!container) return;
@@ -380,9 +356,6 @@
             sel.innerHTML = html;
         }
 
-        // ============================================================
-        //  标签管理
-        // ============================================================
         function populateTagAdminList() {
             var container = document.getElementById('tagAdminList');
             if (!container) return;
@@ -458,9 +431,6 @@
             }
         }
 
-        // ============================================================
-        //  文章管理
-        // ============================================================
         function renderAdminList() {
             var container = document.getElementById('adminPostList');
             if (!container) return;
@@ -562,16 +532,10 @@
             showToast('表单已清空', 'info');
         }
 
-        // ============================================================
-        //  ★★★ 字体管理（核心）★★★
-        // ============================================================
         function loadFontAdminList() {
             var container = document.getElementById('fontAdminList');
             if (!container) return;
-
-            // 填充默认字体下拉框
             populateDefaultFontSelect();
-
             var html = '';
             fonts.forEach(function(f, idx) {
                 var isDefault = (f.name === defaultFont);
@@ -579,7 +543,6 @@
                 var sourceLabel = isSystem ? '系统' : '自定义';
                 var sourceClass = isSystem ? 'system' : 'custom';
                 var pathDisplay = f.path ? ' <span class="font-path">' + escapeHtml(f.path) + '</span>' : '';
-
                 html += '<div class="font-item">';
                 html += '<div><span class="font-name">' + escapeHtml(f.name) + '</span>' + pathDisplay;
                 html += '<span class="font-source ' + sourceClass + '">' + sourceLabel + '</span>';
@@ -664,17 +627,14 @@
             var name = document.getElementById('newFontName').value.trim();
             var path = document.getElementById('newFontPath').value.trim();
             if (!name) { showToast('请输入字体名称', 'error'); return; }
-            // 检查是否已存在
             var exists = fonts.some(function(f) { return f.name === name; });
             if (exists) { showToast('字体 "' + name + '" 已存在', 'error'); return; }
-            // 判断是否为系统字体（与系统字体名称冲突）
             var isSystem = SYSTEM_FONTS.some(function(sf) { return sf.name === name; });
             if (isSystem) {
                 showToast('"' + name + '" 是系统字体，无需添加', 'error');
                 return;
             }
             fonts.push({ name: name, source: 'custom', path: path || '' });
-            // 如果没有默认字体，设为当前
             if (!defaultFont) { defaultFont = name; }
             saveConfigData().then(function() {
                 document.getElementById('newFontName').value = '';
@@ -685,26 +645,25 @@
         }
 
         function deleteFont(index, isSystem) {
-    var font = fonts[index];
-    if (!font) return;
-    var msg = isSystem ?
-        '确定删除系统字体 "' + font.name + '" 吗？删除后可通过"恢复默认列表"还原。' :
-        '确定删除自定义字体 "' + font.name + '" 吗？';
-    if (!confirm(msg)) return;
-    fonts.splice(index, 1);
-    if (defaultFont === font.name) {
-        defaultFont = fonts.length > 0 ? fonts[0].name : '';
-    }
-    saveConfigData().then(function() {
-        loadFontAdminList();
-        showToast('已删除: ' + font.name, 'success');
-    }).catch(function(err) { showToast('删除失败: ' + err.message, 'error'); });
-}
+            var font = fonts[index];
+            if (!font) return;
+            var msg = isSystem ?
+                '确定删除系统字体“' + font.name + '”吗？删除后可通过“恢复默认列表”还原。' :
+                '确定删除自定义字体“' + font.name + '”吗？';
+            if (!confirm(msg)) return;
+            fonts.splice(index, 1);
+            if (defaultFont === font.name) {
+                defaultFont = fonts.length > 0 ? fonts[0].name : '';
+            }
+            saveConfigData().then(function() {
+                loadFontAdminList();
+                showToast('已删除: ' + font.name, 'success');
+            }).catch(function(err) { showToast('删除失败: ' + err.message, 'error'); });
+        }
 
         function loadFontSettingsForm() {
             var switchCheck = document.getElementById('fontSwitchCheck');
             if (switchCheck) switchCheck.checked = fontSwitchEnabled;
-            // 现在字体管理由新的 loadFontAdminList 负责
             loadFontAdminList();
         }
 
@@ -714,14 +673,6 @@
             saveConfigData().then(function() { showToast('字体设置已保存', 'success'); });
         }
 
-        // 恢复默认字体设置（兼容旧版）
-        function resetFonts() {
-            resetFontList();
-        }
-
-        // ============================================================
-        //  音乐管理
-        // ============================================================
         function renderMusicAdmin() {
             var container = document.getElementById('musicAdminList');
             if (!container) return;
@@ -804,9 +755,6 @@
             }
         }
 
-        // ============================================================
-        //  安全设置
-        // ============================================================
         function loadSecuritySettings() {
             var stored = localStorage.getItem('security_config');
             var sec = stored ? JSON.parse(stored) : null;
@@ -842,9 +790,6 @@
             showToast('已恢复默认', 'info');
         }
 
-        // ============================================================
-        //  GitHub 设置
-        // ============================================================
         function saveGitHubConfig() {
             var token = document.getElementById('githubTokenInput').value.trim();
             var user = document.getElementById('githubUserInput').value.trim();
@@ -889,9 +834,6 @@
             }, 600);
         }
 
-        // ============================================================
-        //  备份功能
-        // ============================================================
         function downloadSingleFile(type) {
             var ts = getTimestamp();
             var content, filename;
@@ -1005,9 +947,6 @@
             event.target.value = '';
         }
 
-        // ============================================================
-        //  评论设置
-        // ============================================================
         function loadCommentSettings() {
             var autoLoadEl = document.getElementById('autoLoadComments');
             var repoEl = document.getElementById('giscusRepo');
@@ -1035,9 +974,6 @@
             saveConfigData().then(function() { showToast('评论设置已保存', 'success'); });
         }
 
-        // ============================================================
-        //  留言管理
-        // ============================================================
         function renderMessageAdminList() {
             var container = document.getElementById('messageAdminList');
             if (!container) return;
@@ -1109,9 +1045,6 @@
             });
         }
 
-        // ============================================================
-        //  Markdown 辅助
-        // ============================================================
         function insertMarkdown(type) {
             var textarea = document.getElementById('editContent');
             var start = textarea.selectionStart;

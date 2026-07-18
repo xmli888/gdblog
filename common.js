@@ -1,5 +1,5 @@
 // ============================================================
-//  ★★★ 登录三件套（硬编码默认值）★★★
+//  登录三件套（硬编码默认值）
 // ============================================================
 var YOUR_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3GujvExMjKhKErfk8yI
@@ -25,7 +25,7 @@ var tags = [];
 var aboutContent = '';
 var siteSettings = {};
 var fonts = [];
-var defaultFont = '';
+var defaultFont = '楷体';
 var fontSwitchEnabled = true;
 var musicList = [];
 var musicEnabled = true;
@@ -97,7 +97,6 @@ var DEFAULT_POSTS = [
     }
 ];
 
-// ========== 工具函数 ==========
 function escapeHtml(str) {
     if (!str) return '';
     var div = document.createElement('div');
@@ -161,7 +160,6 @@ function loadLocalConfig() {
 
 function isConfigured() { return config.token && config.user && config.repo; }
 
-// ========== 文件读写 ==========
 function decodeBase64Utf8(base64) {
     var binary = atob(base64);
     var bytes = new Uint8Array(binary.length);
@@ -221,7 +219,6 @@ function saveFile(path, content, message) {
     });
 }
 
-// ========== 配置应用 ==========
 function applyConfig(json) {
     categories = json.categories && json.categories.length ? json.categories : DEFAULT_CONFIG.categories.slice();
     tags = json.tags && json.tags.length ? json.tags.slice() : [];
@@ -239,7 +236,6 @@ function applyConfig(json) {
     aboutContent = json.about || DEFAULT_CONFIG.about;
     siteSettings = json.siteSettings || DEFAULT_CONFIG.siteSettings;
 
-    // 字体列表兼容：旧格式→新格式
     if (json.fonts && json.fonts.length) {
         var first = json.fonts[0];
         if (typeof first === 'string') {
@@ -257,10 +253,6 @@ function applyConfig(json) {
     }
 
     defaultFont = json.defaultFont || DEFAULT_CONFIG.defaultFont;
-    var defaultExists = fonts.some(function(f) { return f.name === defaultFont; });
-    if (!defaultExists && fonts.length > 0) {
-        defaultFont = fonts[0].name;
-    }
 
     fontSwitchEnabled = json.fontSwitchEnabled !== undefined ? json.fontSwitchEnabled : true;
     musicList = json.musicList || [];
@@ -307,7 +299,6 @@ function saveMessagesData() {
     return saveFile('messages.json', jsonStr, '更新留言');
 }
 
-// ========== 数据加载 ==========
 function loadAllData() {
     return fetchFileRaw('posts.json')
         .then(function(text) {
@@ -377,7 +368,6 @@ function resetFontsToSystem() {
     return saveConfigData();
 }
 
-// ========== 加密解密 ==========
 function base64ToArrayBuffer(base64) {
     var binary = atob(base64);
     var bytes = new Uint8Array(binary.length);
