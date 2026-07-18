@@ -33,10 +33,15 @@
   ],
   "defaultFont": "楷体",
   "fontSwitchEnabled": true,
-  "musicList": [],
+  "musicList": [
+    {
+      "name": "古典",
+      "url": "bj.yy"
+    }
+  ],
   "musicEnabled": true,
   "musicAutoPlay": false,
-  "musicDefault": "",
+  "musicDefault": "古典",
   "lastBackupTime": "",
   "autoLoadComments": true,
   "giscus": {
