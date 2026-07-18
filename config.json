@@ -29,15 +29,19 @@
     "仿宋",
     "行楷",
     "隶书",
-    "方正",
-    "myzt/禹卫书法行书简体-新优化版.ttf"
+    "方正"
   ],
-  "defaultFont": "myzt/禹卫书法行书简体-新优化版.ttf",
+  "defaultFont": "楷体",
   "fontSwitchEnabled": true,
-  "musicList": [],
+  "musicList": [
+    {
+      "name": "古典",
+      "url": "yybj.yy"
+    }
+  ],
   "musicEnabled": true,
   "musicAutoPlay": false,
-  "musicDefault": "",
+  "musicDefault": "古典",
   "lastBackupTime": "",
   "autoLoadComments": true,
   "giscus": {
