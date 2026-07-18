@@ -32,7 +32,7 @@
     "方正",
     "myzt/禹卫书法行书简体-新优化版.ttf"
   ],
-  "defaultFont": "楷体",
+  "defaultFont": "myzt/禹卫书法行书简体-新优化版.ttf",
   "fontSwitchEnabled": true,
   "musicList": [],
   "musicEnabled": true,
