@@ -23,41 +23,15 @@
     "authorDesc": "闲来读书，兴至写文。\n以文会友，以友辅仁。"
   },
   "fonts": [
-    {
-      "name": "楷体",
-      "source": "system"
-    },
-    {
-      "name": "宋体",
-      "source": "system"
-    },
-    {
-      "name": "黑体",
-      "source": "system"
-    },
-    {
-      "name": "仿宋",
-      "source": "system"
-    },
-    {
-      "name": "行楷",
-      "source": "system"
-    },
-    {
-      "name": "隶书",
-      "source": "system"
-    },
-    {
-      "name": "方正",
-      "source": "system"
-    },
-    {
-      "name": "禹卫书法行书",
-      "source": "custom",
-      "path": "myzt/禹卫书法行书简体.ttf"
-    }
+    "楷体",
+    "宋体",
+    "黑体",
+    "仿宋",
+    "行楷",
+    "隶书",
+    "方正"
   ],
-  "defaultFont": "禹卫书法行书",
+  "defaultFont": "楷体",
   "fontSwitchEnabled": true,
   "musicList": [
     {

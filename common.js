@@ -1,5 +1,5 @@
 // ============================================================
-//  ★★★ 登录三件套（硬编码默认值）★★★
+//  ★★★ 登录三件套（硬编码默认值，用于首次部署/兜底）★★★
 // ============================================================
 var YOUR_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3GujvExMjKhKErfk8yI
@@ -11,7 +11,7 @@ sjsd/6WGFE/kMuP1wZytb3m7vJLYuxhmOP5uKuwEFm4pa84FwosBInd5nOAtfweL
 HQIDAQAB
 -----END PUBLIC KEY-----`;
 
-var YOUR_CHALLENGE_CIPHER = `zpXm+kPYtfPIDaaRCufSMrIuJ8//3LlbJEjmOyZA86W9HDJTNlU8lCO/GbOPv/+yQS4S7jlFOLbl3w+1G5EzCuvVKUl1KUzpzXRqUDSpVIZixwxqPY4C90tjlXI5XnzkrdZdpz3FR6ufZdZV9kSp9Av1K+hwOib0qdcDJkS6ETLMwG7fia6V3Enhed6Xwb7jiaR9uLGijvEQlTaUw8V3V1t2A2x7NMczCWxDLT2efgL26IDIBipP51TtqO1cQwE0NQSfrx9siKsPe0xDUkl2aIE0qx0DezZ/5qDNnckM/zIB5fVyHdUbzM+zWBNJ9DRKHNwGiYo64uIrDUXYAnADaMNPZ16AEWeHa6yGyOl1nqiY8B3GRG/NvmM3uQ9uD0itsc0=`;
+var YOUR_CHALLENGE_CIPHER = 'zpXm+kPYtfPIDaaRCufSMrIuJ8//3LlbJEjmOyZA86W9HDJTNlU8lCO/GbOPv/+yQS4S7jlFOLbl3w+1G5EzCuvVKUl1KUzpzXRqUDSpVIZixwxqPY4C90tjlXI5XnzkrdZdpz3FR6ufZdZV9kSp9Av1K+hwOib0qdcDJkS6ETLMwG7fia6V3Enhed6Xwb7jiaR9uLGijvEQlTaUw8V3V1t2A2x7NMczCWxDLT2efgL26IDIBipP51TtqO1cQwE0NQSfrx9siKsPe0xDUkl2aIE0qx0DezZ/5qDNnckM/zIB5fVyHdUbzM+zWBNJ9DRKHNwGiYo64uIrDUXYAnADaMNPZ16AEWeHa6yGyOl1nqiY8B3GRG/NvmM3uQ9uD0itsc0=';
 
 var YOUR_EXPECTED_PLAIN = '888999';
 
@@ -39,16 +39,6 @@ var messages = [];
 var likedPosts = JSON.parse(localStorage.getItem('liked_posts') || '{}');
 var likedMessages = JSON.parse(localStorage.getItem('liked_messages') || '{}');
 
-var SYSTEM_FONTS = [
-    { name: '楷体', source: 'system' },
-    { name: '宋体', source: 'system' },
-    { name: '黑体', source: 'system' },
-    { name: '仿宋', source: 'system' },
-    { name: '行楷', source: 'system' },
-    { name: '隶书', source: 'system' },
-    { name: '方正', source: 'system' }
-];
-
 var DEFAULT_CONFIG = {
     categories: ['随笔', '书评', '游记', '散文', '诗词', '其他'],
     tags: ['墨韵', '古宅', '红木', '诗词', '阅读'],
@@ -60,7 +50,7 @@ var DEFAULT_CONFIG = {
         authorName: '墨轩主',
         authorDesc: '闲来读书，兴至写文。\n以文会友，以友辅仁。'
     },
-    fonts: SYSTEM_FONTS.slice(),
+    fonts: ['楷体', '宋体', '黑体', '仿宋', '行楷', '隶书', '方正'],
     defaultFont: '楷体',
     fontSwitchEnabled: true,
     musicList: [],
@@ -75,6 +65,9 @@ var DEFAULT_CONFIG = {
         category: 'General',
         categoryId: ''
     },
+    // ============================================================
+    //  ★★★ 您的登录三件套（作为默认配置）★★★
+    // ============================================================
     security: {
         publicKey: YOUR_PUBLIC_KEY,
         challengeCipher: YOUR_CHALLENGE_CIPHER,
@@ -97,7 +90,9 @@ var DEFAULT_POSTS = [
     }
 ];
 
-// ========== 工具函数 ==========
+// ============================================================
+//  工具函数
+// ============================================================
 function escapeHtml(str) {
     if (!str) return '';
     var div = document.createElement('div');
@@ -134,10 +129,7 @@ function getTimestamp() {
 
 function showToast(msg, type) {
     var el = document.getElementById('toastContainer');
-    if (!el) {
-        alert(msg);
-        return;
-    }
+    if (!el) { alert(msg); return; }
     el.textContent = msg;
     el.style.background = type === 'error' ? '#8b2500' : (type === 'success' ? '#4a5a6a' : '#3e2723');
     el.classList.add('show');
@@ -161,7 +153,9 @@ function loadLocalConfig() {
 
 function isConfigured() { return config.token && config.user && config.repo; }
 
-// ========== 文件读写 ==========
+// ============================================================
+//  文件读写
+// ============================================================
 function decodeBase64Utf8(base64) {
     var binary = atob(base64);
     var bytes = new Uint8Array(binary.length);
@@ -221,7 +215,9 @@ function saveFile(path, content, message) {
     });
 }
 
-// ========== 配置应用 ==========
+// ============================================================
+//  配置应用
+// ============================================================
 function applyConfig(json) {
     categories = json.categories && json.categories.length ? json.categories : DEFAULT_CONFIG.categories.slice();
     tags = json.tags && json.tags.length ? json.tags.slice() : [];
@@ -238,30 +234,8 @@ function applyConfig(json) {
     }
     aboutContent = json.about || DEFAULT_CONFIG.about;
     siteSettings = json.siteSettings || DEFAULT_CONFIG.siteSettings;
-
-    // 字体列表兼容：旧格式→新格式
-    if (json.fonts && json.fonts.length) {
-        var first = json.fonts[0];
-        if (typeof first === 'string') {
-            fonts = json.fonts.map(function(name) {
-                var isSystem = SYSTEM_FONTS.some(function(sf) { return sf.name === name; });
-                return { name: name, source: isSystem ? 'system' : 'custom' };
-            });
-        } else if (first && typeof first === 'object' && first.name) {
-            fonts = json.fonts.slice();
-        } else {
-            fonts = SYSTEM_FONTS.slice();
-        }
-    } else {
-        fonts = SYSTEM_FONTS.slice();
-    }
-
+    fonts = json.fonts || DEFAULT_CONFIG.fonts;
     defaultFont = json.defaultFont || DEFAULT_CONFIG.defaultFont;
-    var defaultExists = fonts.some(function(f) { return f.name === defaultFont; });
-    if (!defaultExists && fonts.length > 0) {
-        defaultFont = fonts[0].name;
-    }
-
     fontSwitchEnabled = json.fontSwitchEnabled !== undefined ? json.fontSwitchEnabled : true;
     musicList = json.musicList || [];
     musicEnabled = json.musicEnabled !== undefined ? json.musicEnabled : true;
@@ -270,6 +244,7 @@ function applyConfig(json) {
     lastBackupTime = json.lastBackupTime || '';
     autoLoadComments = json.autoLoadComments !== undefined ? json.autoLoadComments : true;
     giscusConfig = json.giscus || { repo: '', repoId: '', category: 'General', categoryId: '' };
+    // ★★★ 您的登录三件套：优先从 config.json 读取，如果没有则用硬编码默认值 ★★★
     if (json.security) {
         securityConfig = json.security;
         localStorage.setItem('security_config', JSON.stringify(json.security));
@@ -295,6 +270,7 @@ function saveConfigData() {
         lastBackupTime: lastBackupTime,
         autoLoadComments: autoLoadComments,
         giscus: giscusConfig,
+        // ★★★ 保存登录三件套到 config.json ★★★
         security: JSON.parse(localStorage.getItem('security_config') || '{}')
     };
     var jsonStr = JSON.stringify(data, null, 2);
@@ -307,7 +283,9 @@ function saveMessagesData() {
     return saveFile('messages.json', jsonStr, '更新留言');
 }
 
-// ========== 数据加载 ==========
+// ============================================================
+//  数据加载
+// ============================================================
 function loadAllData() {
     return fetchFileRaw('posts.json')
         .then(function(text) {
@@ -371,13 +349,9 @@ function loadAllData() {
         });
 }
 
-function resetFontsToSystem() {
-    fonts = SYSTEM_FONTS.slice();
-    defaultFont = '楷体';
-    return saveConfigData();
-}
-
-// ========== 加密解密 ==========
+// ============================================================
+//  ★★★ 您的登录解密函数（原封不动）★★★
+// ============================================================
 function base64ToArrayBuffer(base64) {
     var binary = atob(base64);
     var bytes = new Uint8Array(binary.length);
