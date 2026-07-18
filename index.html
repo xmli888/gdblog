@@ -22,7 +22,6 @@
         a { text-decoration: none; color: inherit; }
         .container { width:100%; max-width:1200px; padding:0 20px; }
 
-        /* ===== 顶部横幅 ===== */
         .hero {
             position: relative;
             width: 100%;
@@ -100,7 +99,6 @@
             opacity:0.85; margin-bottom:8px;
         }
 
-        /* 导航栏 */
         .nav-bar {
             position: relative; z-index:3;
             margin-top:12px;
@@ -156,7 +154,6 @@
             .sidebar { flex:3; }
         }
 
-        /* 卡片 */
         .card {
             background: #fdf8f0;
             border: 1px solid #e8d5c0;
@@ -175,7 +172,6 @@
             font-family: '华文楷体','KaiTi',serif;
         }
 
-        /* 文章列表 */
         .post-item {
             padding:16px 8px;
             border-bottom:1px dashed #e8d5c0;
@@ -209,7 +205,6 @@
             padding:2px 12px; border-radius:12px; border:1px solid #ddd0c0;
         }
 
-        /* 侧边栏 */
         .sidebar .profile { text-align:center; }
         .sidebar .profile .avatar {
             font-size:48px; background:#e8d5c0;
@@ -236,7 +231,6 @@
         .category-list li:hover { background:#f8f0e8; }
         .category-list li .count { color:#8a7a6a; font-size:13px; }
 
-        /* 文章详情 */
         .post-detail .title {
             font-size:28px; font-weight:normal;
             font-family: '华文楷体','KaiTi',serif;
@@ -330,7 +324,6 @@
         }
         .recommend .rec-item:hover { background:#f8f0e8; }
 
-        /* 评论区 */
         .comment-section {
             margin-top:24px; padding-top:16px;
             border-top:2px solid #e8d5c0;
@@ -361,31 +354,54 @@
         }
         .font-switcher select:hover { border-color:#c23531; }
 
-        /* ===== 音乐播放器 ===== */
+        /* ===== 音乐播放器 - 左侧定位 ===== */
         .music-player {
-            position:fixed; bottom:30px; right:20px; z-index:999;
-            display:flex; flex-direction:column; align-items:flex-end;
-            touch-action:none; user-select:none;
+            position:fixed;
+            bottom: 30px;
+            left: 20px;
+            z-index:999;
+            display:flex;
+            flex-direction:column;
+            align-items:flex-start;
+            touch-action:none;
+            user-select:none;
         }
         .music-toggle {
-            width:56px; height:56px; border-radius:50%;
-            background:#7a4a34; color:#f5e6d3;
-            border:2px solid #c23531; font-size:24px;
-            cursor:grab; box-shadow:0 4px 16px rgba(0,0,0,0.3);
-            transition:0.3s; display:flex; align-items:center; justify-content:center;
-            position:relative; z-index:2;
+            width:56px;
+            height:56px;
+            border-radius:50%;
+            background:#7a4a34;
+            color:#f5e6d3;
+            border:2px solid #c23531;
+            font-size:24px;
+            cursor:grab;
+            box-shadow:0 4px 16px rgba(0,0,0,0.3);
+            transition:0.3s;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            position:relative;
+            z-index:2;
         }
         .music-toggle:active { cursor:grabbing; }
         .music-toggle:hover { transform:scale(1.05); background:#5a3222; }
         .music-panel {
             width:280px;
             background:linear-gradient(145deg, #6b3a2a, #3d1f15);
-            border-radius:16px; padding:16px 18px; margin-bottom:12px;
+            border-radius:16px;
+            padding:16px 18px;
+            margin-bottom:12px;
             box-shadow:0 8px 32px rgba(0,0,0,0.4);
             border:1px solid #9a6a54;
-            display:none; transition:0.3s;
-            color:#f5e6d3; position:relative; z-index:1;
+            display:none;
+            transition:0.3s;
+            color:#f5e6d3;
+            position:absolute;
+            z-index:1;
             pointer-events:auto;
+            /* 默认向右展开，JS会动态调整方向 */
+            left: 70px;
+            top: -10px;
         }
         .music-panel.open { display:block; }
         .music-panel .song-name {
@@ -413,20 +429,28 @@
         .music-panel .controls button:hover { color:#c23531; transform:scale(1.1); }
         .music-panel .controls button.play-btn { font-size:32px; }
 
-        /* ===== 回到顶部 ===== */
         .back-to-top {
-            position:fixed; bottom:100px; right:20px; z-index:998;
-            width:44px; height:44px; border-radius:50%;
-            background:#7a4a34; color:#f5e6d3;
-            border:2px solid #c23531; font-size:22px;
-            cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,0.25);
-            display:none; align-items:center; justify-content:center;
+            position:fixed;
+            bottom:30px;
+            right:20px;
+            z-index:998;
+            width:44px;
+            height:44px;
+            border-radius:50%;
+            background:#7a4a34;
+            color:#f5e6d3;
+            border:2px solid #c23531;
+            font-size:22px;
+            cursor:pointer;
+            box-shadow:0 4px 16px rgba(0,0,0,0.25);
+            display:none;
+            align-items:center;
+            justify-content:center;
             transition:0.3s;
         }
         .back-to-top:hover { background:#5a3222; transform:scale(1.05); }
         .back-to-top.show { display:flex; }
 
-        /* ===== 互动页面 ===== */
         .interact-tabs {
             display:flex; gap:0;
             border-bottom:2px solid #e8d5c0;
@@ -501,7 +525,6 @@
         .message-form .form-group textarea:focus { border-color:#c23531; }
         .message-form .form-group textarea { min-height:60px; resize:vertical; }
 
-        /* 聊天区域 */
         .chat-area {
             max-height:400px; overflow-y:auto;
             border:1px solid #e8d5c0; border-radius:8px;
@@ -532,7 +555,6 @@
         }
         .chat-input-row button:hover { background:#a02a26; }
 
-        /* ===== Toast ===== */
         .toast-msg {
             position:fixed; bottom:100px; left:50%;
             transform:translateX(-50%);
@@ -547,7 +569,6 @@
         }
         .toast-msg.show { opacity:1; }
 
-        /* ===== 响应式 ===== */
         @media (max-width:600px) {
             .hero { min-height:240px; padding:20px 16px; }
             .hero-logo { width:60px; height:60px; font-size:30px; line-height:60px; }
@@ -574,10 +595,7 @@
 </head>
 <body>
 
-    <!-- Toast -->
     <div id="toastContainer" class="toast-msg"></div>
-
-    <!-- 回到顶部按钮 -->
     <button class="back-to-top" id="backToTop" title="回到顶部">↑</button>
 
     <!-- 音乐播放器 -->
@@ -597,20 +615,16 @@
     </div>
 
     <div class="container">
-
-        <!-- 顶部 -->
         <header class="hero">
             <div class="branch-left"></div>
             <div class="branch-right"></div>
             <div class="bird">🐦</div>
             <div class="bird bird2">🐦</div>
-
             <div class="hero-content" id="heroContent">
                 <div class="hero-logo" id="heroLogo">墨</div>
                 <div class="hero-title" id="heroTitle">墨韵轩</div>
                 <div class="hero-sub" id="heroSub">— 青砖檐下 · 笔墨春秋 · 静观自得 —</div>
             </div>
-
             <nav class="nav-bar" id="mainNav">
                 <a href="#" data-page="home" class="active">首页</a>
                 <a href="#" data-page="archive">归档</a>
@@ -620,15 +634,8 @@
             </nav>
         </header>
 
-        <!-- 主体 -->
         <div class="main" id="app">
-
-            <!-- 左侧主内容 -->
-            <div class="main-content" id="mainContent">
-                <!-- 由 JavaScript 渲染 -->
-            </div>
-
-            <!-- 右侧边栏 -->
+            <div class="main-content" id="mainContent"></div>
             <aside class="sidebar" id="sidebar">
                 <div class="card profile" id="profileCard">
                     <div class="avatar">✍</div>
@@ -642,7 +649,6 @@
             </aside>
         </div>
 
-        <!-- 底部 -->
         <footer style="text-align:center; padding:20px 0 30px; color:#8a7a6a; font-size:13px; border-top:1px solid #e8d5c0; margin-top:20px;">
             <span>© 2026 墨韵轩 · 以古典之心，行现代之事</span>
             <span style="margin:0 12px;">|</span>
@@ -678,34 +684,64 @@
             if (authorDescEl && siteSettings.authorDesc) authorDescEl.innerHTML = siteSettings.authorDesc.replace(/\n/g, '<br>');
         }
 
-        // ========== ★★★ 修复字体应用（按三层逻辑）★★★ ==========
+        // ========== ★★★ 修复字体应用（三层逻辑 + 自定义字体加载）★★★ ==========
         function applyFontSettings() {
             var body = document.body;
 
             // 1. 获取用户本地选择（如果有）
             var storedFont = localStorage.getItem('user_selected_font');
 
-            // 2. 判断后台开关状态
+            // 2. 确定最终使用的字体名称
+            var selectedFontName = null;
+
             if (fontSwitchEnabled) {
                 // 开关开启：用户选择优先，未选则用默认
-                if (storedFont && fonts.indexOf(storedFont) !== -1) {
-                    body.style.fontFamily = storedFont + ', serif';
-                } else if (defaultFont && fonts.indexOf(defaultFont) !== -1) {
-                    body.style.fontFamily = defaultFont + ', serif';
-                } else {
-                    body.style.fontFamily = 'serif';
+                if (storedFont && fonts.some(function(f) { return f.name === storedFont; })) {
+                    selectedFontName = storedFont;
+                } else if (defaultFont && fonts.some(function(f) { return f.name === defaultFont; })) {
+                    selectedFontName = defaultFont;
                 }
             } else {
                 // 开关关闭：强制所有用户使用后台默认字体
-                if (defaultFont && fonts.indexOf(defaultFont) !== -1) {
-                    body.style.fontFamily = defaultFont + ', serif';
-                } else {
-                    body.style.fontFamily = 'serif';
+                if (defaultFont && fonts.some(function(f) { return f.name === defaultFont; })) {
+                    selectedFontName = defaultFont;
                 }
-                // ★ 如果用户之前有选择，但开关关闭了，就清除本地存储，防止下次开关开启时恢复旧选择
+                // 如果用户之前有选择，但开关关闭了，清除本地存储
                 if (storedFont) {
                     localStorage.removeItem('user_selected_font');
                 }
+            }
+
+            // 3. 查找字体条目
+            var fontEntry = null;
+            if (selectedFontName) {
+                fontEntry = fonts.find(function(f) { return f.name === selectedFontName; });
+            }
+
+            // 4. 加载自定义字体（如果有路径）
+            if (fontEntry && fontEntry.source === 'custom' && fontEntry.path) {
+                // 生成唯一的 @font-face 名称（避免冲突）
+                var safeFontName = fontEntry.name.replace(/\s/g, '_');
+                var fontFamilyName = 'CustomFont_' + safeFontName;
+
+                // 检查是否已存在该 @font-face 规则
+                var existingStyle = document.getElementById('custom-font-' + safeFontName);
+                if (!existingStyle) {
+                    // 创建 @font-face 规则
+                    var style = document.createElement('style');
+                    style.id = 'custom-font-' + safeFontName;
+                    style.textContent = '@font-face { font-family: "' + fontFamilyName + '"; src: url("' + fontEntry.path + '") format("truetype"); font-weight: normal; font-style: normal; }';
+                    document.head.appendChild(style);
+                }
+
+                // 应用字体
+                body.style.fontFamily = fontFamilyName + ', serif';
+            } else if (fontEntry) {
+                // 系统字体：直接使用名称
+                body.style.fontFamily = fontEntry.name + ', serif';
+            } else {
+                // 兜底
+                body.style.fontFamily = 'serif';
             }
 
             // 渲染字体下拉菜单
@@ -728,16 +764,16 @@
             select.appendChild(opt);
             fonts.forEach(function(f) {
                 var o = document.createElement('option');
-                o.value = f;
-                o.textContent = f;
-                if (localStorage.getItem('user_selected_font') === f) o.selected = true;
+                o.value = f.name;
+                o.textContent = f.name;
+                if (localStorage.getItem('user_selected_font') === f.name) o.selected = true;
                 select.appendChild(o);
             });
             select.addEventListener('change', function() {
                 var val = this.value;
                 if (val) {
                     localStorage.setItem('user_selected_font', val);
-                    document.body.style.fontFamily = val + ', serif';
+                    applyFontSettings();
                 } else {
                     localStorage.removeItem('user_selected_font');
                     applyFontSettings();
@@ -747,7 +783,7 @@
             container.appendChild(wrapper);
         }
 
-        // ========== ★★★ 修复音乐播放器加载（确保能播放后台设置的路径）★★★ ==========
+        // ========== ★★★ 修复音乐播放器：左侧定位 + 完整拖拽 + 智能面板方向 ★★★ ==========
         function applyMusicSettings() {
             var player = document.getElementById('musicPlayer');
             if (!musicEnabled) {
@@ -761,8 +797,6 @@
             if (pos && player) {
                 try {
                     var p = JSON.parse(pos);
-                    if (p.right !== undefined) player.style.right = p.right + 'px';
-                    if (p.bottom !== undefined) player.style.bottom = p.bottom + 'px';
                     if (p.left !== undefined) player.style.left = p.left + 'px';
                     if (p.top !== undefined) player.style.top = p.top + 'px';
                 } catch (e) {}
@@ -776,17 +810,13 @@
                 currentSongIndex = idx;
                 var songNameEl = document.getElementById('musicSongName');
                 if (songNameEl) songNameEl.textContent = musicList[idx].name;
-                // ★ 关键：设置音频源，确保能加载
                 audio.src = musicList[idx].url;
-                // 如果开启了自动播放，尝试播放
                 if (musicAutoPlay) {
                     audio.play().then(function() {
                         isPlaying = true;
                         var playBtn = document.getElementById('musicPlayBtn');
                         if (playBtn) playBtn.textContent = '⏸';
-                    }).catch(function() {
-                        // 自动播放被浏览器阻止时静默处理，不影响用户体验
-                    });
+                    }).catch(function() {});
                 }
             } else {
                 var songNameEl = document.getElementById('musicSongName');
@@ -799,98 +829,145 @@
                 var toggleBtn = document.getElementById('musicToggle');
                 var panel = document.getElementById('musicPanel');
 
-                // --- 点击切换面板 ---
+                // ★★★ 智能面板方向函数 ★★★
+                function updatePanelDirection() {
+                    var rect = player.getBoundingClientRect();
+                    var winW = window.innerWidth;
+                    var winH = window.innerHeight;
+                    var btnW = 56;
+                    var btnH = 56;
+                    var panelW = 280;
+                    var panelH = 180;
+
+                    // 判断悬浮球中心位置
+                    var centerX = rect.left + btnW / 2;
+                    var centerY = rect.top + btnH / 2;
+
+                    // 水平方向：如果在右半屏，面板向左展开；否则向右
+                    var leftDir = centerX > winW / 2;
+                    // 垂直方向：如果在下半屏，面板向上展开；否则向下
+                    var topDir = centerY > winH / 2;
+
+                    // 重置样式
+                    panel.style.left = '';
+                    panel.style.right = '';
+                    panel.style.top = '';
+                    panel.style.bottom = '';
+
+                    if (leftDir) {
+                        // 向左展开：面板右边缘对齐按钮左边缘
+                        panel.style.right = (winW - rect.left + 10) + 'px';
+                        panel.style.left = 'auto';
+                    } else {
+                        // 向右展开：面板左边缘对齐按钮右边缘
+                        panel.style.left = (rect.left + btnW + 10) + 'px';
+                        panel.style.right = 'auto';
+                    }
+
+                    if (topDir) {
+                        // 向上展开：面板下边缘对齐按钮上边缘
+                        panel.style.bottom = (winH - rect.top + 10) + 'px';
+                        panel.style.top = 'auto';
+                    } else {
+                        // 向下展开：面板上边缘对齐按钮下边缘
+                        panel.style.top = (rect.top + btnH + 10) + 'px';
+                        panel.style.bottom = 'auto';
+                    }
+
+                    // 确保面板不超出屏幕边界（微调）
+                    // 由于无法精确获取面板实际尺寸，使用CSS左/右/上/下定位已经能自适应
+                }
+
+                // 点击切换面板
                 toggleBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     musicPanelOpen = !musicPanelOpen;
                     panel.classList.toggle('open', musicPanelOpen);
+                    if (musicPanelOpen) {
+                        updatePanelDirection();
+                    }
                 });
 
                 // --- 拖拽功能（鼠标+触摸） ---
-                var dragStartX = 0,
-                    dragStartY = 0;
-                var dragMoved = false;
-
-                toggleBtn.addEventListener('touchstart', function(e) {
-                    var touch = e.touches[0];
-                    dragStartX = touch.clientX;
-                    dragStartY = touch.clientY;
-                    dragMoved = false;
-                }, { passive: true });
-
-                toggleBtn.addEventListener('touchmove', function(e) {
-                    var touch = e.touches[0];
-                    var dx = touch.clientX - dragStartX;
-                    var dy = touch.clientY - dragStartY;
-                    if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
-                        dragMoved = true;
-                    }
-                }, { passive: true });
-
-                toggleBtn.addEventListener('touchend', function(e) {
-                    if (!dragMoved && panel) {
-                        musicPanelOpen = !musicPanelOpen;
-                        panel.classList.toggle('open', musicPanelOpen);
-                    } else if (player) {
-                        var rect = player.getBoundingClientRect();
-                        localStorage.setItem('music_player_position', JSON.stringify({ left: rect.left,
-                            top: rect.top }));
-                    }
-                });
-
                 var isDragging = false;
-                var dragStartX2 = 0,
-                    dragStartY2 = 0;
-                var origLeft = 0,
-                    origTop = 0;
+                var dragOffsetX = 0,
+                    dragOffsetY = 0;
                 var moved = false;
 
-                toggleBtn.addEventListener('mousedown', function(e) {
+                function startDrag(e) {
+                    var clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                    var clientY = e.clientY || (e.touches && e.touches[0].clientY);
+                    if (clientX === undefined) return;
+                    var rect = player.getBoundingClientRect();
+                    dragOffsetX = clientX - rect.left;
+                    dragOffsetY = clientY - rect.top;
                     isDragging = true;
                     moved = false;
-                    dragStartX2 = e.clientX;
-                    dragStartY2 = e.clientY;
-                    if (player) {
-                        var rect = player.getBoundingClientRect();
-                        origLeft = rect.left;
-                        origTop = rect.top;
-                    }
-                    document.addEventListener('mousemove', onMove);
-                    document.addEventListener('mouseup', onUp);
-                });
+                    player.style.cursor = 'grabbing';
+                }
 
-                function onMove(e) {
-                    if (!isDragging || !player) return;
-                    var dx = e.clientX - dragStartX2;
-                    var dy = e.clientY - dragStartY2;
-                    if (Math.abs(dx) > 5 || Math.abs(dy) > 5) moved = true;
-                    var newX = origLeft + dx;
-                    var newY = origTop + dy;
+                function moveDrag(e) {
+                    if (!isDragging) return;
+                    var clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                    var clientY = e.clientY || (e.touches && e.touches[0].clientY);
+                    if (clientX === undefined) return;
                     var winW = window.innerWidth;
                     var winH = window.innerHeight;
                     var w = player.offsetWidth || 80;
                     var h = player.offsetHeight || 80;
+                    var newX = clientX - dragOffsetX;
+                    var newY = clientY - dragOffsetY;
                     newX = Math.max(0, Math.min(winW - w, newX));
                     newY = Math.max(0, Math.min(winH - h, newY));
                     player.style.left = newX + 'px';
                     player.style.top = newY + 'px';
                     player.style.right = 'auto';
                     player.style.bottom = 'auto';
+                    moved = true;
+                    e.preventDefault();
                 }
 
-                function onUp() {
-                    document.removeEventListener('mousemove', onMove);
-                    document.removeEventListener('mouseup', onUp);
-                    if (isDragging && moved && player) {
-                        var rect2 = player.getBoundingClientRect();
-                        localStorage.setItem('music_player_position', JSON.stringify({ left: rect2.left,
-                            top: rect2.top }));
-                    } else if (isDragging && !moved && panel) {
-                        musicPanelOpen = !musicPanelOpen;
-                        panel.classList.toggle('open', musicPanelOpen);
+                function endDrag(e) {
+                    if (isDragging) {
+                        isDragging = false;
+                        player.style.cursor = 'grab';
+                        if (moved) {
+                            var rect = player.getBoundingClientRect();
+                            localStorage.setItem('music_player_position', JSON.stringify({
+                                left: rect.left,
+                                top: rect.top
+                            }));
+                            // 如果面板已打开，重新调整方向
+                            if (panel.classList.contains('open')) {
+                                updatePanelDirection();
+                            }
+                        }
                     }
-                    isDragging = false;
                 }
+
+                toggleBtn.addEventListener('mousedown', startDrag);
+                document.addEventListener('mousemove', moveDrag);
+                document.addEventListener('mouseup', endDrag);
+                toggleBtn.addEventListener('touchstart', startDrag, { passive: true });
+                document.addEventListener('touchmove', moveDrag, { passive: false });
+                document.addEventListener('touchend', endDrag);
+
+                // 面板外点击关闭
+                document.addEventListener('click', function(e) {
+                    if (!panel || !panel.classList.contains('open')) return;
+                    var isInside = panel.contains(e.target) || (toggleBtn && toggleBtn.contains(e.target));
+                    if (!isInside) {
+                        panel.classList.remove('open');
+                        musicPanelOpen = false;
+                    }
+                });
+
+                // 窗口大小变化时重新调整面板方向
+                window.addEventListener('resize', function() {
+                    if (panel.classList.contains('open')) {
+                        updatePanelDirection();
+                    }
+                });
 
                 // --- 播放控制 ---
                 var playBtn = document.getElementById('musicPlayBtn');
@@ -905,9 +982,7 @@
                             audio.play().then(function() {
                                 isPlaying = true;
                                 document.getElementById('musicPlayBtn').textContent = '⏸';
-                            }).catch(function() {
-                                // 播放失败静默处理
-                            });
+                            }).catch(function() {});
                         }
                     });
                 }
@@ -957,16 +1032,6 @@
                         if (playBtn2) playBtn2.textContent = '▶️';
                     }
                 });
-
-                // --- 点击外部关闭面板 ---
-                document.addEventListener('click', function(e) {
-                    if (!panel || !panel.classList.contains('open')) return;
-                    var isInside = panel.contains(e.target) || (toggleBtn && toggleBtn.contains(e.target));
-                    if (!isInside) {
-                        panel.classList.remove('open');
-                        musicPanelOpen = false;
-                    }
-                });
             }
         }
 
@@ -980,12 +1045,10 @@
                 isPlaying = true;
                 var playBtn = document.getElementById('musicPlayBtn');
                 if (playBtn) playBtn.textContent = '⏸';
-            }).catch(function() {
-                // 播放失败静默处理
-            });
+            }).catch(function() {});
         }
 
-        // ========== 渲染引擎 ==========
+        // ========== 渲染引擎（与之前相同） ==========
         function renderPage(page, data) {
             var container = document.getElementById('mainContent');
             if (!container) return;
@@ -1300,7 +1363,7 @@
             }
         }
 
-        // ========== 文章详情（含阅读数统计，已保留原有逻辑） ==========
+        // ========== 文章详情（含阅读数统计） ==========
         function renderPostDetail(container, postId) {
             var post = posts.find(function(p) { return p.id === postId; });
             if (!post) {
@@ -1309,7 +1372,7 @@
             }
             currentPostId = postId;
 
-            // 阅读数统计（保留原有逻辑，未改动）
+            // 阅读数统计
             if (!sessionStorage.getItem('viewed_' + post.id)) {
                 post.views = (post.views || 0) + 1;
                 sessionStorage.setItem('viewed_' + post.id, '1');
@@ -1390,8 +1453,7 @@
             html += '</div>';
             container.innerHTML = html;
 
-            // ★ 修复返回键问题：每次进入详情页时用 pushState 添加历史记录，但为了递进返回，这里保持原有逻辑即可
-            // 我们已经在 initFrontend 和 popstate 中做了完整处理
+            // 返回键处理：pushState 添加历史记录
             if (window.history && window.history.pushState) {
                 window.history.pushState({}, '', '#post-' + post.id);
             }
@@ -1569,12 +1631,10 @@
             if (hash.startsWith('#post-')) {
                 var id = parseInt(hash.replace('#post-', ''));
                 if (!isNaN(id)) {
-                    // 从历史记录返回时，渲染对应的文章详情页
                     currentPage = 'post';
                     currentPostId = id;
                     renderPage('post', id);
                 } else {
-                    // 如果哈希无效，回到首页
                     currentPage = 'home';
                     renderPage('home');
                 }
@@ -1591,7 +1651,6 @@
                 currentPage = 'interact';
                 renderPage('interact');
             } else {
-                // 无哈希或空哈希，回到首页
                 currentPage = 'home';
                 renderPage('home');
             }
@@ -1610,7 +1669,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // ========== ★★★ 修复初始化路由（确保刷新后正确加载页面）★★★ ==========
+        // ========== ★★★ 修复初始化路由 ★★★ ==========
         function initFrontend() {
             applySiteSettings();
             applyFontSettings();
@@ -1643,7 +1702,7 @@
                 renderPage('home');
             }
 
-            // 页面可见时刷新数据（保持原逻辑）
+            // 页面可见时刷新数据
             document.addEventListener('visibilitychange', function() {
                 if (!document.hidden) {
                     loadAllData().then(function() {
