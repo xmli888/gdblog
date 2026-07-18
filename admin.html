@@ -223,7 +223,7 @@
         }
 
         // ============================================================
-        //  渲染管理面板（包含字体管理面板）
+        //  渲染管理面板（包含字体管理、留言管理）
         // ============================================================
         function renderAdmin() {
             var container = document.getElementById('app');
@@ -233,22 +233,14 @@
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">📄 文章管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-list" id="adminPostList"></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">📂 分类管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;"><input type="text" id="newCategoryName" placeholder="新分类名称" style="flex:1;min-height:38px;" /><button class="btn btn-primary" onclick="addCategory()" style="min-height:38px;">添加</button></div><div class="admin-list" id="categoryAdminList"></div></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🏷️ 标签管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;"><input type="text" id="newTagName" placeholder="新标签名称" style="flex:1;min-height:38px;" /><button class="btn btn-primary" onclick="addTag()" style="min-height:38px;">添加</button></div><div class="admin-list" id="tagAdminList"></div></div></div></div>' +
-                // ★★★ 字体管理面板 ★★★
-                '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🔤 字体管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 系统字体（楷体、宋体等）由操作系统提供，无需上传文件。<br/>自定义字体需要上传字体文件（.ttf/.woff/.woff2）并填写正确的路径。</div>' +
-                // 添加字体表单
-                '<div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px;"><div style="flex:2; min-width:150px;"><label style="font-weight:bold; display:block; font-size:13px; margin-bottom:2px;">字体名称</label><input type="text" id="newFontName" placeholder="如：禹卫书法行书" style="width:100%;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:14px;min-height:38px;" /></div><div style="flex:3; min-width:200px;"><label style="font-weight:bold; display:block; font-size:13px; margin-bottom:2px;">字体文件路径</label><input type="text" id="newFontPath" placeholder="如：myzt/禹卫书法行书.ttf" style="width:100%;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:14px;min-height:38px;" /></div><div style="flex:0 0 auto; align-self:flex-end;"><button class="btn btn-primary" onclick="addFont()" style="min-height:38px;padding:0 24px;">添加</button></div></div>' +
-                // 默认字体选择 + 重置按钮
-                '<div class="font-controls"><div class="default-selector"><label style="font-weight:bold; font-size:13px;">默认字体</label><select id="defaultFontSelect" onchange="setDefaultFontFromSelect()"></select></div><div><button class="btn btn-secondary" onclick="resetDefaultFont()" style="min-height:38px;">重置默认</button><button class="btn btn-secondary" onclick="resetFontList()" style="min-height:38px;margin-left:8px;">恢复默认列表</button></div></div>' +
-                // 字体列表
-                '<div class="admin-list" id="fontAdminList"></div></div></div></div>' +
-                // ★★★ 其他面板 ★★★
+                '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🔤 字体管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 系统字体（楷体、宋体等）由操作系统提供，无需上传文件。<br/>自定义字体需要上传字体文件（.ttf/.woff/.woff2）并填写正确的路径。</div><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px;"><div style="flex:2; min-width:150px;"><label style="font-weight:bold; display:block; font-size:13px; margin-bottom:2px;">字体名称</label><input type="text" id="newFontName" placeholder="如：禹卫书法行书" style="width:100%;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:14px;min-height:38px;" /></div><div style="flex:3; min-width:200px;"><label style="font-weight:bold; display:block; font-size:13px; margin-bottom:2px;">字体文件路径</label><input type="text" id="newFontPath" placeholder="如：myzt/禹卫书法行书.ttf" style="width:100%;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:14px;min-height:38px;" /></div><div style="flex:0 0 auto; align-self:flex-end;"><button class="btn btn-primary" onclick="addFont()" style="min-height:38px;padding:0 24px;">添加</button></div></div><div class="font-controls"><div class="default-selector"><label style="font-weight:bold; font-size:13px;">默认字体</label><select id="defaultFontSelect" onchange="setDefaultFontFromSelect()"></select></div><div><button class="btn btn-secondary" onclick="resetDefaultFont()" style="min-height:38px;">重置默认</button><button class="btn btn-secondary" onclick="resetFontList()" style="min-height:38px;margin-left:8px;">恢复默认列表</button></div></div><div style="display:flex; gap:10px; align-items:center; margin:12px 0;"><label style="font-weight:bold; font-size:13px;">前台字体切换</label><input type="checkbox" id="fontSwitchCheck" onchange="saveFontSettings()" /><span style="font-size:13px; color:#8a7a6a;">开启后用户可自定义字体</span></div><div class="admin-list" id="fontAdminList"></div></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🎵 音乐管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 支持本地音乐路径或网络音乐链接。</div><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;"><input type="text" id="newMusicName" placeholder="歌曲名" style="flex:1;min-height:38px;" /><input type="text" id="newMusicUrl" placeholder="路径 / URL" style="flex:2;min-height:38px;" /><button class="btn btn-primary" onclick="addMusic()" style="min-height:38px;">添加</button></div><div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:10px;"><label><input type="checkbox" id="musicEnabledCheck" onchange="saveMusicSettings()" /> 显示播放器</label><label><input type="checkbox" id="musicAutoPlayCheck" onchange="saveMusicSettings()" /> 自动播放</label><label>默认歌曲 <select id="musicDefaultSelect" style="min-height:38px;padding:6px 10px;"></select></label></div><div class="admin-list" id="musicAdminList"></div></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">📜 关于页面 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="form-group"><textarea id="aboutEditor" rows="6"></textarea></div><button class="btn btn-primary" onclick="saveAbout()">保存关于</button></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🔐 安全设置 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="form-group"><label>公钥</label><textarea id="secPublicKey" rows="3" style="font-family:monospace;font-size:12px;"></textarea></div><div class="form-group"><label>挑战码密文</label><textarea id="secChallengeCipher" rows="2" style="font-family:monospace;font-size:12px;"></textarea></div><div class="form-group"><label>期望明文</label><input type="text" id="secExpectedPlain" style="min-height:38px;" /></div><div class="btn-group"><button class="btn btn-primary" onclick="saveSecuritySettings()">保存安全设置</button><button class="btn btn-secondary" onclick="resetSecuritySettings()">恢复默认</button></div></div></div></div>' +
                 '<div class="panel" id="githubConfigPanel"><div class="panel-header" onclick="togglePanel(this)">⚙️ GitHub 设置 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 配置 GitHub Token 后，文章和配置才能保存到远程仓库。<a href="https://github.com/settings/tokens" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处生成 Token</a>（需勾选 <code>repo</code> 权限）。</div><div class="form-group"><label>🔑 Personal Access Token</label><input type="password" id="githubTokenInput" placeholder="ghp_xxxxxxxxxxxx" style="min-height:38px;" /></div><div class="form-group"><label>👤 GitHub 用户名</label><input type="text" id="githubUserInput" placeholder="你的用户名" style="min-height:38px;" /></div><div class="form-group"><label>📁 仓库名</label><input type="text" id="githubRepoInput" placeholder="仓库名" style="min-height:38px;" /></div><div class="btn-group"><button class="btn btn-primary" onclick="saveGitHubConfig()">保存配置</button><button class="btn btn-secondary" onclick="clearGitHubConfig()">清空配置</button></div><div id="githubConfigStatus" style="margin-top:8px;font-size:13px;color:#8a7a6a;"></div></div></div></div>' +
                 '<div class="panel" id="backupPanel"><div class="panel-header" onclick="togglePanel(this)">💾 备份设置 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 备份当前文章、配置和留言数据。<br/>可下载单个文件，也可批量选择后压缩下载。</div><div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;"><button class="btn btn-secondary" onclick="downloadSingleFile(\'posts\')">📥 posts.json</button><button class="btn btn-secondary" onclick="downloadSingleFile(\'config\')">📥 config.json</button><button class="btn btn-secondary" onclick="downloadSingleFile(\'messages\')">📥 messages.json</button></div><div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;"><label><input type="checkbox" id="backupPosts" checked /> posts.json</label><label><input type="checkbox" id="backupConfig" checked /> config.json</label><label><input type="checkbox" id="backupMessages" checked /> messages.json</label><button class="btn btn-secondary" onclick="toggleAllBackup()">全选/取消</button><button class="btn btn-secondary" onclick="downloadBackup()">📦 下载选中 (ZIP)</button><button class="btn btn-primary" onclick="syncBackupToRepo()">📤 同步到仓库</button><button class="btn btn-secondary" onclick="document.getElementById(\'uploadBackupInput\').click()">📤 上传文件</button><input type="file" id="uploadBackupInput" accept=".json" style="display:none;" onchange="uploadBackupFile(event)" /></div><div id="backupStatus" style="font-size:13px;color:#8a7a6a;">上次备份：<span id="lastBackupTime">暂无</span></div></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">💬 评论设置 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 使用 Giscus 评论系统（基于 GitHub Discussions）。<a href="https://giscus.app/zh-CN" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处获取配置</a></div><div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;"><label style="font-weight:bold;">自动加载评论</label><input type="checkbox" id="autoLoadComments" /><span style="font-size:13px; color:#8a7a6a;">开启后文章页面自动加载评论区</span></div><div class="form-group"><label>仓库名</label><input type="text" id="giscusRepo" placeholder="用户名/仓库名" style="min-height:38px;" /></div><div class="form-group"><label>Repo ID</label><input type="text" id="giscusRepoId" placeholder="R_xxxxxxxxxx" style="min-height:38px;" /></div><div class="form-group"><label>分类</label><input type="text" id="giscusCategory" placeholder="General" style="min-height:38px;" /></div><div class="form-group"><label>分类 ID</label><input type="text" id="giscusCategoryId" placeholder="DIC_xxxxxxx" style="min-height:38px;" /></div><div class="btn-group"><button class="btn btn-primary" onclick="saveCommentSettings()">保存评论设置</button></div></div></div></div>' +
-                // ★★★ 留言管理面板（已完整保留）★★★
+                // ★★★ 留言管理面板（完整功能）★★★
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">💬 留言管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;"><input type="text" id="adminMsgNickname" placeholder="昵称" style="flex:1;min-height:38px;" /><input type="text" id="adminMsgEmail" placeholder="邮箱" style="flex:1;min-height:38px;" /><input type="text" id="adminMsgContent" placeholder="留言内容" style="flex:2;min-height:38px;" /><button class="btn btn-primary" onclick="adminAddMessage()" style="min-height:38px;">添加留言</button></div><div class="admin-list" id="messageAdminList"></div></div></div></div>';
 
             loadAdminData();
@@ -569,7 +561,6 @@
             var container = document.getElementById('fontAdminList');
             if (!container) return;
 
-            // 填充默认字体下拉框
             populateDefaultFontSelect();
 
             var html = '';
@@ -664,17 +655,14 @@
             var name = document.getElementById('newFontName').value.trim();
             var path = document.getElementById('newFontPath').value.trim();
             if (!name) { showToast('请输入字体名称', 'error'); return; }
-            // 检查是否已存在
             var exists = fonts.some(function(f) { return f.name === name; });
             if (exists) { showToast('字体 "' + name + '" 已存在', 'error'); return; }
-            // 判断是否为系统字体（与系统字体名称冲突）
             var isSystem = SYSTEM_FONTS.some(function(sf) { return sf.name === name; });
             if (isSystem) {
                 showToast('"' + name + '" 是系统字体，无需添加', 'error');
                 return;
             }
             fonts.push({ name: name, source: 'custom', path: path || '' });
-            // 如果没有默认字体，设为当前
             if (!defaultFont) { defaultFont = name; }
             saveConfigData().then(function() {
                 document.getElementById('newFontName').value = '';
@@ -704,7 +692,6 @@
         function loadFontSettingsForm() {
             var switchCheck = document.getElementById('fontSwitchCheck');
             if (switchCheck) switchCheck.checked = fontSwitchEnabled;
-            // 现在字体管理由新的 loadFontAdminList 负责
             loadFontAdminList();
         }
 
@@ -714,7 +701,6 @@
             saveConfigData().then(function() { showToast('字体设置已保存', 'success'); });
         }
 
-        // 恢复默认字体设置（兼容旧版）
         function resetFonts() {
             resetFontList();
         }
@@ -1036,7 +1022,7 @@
         }
 
         // ============================================================
-        //  ★★★ 留言管理功能（完整保留）★★★
+        //  ★★★ 留言管理（完整功能）★★★
         // ============================================================
         function renderMessageAdminList() {
             var container = document.getElementById('messageAdminList');
@@ -1109,9 +1095,6 @@
             });
         }
 
-        // ============================================================
-        //  Markdown 辅助
-        // ============================================================
         function insertMarkdown(type) {
             var textarea = document.getElementById('editContent');
             var start = textarea.selectionStart;
