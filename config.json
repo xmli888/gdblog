@@ -23,20 +23,46 @@
     "authorDesc": "闲来读书，兴至写文。\n以文会友，以友辅仁。"
   },
   "fonts": [
-    "楷体",
-    "宋体",
-    "黑体",
-    "仿宋",
-    "行楷",
-    "隶书",
-    "方正"
+    {
+      "name": "楷体",
+      "source": "system"
+    },
+    {
+      "name": "宋体",
+      "source": "system"
+    },
+    {
+      "name": "黑体",
+      "source": "system"
+    },
+    {
+      "name": "仿宋",
+      "source": "system"
+    },
+    {
+      "name": "行楷",
+      "source": "system"
+    },
+    {
+      "name": "隶书",
+      "source": "system"
+    },
+    {
+      "name": "方正",
+      "source": "system"
+    }
   ],
   "defaultFont": "楷体",
   "fontSwitchEnabled": true,
-  "musicList": [],
+  "musicList": [
+    {
+      "name": "古典",
+      "url": "bj.yy"
+    }
+  ],
   "musicEnabled": true,
   "musicAutoPlay": false,
-  "musicDefault": "",
+  "musicDefault": "古典",
   "lastBackupTime": "",
   "autoLoadComments": true,
   "giscus": {
