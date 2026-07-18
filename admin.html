@@ -234,6 +234,7 @@
                 '<div class="panel" id="githubConfigPanel"><div class="panel-header" onclick="togglePanel(this)">⚙️ GitHub 设置 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 配置 GitHub Token 后，文章和配置才能保存到远程仓库。<a href="https://github.com/settings/tokens" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处生成 Token</a>（需勾选 <code>repo</code> 权限）。</div><div class="form-group"><label>🔑 Personal Access Token</label><input type="password" id="githubTokenInput" placeholder="ghp_xxxxxxxxxxxx" style="min-height:38px;" /></div><div class="form-group"><label>👤 GitHub 用户名</label><input type="text" id="githubUserInput" placeholder="你的用户名" style="min-height:38px;" /></div><div class="form-group"><label>📁 仓库名</label><input type="text" id="githubRepoInput" placeholder="仓库名" style="min-height:38px;" /></div><div class="btn-group"><button class="btn btn-primary" onclick="saveGitHubConfig()">保存配置</button><button class="btn btn-secondary" onclick="clearGitHubConfig()">清空配置</button></div><div id="githubConfigStatus" style="margin-top:8px;font-size:13px;color:#8a7a6a;"></div></div></div></div>' +
                 '<div class="panel" id="backupPanel"><div class="panel-header" onclick="togglePanel(this)">💾 备份设置 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 备份当前文章、配置和留言数据。<br/>可下载单个文件，也可批量选择后压缩下载。</div><div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;"><button class="btn btn-secondary" onclick="downloadSingleFile(\'posts\')">📥 posts.json</button><button class="btn btn-secondary" onclick="downloadSingleFile(\'config\')">📥 config.json</button><button class="btn btn-secondary" onclick="downloadSingleFile(\'messages\')">📥 messages.json</button></div><div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;"><label><input type="checkbox" id="backupPosts" checked /> posts.json</label><label><input type="checkbox" id="backupConfig" checked /> config.json</label><label><input type="checkbox" id="backupMessages" checked /> messages.json</label><button class="btn btn-secondary" onclick="toggleAllBackup()">全选/取消</button><button class="btn btn-secondary" onclick="downloadBackup()">📦 下载选中 (ZIP)</button><button class="btn btn-primary" onclick="syncBackupToRepo()">📤 同步到仓库</button><button class="btn btn-secondary" onclick="document.getElementById(\'uploadBackupInput\').click()">📤 上传文件</button><input type="file" id="uploadBackupInput" accept=".json" style="display:none;" onchange="uploadBackupFile(event)" /></div><div id="backupStatus" style="font-size:13px;color:#8a7a6a;">上次备份：<span id="lastBackupTime">暂无</span></div></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">💬 评论设置 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 使用 Giscus 评论系统（基于 GitHub Discussions）。<a href="https://giscus.app/zh-CN" target="_blank" style="color:#c23531;text-decoration:underline;">点击此处获取配置</a></div><div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;"><label style="font-weight:bold;">自动加载评论</label><input type="checkbox" id="autoLoadComments" /><span style="font-size:13px; color:#8a7a6a;">开启后文章页面自动加载评论区</span></div><div class="form-group"><label>仓库名</label><input type="text" id="giscusRepo" placeholder="用户名/仓库名" style="min-height:38px;" /></div><div class="form-group"><label>Repo ID</label><input type="text" id="giscusRepoId" placeholder="R_xxxxxxxxxx" style="min-height:38px;" /></div><div class="form-group"><label>分类</label><input type="text" id="giscusCategory" placeholder="General" style="min-height:38px;" /></div><div class="form-group"><label>分类 ID</label><input type="text" id="giscusCategoryId" placeholder="DIC_xxxxxxx" style="min-height:38px;" /></div><div class="btn-group"><button class="btn btn-primary" onclick="saveCommentSettings()">保存评论设置</button></div></div></div></div>' +
+                // ★★★ 留言管理面板（已恢复）★★★
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">💬 留言管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:10px;"><input type="text" id="adminMsgNickname" placeholder="昵称" style="flex:1;min-height:38px;" /><input type="text" id="adminMsgEmail" placeholder="邮箱" style="flex:1;min-height:38px;" /><input type="text" id="adminMsgContent" placeholder="留言内容" style="flex:2;min-height:38px;" /><button class="btn btn-primary" onclick="adminAddMessage()" style="min-height:38px;">添加留言</button></div><div class="admin-list" id="messageAdminList"></div></div></div></div>';
 
             loadAdminData();
@@ -648,8 +649,8 @@
             var font = fonts[index];
             if (!font) return;
             var msg = isSystem ?
-                '确定删除系统字体“' + font.name + '”吗？删除后可通过“恢复默认列表”还原。' :
-                '确定删除自定义字体“' + font.name + '”吗？';
+                '确定删除系统字体“‘ + font.name + '”吗？删除后可通过“恢复默认列表”还原。' :
+                '确定删除自定义字体“‘ + font.name + '”吗？';
             if (!confirm(msg)) return;
             fonts.splice(index, 1);
             if (defaultFont === font.name) {
@@ -974,6 +975,9 @@
             saveConfigData().then(function() { showToast('评论设置已保存', 'success'); });
         }
 
+        // ============================================================
+        //  ★★★ 留言管理功能（完整保留）★★★
+        // ============================================================
         function renderMessageAdminList() {
             var container = document.getElementById('messageAdminList');
             if (!container) return;
