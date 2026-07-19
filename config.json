@@ -61,17 +61,13 @@
   "fontSwitchEnabled": true,
   "musicList": [
     {
-      "name": "古典",
-      "url": "bj.yy"
-    },
-    {
       "name": "乌龙山剿匪记",
       "url": "myyy/wlsjfj.yy"
     }
   ],
   "musicEnabled": true,
   "musicAutoPlay": false,
-  "musicDefault": "古典",
+  "musicDefault": "乌龙山剿匪记",
   "lastBackupTime": "",
   "autoLoadComments": true,
   "giscus": {
