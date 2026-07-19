@@ -71,15 +71,11 @@
     {
       "name": "乌龙山",
       "url": "myyy/wlsjfj.mp3"
-    },
-    {
-      "name": "山隐居",
-      "url": "myyy/bj.mp3"
     }
   ],
   "musicEnabled": true,
-  "musicAutoPlay": true,
-  "musicDefault": "乌龙山",
+  "musicAutoPlay": false,
+  "musicDefault": "乌龙山剿匪记",
   "lastBackupTime": "",
   "autoLoadComments": true,
   "giscus": {
