@@ -50,6 +50,11 @@
     {
       "name": "方正",
       "source": "system"
+    },
+    {
+      "name": "行简",
+      "source": "custom",
+      "path": "myzt/禹卫书法行书简体.ttf"
     }
   ],
   "defaultFont": "楷体",
