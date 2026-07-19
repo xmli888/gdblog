@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 移动端自适应适配，兼容所有手机设备 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>全局自定义字体跨设备浏览器测试页</title>
+    <style>
+        /* 核心：定义服务端自定义字体 */
+        @font-face {
+            font-family: "YuWeiShuXing"; /* 自定义字体名称，页面全局调用 */
+            src: url("./myzt/禹卫书法行书简体.ttf") format("truetype");
+            /* 增加容错格式，提升各类浏览器兼容性 */
+            font-weight: normal;
+            font-style: normal;
+            /* 优先加载网页字体，不使用系统兜底字体 */
+            font-display: block;
+        }
+
+        /* 全局页面全部元素强制使用自定义字体，覆盖浏览器默认字体 */
+        * {
+            font-family: "YuWeiShuXing", sans-serif !important;
+        }
+
+        body {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 20px;
+            font-size: 22px;
+            line-height: 2;
+            color: #222;
+            background-color: #f8f8f8;
+        }
+
+        .title {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .tip-box {
+            padding:15px;
+            border:1px solid #999;
+            border-radius:12px;
+            background:#fff;
+            margin-bottom:30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="tip-box">
+        <p>设备检测提示：<span id="deviceInfo"></span></p>
+        <p>字体加载状态：<span id="fontStatus">加载中……</span></p>
+        <p>说明：本页面强制调用虚拟机服务端【禹卫书法行书简体】，所有手机、电脑、任意品牌、任意浏览器都不会调取本机系统字体</p>
+    </div>
+
+    <h2 class="title">山野随笔（自定义字体展示文本）</h2>
+    <div class="article">
+        <p>晨起缓步走入山间，薄雾缠绕连绵的青峰，清风穿过林间枝叶，携带着草木独有的清香。尘世里诸多琐碎烦忧，走到自然之中便慢慢消散无踪。</p>
+        <p>溪流顺着山石蜿蜒流淌，水底卵石清晰可见，几只飞鸟掠过长空，落于溪边老树的枝桠之上。人这一生，不必执着于得失浮沉，守一份平和心境，接纳岁月所有馈赠，便是难得的自在。</p>
+        <p>落日垂向远山的时候，整片山野染上温润的橘黄色霞光，晚风渐凉，步履缓缓归途。纵使前路尚有风雨，心怀温柔，便随处可见世间美好风光。</p>
+    </div>
+
+    <script>
+        // JS 获取设备、浏览器信息，用于测试区分不同访问终端
+        const userAgent = navigator.userAgent;
+        let deviceText = "";
+        // 判断移动端/PC端
+        if (/Android|iPhone|iPad|iPod|Huawei|Xiaomi|OPPO|VIVO/.test(userAgent)) {
+            deviceText = "移动手机设备";
+        } else {
+            deviceText = "台式电脑设备";
+        }
+        document.getElementById("deviceInfo").innerText = `${deviceText}，浏览器标识：${userAgent}`;
+
+        // JS 校验字体是否成功加载
+        document.fonts.ready.then(()=>{
+            document.getElementById("fontStatus").innerText = "✅ 服务端禹卫书法行书字体加载成功，已脱离设备本机默认字体";
+        }).catch(()=>{
+            document.getElementById("fontStatus").innerText = "❌ 字体加载失败，请检查 myzt 文件夹字体文件路径是否正确";
+        })
+    </script>
+</body>
+</html>
