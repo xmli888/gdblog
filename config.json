@@ -70,7 +70,7 @@
     }
   ],
   "musicEnabled": true,
-  "musicAutoPlay": false,
+  "musicAutoPlay": true,
   "musicDefault": "乌龙山",
   "lastBackupTime": "",
   "autoLoadComments": true,
