@@ -75,10 +75,10 @@
   "lastBackupTime": "",
   "autoLoadComments": true,
   "giscus": {
-    "repo": "",
-    "repoId": "",
+    "repo": "xmli888/gdblog",
+    "repoId": "R_kgDOTWTb0g",
     "category": "General",
-    "categoryId": ""
+    "categoryId": "DIC_kwDOTWTb0s4DBh5Y"
   },
   "security": {
     "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3GujvExMjKhKErfk8yI\nfQIdZ5WTZ8krD4Q0m/b7cbOSaqwnwMMepsSDw2SonkAEEyOCVnKhX1NXoeX56yRJ\n7hdoe82RGDLZ3UDUGpdknUSCDeAjblsfzawbEMpNObo/e4TcSh8UKKBtKOdVXGHw\nHzfh6l8PByjsgvd7oi/jXPJ5iKC6PMeiiGKhK6VqAs7AexMviKtICi8ZOZseepSR\nolZEVm7zMathz/Mu0XOtSGztEopDeQjsFjIW3nhJnPYiJV+/BCmvn4WuJ9PQM1nW\nsjsd/6WGFE/kMuP1wZytb3m7vJLYuxhmOP5uKuwEFm4pa84FwosBInd5nOAtfweL\nHQIDAQAB\n-----END PUBLIC KEY-----",
