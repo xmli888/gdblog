@@ -78,8 +78,8 @@
     }
   ],
   "musicEnabled": true,
-  "musicAutoPlay": false,
-  "musicDefault": "乌龙山剿匪记",
+  "musicAutoPlay": true,
+  "musicDefault": "乌龙山",
   "lastBackupTime": "",
   "autoLoadComments": true,
   "giscus": {
