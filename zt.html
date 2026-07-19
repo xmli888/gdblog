@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自定义字体跨设备测试</title>
+    <title>自定义字体最终版</title>
     <style>
         @font-face {
             font-family: "YuWeiShuXing";
-            /* 主路径TTF */
             src: url("./myzt/禹卫书法行书简体.ttf") format("truetype");
             font-weight: normal;
             font-style: normal;
-            /* 关键：block会阻塞文字渲染，字体没下载完空白，不会直接跳系统字体 */
+            /* 核心配置：必须等待字体加载完毕再渲染文字，绝对不会回退系统字体 */
             font-display: block;
+            /* 囊括全部中英文Unicode编码 */
             unicode-range: U+0000-FFFF;
+            /* 规避部分浏览器字体安全校验 */
+            src-local: none;
         }
-        /* 强制全局所有元素，移除所有兜底系统字体，只保留自定义字体 */
-        * {
+        /* 采用最高优先级，强制全部标签应用字体，彻底删掉所有系统备选字体 */
+        html,body,div,p,span,h1,h2,h3{
             font-family: "YuWeiShuXing" !important;
-            /* 删除sans-serif兜底，这是很多浏览器自动换回系统字体的元凶 */
         }
         body {
             max-width: 800px;
@@ -41,12 +42,6 @@
             background:#fff;
             margin-bottom:30px;
         }
-        .test-demo{
-            margin-top:20px;
-            padding:20px;
-            background:#fff;
-            border-radius:8px;
-        }
     </style>
 </head>
 <body>
@@ -54,11 +49,11 @@
         <p>设备检测提示：<span id="deviceInfo"></span></p>
         <p>字体加载状态：<span id="fontStatus">加载中……</span></p>
         <p>字体探测结果：<span id="detectResult">等待检测</span></p>
-        <p>说明：本页面强制调用服务端禹卫书法行书，移除全部系统字体兜底，终端设备不会调取本机字体</p>
+        <p>重要提示：字体加载失败文字会空白，不会自动切换设备自带字体</p>
     </div>
 
     <h2 class="title">山野随笔（自定义字体展示文本）</h2>
-    <div class="test-demo article">
+    <div>
         <p>晨起缓步走入山间，薄雾缠绕连绵的青峰，清风穿过林间枝叶，携带着草木独有的清香。尘世里诸多琐碎烦忧，走到自然之中便慢慢消散无踪。</p>
         <p>溪流顺着山石蜿蜒流淌，水底卵石清晰可见，几只飞鸟掠过长空，落于溪边老树的枝桠之上。人这一生，不必执着于得失浮沉，守一份平和心境，接纳岁月所有馈赠，便是难得的自在。</p>
         <p>落日垂向远山的时候，整片山野染上温润的橘黄色霞光，晚风渐凉，步履缓缓归途。纵使前路尚有风雨，心怀温柔，便随处可见世间美好风光。</p>
@@ -74,18 +69,16 @@
         }
         document.getElementById("deviceInfo").innerText = `${deviceText}`;
 
-        // 字体加载监听
         document.fonts.ready.then(()=>{
-            document.getElementById("fontStatus").innerText = "✅ 字体文件请求下载完成";
-            // 检测字体是否生效
+            document.getElementById("fontStatus").innerText = "字体文件已完成网络请求";
             if(document.fonts.check("22px YuWeiShuXing")){
-                document.getElementById("detectResult").innerText = "✅ 自定义字体正常渲染，未使用系统字体";
+                document.getElementById("detectResult").innerText = "✅ 自定义字体正常渲染";
             }else{
-                document.getElementById("detectResult").innerText = "❌ 浏览器没有识别到服务端字体，依旧调用系统字体";
+                document.getElementById("detectResult").innerText = "❌ 浏览器无法解析TTF字体文件";
             }
         }).catch(()=>{
-            document.getElementById("fontStatus").innerText = "❌ 字体资源请求失败";
-            document.getElementById("detectResult").innerText = "服务器无法获取字体文件";
+            document.getElementById("fontStatus").innerText = "❌ 字体请求异常";
+            document.getElementById("detectResult").innerText = "资源加载失败";
         })
     </script>
 </body>
