@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🎵 频谱增强版 · 14种效果</title>
+    <style>
+        /* ============================================================
+           基础样式
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #1a1a2e;
+            min-height: 100vh;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', 'PingFang SC', sans-serif;
+        }
+
+        /* ============================================================
+           悬浮球（三合一动画）
+           ============================================================ */
+        #toggleWrapper {
+            position: fixed;
+            bottom: 30px;
+            left: 20px;
+            z-index: 999;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            cursor: grab;
+            touch-action: none;
+        }
+        #toggleWrapper:active {
+            cursor: grabbing;
+        }
+
+        .music-toggle {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #6b3a2a;
+            color: #f5e6d3;
+            border: 2px solid #c23531;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        #toggleWrapper.playing {
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #toggleWrapper.playing .music-toggle {
+            animation: breath 1.2s ease-in-out infinite;
+        }
+        @keyframes breath {
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(194, 53, 49, 0.25);
+            }
+            50% {
+                transform: scale(1.12);
+                box-shadow: 0 0 35px rgba(194, 53, 49, 0.5), 0 0 70px rgba(194, 53, 49, 0.15);
+            }
+        }
+
+        #toggleWrapper.playing::before,
+        #toggleWrapper.playing::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            border: 2px solid rgba(194, 53, 49, 0.25);
+            animation: wave-expand 1.5s ease-out infinite;
+            pointer-events: none;
+        }
+        #toggleWrapper.playing::after {
+            animation-delay: 0.5s;
+        }
+        @keyframes wave-expand {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.6);
+                opacity: 0;
+            }
+        }
+
+        /* ============================================================
+           主播放面板（220px，间距1px）
+           ============================================================ */
+        #musicPanel {
+            position: fixed;
+            z-index: 998;
+            width: 220px;
+            background: linear-gradient(145deg, #6b3a2a, #3d1f15);
+            border-radius: 16px;
+            padding: 14px 16px 14px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            border: 1px solid #9a6a54;
+            display: none;
+            color: #f5e6d3;
+            pointer-events: auto;
+        }
+        #musicPanel.open {
+            display: block;
+        }
+
+        /* 歌名滚动 */
+        .song-name-wrap {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            margin-bottom: 6px;
+            height: 22px;
+            position: relative;
+        }
+        .song-name {
+            display: inline-block;
+            font-size: 14px;
+            color: #e8d5c0;
+            font-family: '华文楷体', 'KaiTi', serif;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            transform: translateX(0);
+            transition: none;
+        }
+        .song-name.scrolling {
+            animation: scroll-text 10s linear infinite;
+        }
+        @keyframes scroll-text {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* 频谱显示区 */
+        .spectrum-area {
+            height: 32px;
+            margin-bottom: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            padding: 2px 4px;
+            overflow: hidden;
+            position: relative;
+            min-height: 32px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 3px;
+            flex-wrap: nowrap;
+        }
+
+        /* 竖条基类 */
+        .spec-bar {
+            width: 4px;
+            border-radius: 2px;
+            transition: height 0.06s ease-out;
+            height: 4px;
+            flex-shrink: 0;
+        }
+
+        .spec-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #c23531;
+            transition: transform 0.08s ease-out;
+            transform: scale(0.3);
+            flex-shrink: 0;
+        }
+        .spec-ring {
+            border-radius: 50%;
+            border: 2px solid rgba(194, 53, 49, 0.3);
+            transition: all 0.1s ease-out;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+        }
+
+        /* 进度条 */
+        .progress-area {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .progress-time {
+            font-size: 10px;
+            color: #b0a090;
+            font-family: monospace;
+            min-width: 28px;
+        }
+        .progress-wrap {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 215, 140, 0.2);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #c23531;
+            border-radius: 4px;
+            position: relative;
+            transition: width 0.05s linear;
+        }
+        .progress-dot {
+            position: absolute;
+            top: 50%;
+            right: -6px;
+            transform: translate(50%, -50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #c23531;
+            border: 2px solid #f5e6d3;
+            box-shadow: 0 0 10px rgba(194, 53, 49, 0.4);
+            pointer-events: none;
+            display: none;
+        }
+        .progress-dot.show {
+            display: block;
+        }
+
+        /* 模式行 */
+        .mode-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-wrap: nowrap;
+        }
+        .mode-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: #8a7a6a;
+            font-size: 11px;
+            padding: 2px 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: '华文楷体', 'KaiTi', serif;
+            letter-spacing: 1px;
+            min-height: 24px;
+            white-space: nowrap;
+        }
+        .mode-btn.active {
+            background: #c23531;
+            color: #fff;
+            border-color: #c23531;
+        }
+        .mode-btn:active {
+            transform: scale(0.94);
+        }
+
+        .effect-toggle-btn {
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: #8a7a6a;
+            font-size: 11px;
+            padding: 2px 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: '华文楷体', 'KaiTi', serif;
+            letter-spacing: 1px;
+            min-height: 24px;
+            white-space: nowrap;
+        }
+        .effect-toggle-btn:active {
+            transform: scale(0.94);
+        }
+        .effect-toggle-btn.active {
+            background: #c23531;
+            color: #fff;
+            border-color: #c23531;
+        }
+
+        /* ★★★ 控制按钮 ★★★ */
+        .panel-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            height: 36px;
+            /* 固定高度防止面板拉伸 */
+            line-height: 1;
+        }
+        .panel-controls button {
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+            -webkit-appearance: none;
+            appearance: none;
+            color: #e8d5c0;
+            cursor: pointer;
+            padding: 0;
+            min-width: 36px;
+            min-height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            position: relative;
+            font-family: 'Segoe UI', 'PingFang SC', sans-serif;
+        }
+        .panel-controls button:hover {
+            color: #c23531;
+            transform: scale(1.06);
+        }
+
+        /* ★ 上一首/下一首 固定 18px */
+        .panel-controls #prevBtn,
+        .panel-controls #nextBtn {
+            font-size: 18px;
+        }
+
+        /* ★ 播放按钮：三角号 30px，暂停时用 CSS 竖线 ★ */
+        .panel-controls .play-btn {
+            font-size: 30px;
+            /* 三角号 30px */
+            line-height: 1;
+            background: none !important;
+        }
+        /* 暂停状态：显示两条竖线（CSS 画） */
+        .panel-controls .play-btn.paused {
+            font-size: 0;
+            /* 隐藏文字 */;
+        }
+        .panel-controls .play-btn.paused::before,
+        .panel-controls .play-btn.paused::after {
+            content: '';
+            display: block;
+            width: 3.5px;
+            height: 20px;
+            /* 与 30px 三角号视觉高度匹配 */
+            background: #e8d5c0;
+            border-radius: 2px;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        .panel-controls .play-btn.paused::before {
+            margin-right: 4px;
+        }
+        .panel-controls .play-btn.paused:hover::before,
+        .panel-controls .play-btn.paused:hover::after {
+            background: #c23531;
+        }
+
+        /* 播放状态：显示三角号（正常显示） */
+        .panel-controls .play-btn.playing {
+            font-size: 30px;
+        }
+        .panel-controls .play-btn.playing::before,
+        .panel-controls .play-btn.playing::after {
+            display: none;
+        }
+
+        /* ============================================================
+           效果选择面板
+           ============================================================ */
+        #effectPanel {
+            position: fixed;
+            z-index: 997;
+            width: 220px;
+            background: linear-gradient(145deg, #5a2a1a, #2d150e);
+            border-radius: 12px;
+            padding: 12px 14px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            border: 1px solid #7a4a34;
+            display: none;
+            color: #f5e6d3;
+            pointer-events: auto;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+        #effectPanel.open {
+            display: block;
+        }
+
+        #effectPanel .effect-title {
+            font-size: 11px;
+            color: #b0a090;
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+            font-family: '华文楷体', 'KaiTi', serif;
+            border-bottom: 1px solid rgba(255, 215, 140, 0.1);
+            padding-bottom: 4px;
+        }
+
+        .effect-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            justify-content: center;
+        }
+        .effect-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            color: #b0a090;
+            font-size: 9px;
+            padding: 3px 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: '华文楷体', 'KaiTi', serif;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .effect-btn.active {
+            background: #c23531;
+            color: #fff;
+            border-color: #c23531;
+        }
+        .effect-btn:active {
+            transform: scale(0.94);
+        }
+
+        .effect-confirm-row {
+            margin-top: 8px;
+            display: flex;
+            justify-content: center;
+            border-top: 1px solid rgba(255, 215, 140, 0.1);
+            padding-top: 8px;
+        }
+        .effect-confirm-btn {
+            background: #c23531;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 11px;
+            padding: 4px 20px;
+            cursor: pointer;
+            font-family: '华文楷体', 'KaiTi', serif;
+            letter-spacing: 1px;
+            transition: 0.2s;
+        }
+        .effect-confirm-btn:active {
+            transform: scale(0.94);
+        }
+
+        /* 状态栏 */
+        .status {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #b0a090;
+            font-size: 11px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 4px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 1000;
+        }
+        .status span {
+            color: #e8d5c0;
+            font-weight: 600;
+        }
+        .status .badge {
+            display: inline-block;
+            background: #c23531;
+            color: #fff;
+            font-size: 9px;
+            padding: 0 6px;
+            border-radius: 8px;
+            margin-left: 4px;
+        }
+
+        #effectPanel::-webkit-scrollbar {
+            width: 3px;
+        }
+        #effectPanel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+        }
+        #effectPanel::-webkit-scrollbar-thumb {
+            background: #c23531;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="status">
+        <span id="playStatus">⏸ 暂停</span>
+        <span class="badge">间距 1px</span>
+        <span class="badge" style="background:#2a7a4a;">宽 220px</span>
+        <span class="badge" style="background:#6a3a8a;" id="modeDisplay">顺序</span>
+        <span class="badge" style="background:#c23531;" id="effectNameDisplay">红色竖条</span>
+    </div>
+
+    <!-- 主面板 -->
+    <div id="musicPanel">
+        <div class="song-name-wrap">
+            <div class="song-name" id="songName">🎵 乌龙山剿匪记 · 强哥音乐测试</div>
+        </div>
+        <div class="spectrum-area" id="spectrumArea"></div>
+        <div class="progress-area">
+            <span class="progress-time" id="currentTime">00:00</span>
+            <div class="progress-wrap" id="progressWrap">
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-dot" id="progressDot"></div>
+                </div>
+            </div>
+            <span class="progress-time" id="totalTime">03:00</span>
+        </div>
+        <div class="mode-row">
+            <button class="mode-btn" data-mode="single">单循</button>
+            <button class="mode-btn active" data-mode="order">循环</button>
+            <button class="mode-btn" data-mode="random">随机</button>
+            <button class="effect-toggle-btn" id="effectToggleBtn">效果</button>
+        </div>
+        <div class="panel-controls">
+            <button id="prevBtn">⏮</button>
+            <button class="play-btn playing" id="playBtn">▶</button>
+            <button id="nextBtn">⏭</button>
+        </div>
+    </div>
+
+    <!-- 效果面板 -->
+    <div id="effectPanel">
+        <div class="effect-title">✦ 频谱效果 ✦</div>
+        <div class="effect-grid" id="effectGrid"></div>
+        <div class="effect-confirm-row">
+            <button class="effect-confirm-btn" id="effectConfirmBtn">确定</button>
+        </div>
+    </div>
+
+    <!-- 悬浮球 -->
+    <div id="toggleWrapper">
+        <div class="music-toggle" id="musicToggle">🎵</div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  频谱增强版 - 完整逻辑（真实音频测试）
+        // ============================================================
+
+        // DOM
+        var toggleWrapper = document.getElementById('toggleWrapper');
+        var panel = document.getElementById('musicPanel');
+        var playBtn = document.getElementById('playBtn');
+        var prevBtn = document.getElementById('prevBtn');
+        var nextBtn = document.getElementById('nextBtn');
+        var progressBar = document.getElementById('progressBar');
+        var progressWrap = document.getElementById('progressWrap');
+        var progressDot = document.getElementById('progressDot');
+        var currentTimeEl = document.getElementById('currentTime');
+        var totalTimeEl = document.getElementById('totalTime');
+        var songNameEl = document.getElementById('songName');
+        var playStatus = document.getElementById('playStatus');
+        var modeDisplay = document.getElementById('modeDisplay');
+        var spectrumArea = document.getElementById('spectrumArea');
+        var effectPanel = document.getElementById('effectPanel');
+        var effectToggleBtn = document.getElementById('effectToggleBtn');
+        var effectGrid = document.getElementById('effectGrid');
+        var effectNameDisplay = document.getElementById('effectNameDisplay');
+        var effectConfirmBtn = document.getElementById('effectConfirmBtn');
+
+        // 状态
+        var isPlaying = false,
+            panelOpen = false;
+        var progress = 0,
+            duration = 180,
+            progressTimer = null;
+        var gap = 1,
+            currentSongIndex = 0,
+            currentMode = 'order';
+        var currentEffect = 'red-bar-up';
+        var effectPanelOpen = false;
+        var specTimer = null;
+
+        // ★ 真实音频列表 ★
+        var songs = [
+            { name: '🎵 乌龙山剿匪记 · 强哥音乐测试', url: 'myyy/wlsjfj.mp3', duration: 0 },
+            { name: '🎵 山隐居 · 古典', url: 'myyy/bj.mp3', duration: 0 }
+        ];
+
+        // 14种效果
+        var effects = [
+            { id: 'red-bar-up', label: '红色竖条' },
+            { id: 'white-bar-up', label: '白色竖条' },
+            { id: 'color-bar-up', label: '彩色竖条' },
+            { id: 'red-bar-float', label: '红浮竖条' },
+            { id: 'white-bar-float', label: '白浮竖条' },
+            { id: 'color-bar-float', label: '彩浮竖条' },
+            { id: 'combo-bar-float', label: '组合竖条' },
+            { id: 'dots', label: '圆点' },
+            { id: 'wave', label: '波浪' },
+            { id: 'rings', label: '光环' },
+            { id: 'radar', label: '雷达' },
+            { id: 'meter', label: '仪表' },
+            { id: 'combo', label: '组合' },
+            { id: 'glow', label: '光晕' }
+        ];
+
+        var effectLabels = {};
+        effects.forEach(function(e) { effectLabels[e.id] = e.label; });
+
+        var specElements = [];
+
+        // ★ 真实音频对象 ★
+        var audio = new Audio();
+
+        // ============================================================
+        //  工具
+        // ============================================================
+        function checkScroll() {
+            var wrap = document.querySelector('.song-name-wrap');
+            var nameEl = songNameEl;
+            if (!wrap || !nameEl) return;
+            nameEl.classList.remove('scrolling');
+            void nameEl.offsetWidth;
+            if (nameEl.scrollWidth > wrap.offsetWidth) {
+                nameEl.classList.add('scrolling');
+            }
+        }
+
+        function initSong(index) {
+            var song = songs[index % songs.length];
+            songNameEl.textContent = song.name;
+            // 设置音频源
+            audio.src = song.url;
+            audio.load();
+            // 获取时长（异步，但我们会用timeupdate更新）
+            duration = song.duration || 180;
+            totalTimeEl.textContent = formatTime(duration);
+            progress = 0;
+            updateProgress();
+            setTimeout(checkScroll, 50);
+            // 如果正在播放，重新开始
+            if (isPlaying) {
+                audio.play().catch(function(e) { console.warn('播放失败:', e); });
+            }
+        }
+
+        function formatTime(seconds) {
+            var m = Math.floor(seconds / 60);
+            var s = Math.floor(seconds % 60);
+            return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+        }
+
+        function updateProgress() {
+            var percent = (progress / duration) * 100;
+            progressBar.style.width = Math.min(percent, 100) + '%';
+            currentTimeEl.textContent = formatTime(progress);
+            progressDot.classList.toggle('show', percent > 0 && percent < 100);
+        }
+
+        // ============================================================
+        //  频谱渲染
+        // ============================================================
+        function renderSpectrum(style) {
+            spectrumArea.innerHTML = '';
+            specElements = [];
+
+            spectrumArea.style.display = 'flex';
+            spectrumArea.style.flexDirection = 'row';
+            spectrumArea.style.flexWrap = 'nowrap';
+            spectrumArea.style.gap = '3px';
+            spectrumArea.style.padding = '2px 4px';
+            spectrumArea.style.position = 'relative';
+            spectrumArea.style.alignItems = 'flex-end';
+            spectrumArea.style.justifyContent = 'center';
+
+            var count = 16;
+            var isBar = style.indexOf('bar') !== -1 || style === 'combo-bar-float';
+            var isFloat = (style === 'red-bar-float' || style === 'color-bar-float' ||
+                style === 'white-bar-float' || style === 'combo-bar-float');
+            var isCombo = style === 'combo-bar-float';
+
+            if (isBar) {
+                if (isFloat) {
+                    spectrumArea.style.alignItems = 'center';
+                } else {
+                    spectrumArea.style.alignItems = 'flex-end';
+                }
+
+                var colorBase;
+                if (style.startsWith('red')) colorBase = '#c23531';
+                else if (style.startsWith('color')) colorBase = 'rainbow';
+                else if (style.startsWith('white')) colorBase = '#e8d5c0';
+                else colorBase = '#c23531';
+
+                for (var i = 0; i < count; i++) {
+                    var bar = document.createElement('div');
+                    bar.className = 'spec-bar';
+                    bar.style.width = '4px';
+                    bar.style.height = '4px';
+                    bar.style.borderRadius = '2px';
+                    bar.style.transition = 'height 0.06s ease-out';
+                    bar.style.flexShrink = '0';
+                    if (colorBase === 'rainbow') {
+                        var hue = (i / count) * 360;
+                        bar.style.background = 'hsl(' + hue + ', 80%, 55%)';
+                    } else if (isCombo && i % 2 === 0) {
+                        bar.style.background = '#c23531';
+                    } else if (isCombo && i % 2 === 1) {
+                        bar.style.background = '#e8a040';
+                    } else {
+                        bar.style.background = colorBase;
+                    }
+                    spectrumArea.appendChild(bar);
+                    specElements.push(bar);
+                }
+            } else if (style === 'dots') {
+                spectrumArea.style.alignItems = 'center';
+                spectrumArea.style.gap = '6px';
+                spectrumArea.style.flexWrap = 'wrap';
+                for (var i = 0; i < 12; i++) {
+                    var dot = document.createElement('div');
+                    dot.className = 'spec-dot';
+                    dot.style.width = '6px';
+                    dot.style.height = '6px';
+                    dot.style.background = '#c23531';
+                    dot.style.transition = 'transform 0.08s ease-out';
+                    dot.style.transform = 'scale(0.3)';
+                    dot.style.flexShrink = '0';
+                    spectrumArea.appendChild(dot);
+                    specElements.push(dot);
+                }
+            } else if (style === 'rings') {
+                spectrumArea.style.alignItems = 'center';
+                spectrumArea.style.justifyContent = 'center';
+                spectrumArea.style.position = 'relative';
+                for (var i = 0; i < 5; i++) {
+                    var ring = document.createElement('div');
+                    ring.className = 'spec-ring';
+                    ring.style.width = (20 + i * 8) + 'px';
+                    ring.style.height = (20 + i * 8) + 'px';
+                    ring.style.border = '2px solid rgba(194,53,49,' + (0.5 - i * 0.08) + ')';
+                    ring.style.position = 'absolute';
+                    ring.style.top = '50%';
+                    ring.style.left = '50%';
+                    ring.style.transform = 'translate(-50%, -50%) scale(0.5)';
+                    ring.style.transition = 'all 0.1s ease-out';
+                    spectrumArea.appendChild(ring);
+                    specElements.push(ring);
+                }
+            } else if (style === 'wave') {
+                spectrumArea.style.alignItems = 'center';
+                spectrumArea.style.padding = '2px 4px';
+                var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('width', '100%');
+                svg.setAttribute('height', '100%');
+                svg.style.display = 'block';
+                var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', 'M0,16 L240,16');
+                path.setAttribute('stroke', '#c23531');
+                path.setAttribute('stroke-width', '2');
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke-linecap', 'round');
+                svg.appendChild(path);
+                spectrumArea.appendChild(svg);
+                specElements.push(path);
+            } else if (style === 'radar') {
+                spectrumArea.style.alignItems = 'center';
+                spectrumArea.style.justifyContent = 'center';
+                spectrumArea.style.position = 'relative';
+                for (var i = 0; i < 8; i++) {
+                    var angle = (i / 8) * 360;
+                    var bar = document.createElement('div');
+                    bar.className = 'spec-bar';
+                    bar.style.width = '3px';
+                    bar.style.height = '4px';
+                    bar.style.background = '#c23531';
+                    bar.style.borderRadius = '2px';
+                    bar.style.transform = 'rotate(' + angle + 'deg)';
+                    bar.style.transformOrigin = 'center bottom';
+                    bar.style.position = 'absolute';
+                    bar.style.bottom = '50%';
+                    bar.style.left = '50%';
+                    bar.style.marginLeft = '-1.5px';
+                    bar.style.transition = 'height 0.06s ease-out';
+                    spectrumArea.appendChild(bar);
+                    specElements.push(bar);
+                }
+            } else if (style === 'meter') {
+                spectrumArea.style.alignItems = 'flex-end';
+                spectrumArea.style.flexDirection = 'column';
+                spectrumArea.style.gap = '1px';
+                spectrumArea.style.justifyContent = 'center';
+                for (var i = 0; i < 8; i++) {
+                    var bar = document.createElement('div');
+                    bar.className = 'spec-bar';
+                    bar.style.width = (10 + i * 10) + '%';
+                    bar.style.height = '4px';
+                    bar.style.background = '#c23531';
+                    bar.style.borderRadius = '2px';
+                    bar.style.transition = 'height 0.06s ease-out';
+                    bar.style.marginBottom = '1px';
+                    spectrumArea.appendChild(bar);
+                    specElements.push(bar);
+                }
+            } else if (style === 'combo') {
+                spectrumArea.style.alignItems = 'center';
+                spectrumArea.style.justifyContent = 'center';
+                spectrumArea.style.position = 'relative';
+                spectrumArea.style.gap = '3px';
+                for (var i = 0; i < 12; i++) {
+                    var bar = document.createElement('div');
+                    bar.className = 'spec-bar';
+                    bar.style.width = '3px';
+                    bar.style.height = '4px';
+                    bar.style.background = i % 2 === 0 ? '#c23531' : '#e8a040';
+                    bar.style.borderRadius = '2px';
+                    bar.style.transition = 'height 0.06s ease-out';
+                    bar.style.flexShrink = '0';
+                    spectrumArea.appendChild(bar);
+                    specElements.push(bar);
+                }
+                var glow = document.createElement('div');
+                glow.style.width = '16px';
+                glow.style.height = '16px';
+                glow.style.borderRadius = '50%';
+                glow.style.background = 'rgba(194,53,49,0.2)';
+                glow.style.position = 'absolute';
+                glow.style.top = '50%';
+                glow.style.left = '50%';
+                glow.style.transform = 'translate(-50%, -50%) scale(0.5)';
+                glow.style.transition = 'all 0.15s ease-out';
+                spectrumArea.appendChild(glow);
+                specElements.push(glow);
+            } else if (style === 'glow') {
+                spectrumArea.style.alignItems = 'center';
+                spectrumArea.style.justifyContent = 'center';
+                spectrumArea.style.position = 'relative';
+                var glowBg = document.createElement('div');
+                glowBg.style.width = '100%';
+                glowBg.style.height = '100%';
+                glowBg.style.background = 'radial-gradient(circle, rgba(194,53,49,0.15) 0%, transparent 70%)';
+                glowBg.style.borderRadius = '6px';
+                glowBg.style.transition = 'opacity 0.2s ease-out';
+                glowBg.style.opacity = '0.3';
+                spectrumArea.appendChild(glowBg);
+                specElements.push(glowBg);
+            }
+        }
+
+        // ============================================================
+        //  频谱动画
+        // ============================================================
+        function updateSpectrum() {
+            if (!isPlaying) {
+                for (var i = 0; i < specElements.length; i++) {
+                    var el = specElements[i];
+                    if (!el || !el.style) continue;
+                    if (el.className === 'spec-bar' || (el.tagName === 'DIV' && el.style.height !== undefined)) {
+                        el.style.height = '4px';
+                    } else if (el.className === 'spec-dot') {
+                        el.style.transform = 'scale(0.3)';
+                    } else if (el.className === 'spec-ring') {
+                        el.style.transform = 'translate(-50%, -50%) scale(0.5)';
+                    } else if (el.tagName === 'path') {
+                        el.setAttribute('d', 'M0,16 L240,16');
+                    } else if (el.style && el.style.opacity !== undefined) {
+                        el.style.opacity = '0.3';
+                    }
+                }
+                return;
+            }
+
+            var isFloat = (currentEffect === 'red-bar-float' || currentEffect === 'color-bar-float' ||
+                currentEffect === 'white-bar-float' || currentEffect === 'combo-bar-float');
+
+            for (var i = 0; i < specElements.length; i++) {
+                var el = specElements[i];
+                if (!el || !el.style) continue;
+
+                if (el.className === 'spec-bar' || (el.tagName === 'DIV' && el.style.height !== undefined)) {
+                    var height;
+                    if (isFloat) {
+                        height = 4 + Math.random() * 28;
+                    } else {
+                        height = 4 + Math.random() * 28;
+                    }
+                    el.style.height = height + 'px';
+                } else if (el.className === 'spec-dot') {
+                    el.style.transform = 'scale(' + (0.3 + Math.random() * 0.7) + ')';
+                } else if (el.className === 'spec-ring') {
+                    el.style.transform = 'translate(-50%, -50%) scale(' + (0.4 + Math.random() * 0.6) + ')';
+                } else if (el.tagName === 'path') {
+                    var points = [];
+                    for (var j = 0; j <= 24; j++) {
+                        var x = j * 10;
+                        var y = 16 + Math.sin(j * 0.6 + Date.now() / 400) * (6 + Math.random() * 4);
+                        points.push(x + ',' + y);
+                    }
+                    el.setAttribute('d', 'M0,16 L' + points.join(' L') + ' L240,16');
+                } else if (el.style && el.style.opacity !== undefined) {
+                    el.style.opacity = (0.3 + Math.random() * 0.5);
+                }
+            }
+        }
+
+        function startSpectrum() {
+            stopSpectrum();
+            specTimer = setInterval(function() { updateSpectrum(); }, 60);
+        }
+
+        function stopSpectrum() {
+            if (specTimer) {
+                clearInterval(specTimer);
+                specTimer = null;
+            }
+            updateSpectrum();
+        }
+
+        // ============================================================
+        //  效果切换
+        // ============================================================
+        function setEffect(effectId) {
+            currentEffect = effectId;
+            renderSpectrum(effectId);
+            if (isPlaying) startSpectrum();
+            else updateSpectrum();
+            effectNameDisplay.textContent = effectLabels[effectId] || effectId;
+            document.querySelectorAll('.effect-btn').forEach(function(btn) {
+                btn.classList.toggle('active', btn.dataset.effect === effectId);
+            });
+        }
+
+        // ============================================================
+        //  面板控制
+        // ============================================================
+        function openEffectPanel() {
+            effectPanelOpen = true;
+            effectPanel.classList.add('open');
+            effectToggleBtn.classList.add('active');
+            var panelRect = panel.getBoundingClientRect();
+            var winW = window.innerWidth,
+                winH = window.innerHeight;
+            var panelW = 220;
+            var panelH = Math.min(320, effectPanel.scrollHeight || 280);
+            var left = panelRect.left;
+            if (left + panelW > winW - 4) left = winW - panelW - 4;
+            if (left < 4) left = 4;
+            var top;
+            var spaceAbove = panelRect.top - 10;
+            var spaceBelow = winH - panelRect.bottom - 10;
+            if (spaceAbove > panelH) top = panelRect.top - panelH - 2;
+            else if (spaceBelow > panelH) top = panelRect.bottom + 2;
+            else top = Math.max(4, panelRect.top - panelH - 2);
+            effectPanel.style.left = left + 'px';
+            effectPanel.style.top = top + 'px';
+            effectPanel.style.right = 'auto';
+            effectPanel.style.bottom = 'auto';
+        }
+
+        function closeEffectPanel() {
+            effectPanelOpen = false;
+            effectPanel.classList.remove('open');
+            effectToggleBtn.classList.remove('active');
+        }
+
+        function toggleEffectPanel() {
+            if (effectPanelOpen) closeEffectPanel();
+            else openEffectPanel();
+        }
+
+        function openMainPanel() {
+            if (panelOpen) return;
+            panelOpen = true;
+            panel.classList.add('open');
+            updatePanelPosition();
+            setTimeout(checkScroll, 100);
+            if (isPlaying) startSpectrum();
+        }
+
+        function closeMainPanel() {
+            if (!panelOpen) return;
+            panelOpen = false;
+            panel.classList.remove('open');
+        }
+
+        toggleWrapper.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (panelOpen) {
+                closeMainPanel();
+                if (effectPanelOpen) closeEffectPanel();
+            } else {
+                openMainPanel();
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (panel.contains(e.target) || toggleWrapper.contains(e.target)) return;
+            if (effectPanel && effectPanel.contains(e.target)) return;
+            if (panel.classList.contains('open')) {
+                closeMainPanel();
+                if (effectPanelOpen) closeEffectPanel();
+            }
+        });
+
+        effectToggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (!panel.classList.contains('open')) {
+                openMainPanel();
+                setTimeout(function() { toggleEffectPanel(); }, 150);
+            } else {
+                toggleEffectPanel();
+            }
+        });
+
+        document.querySelectorAll('.effect-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(ev) {
+                ev.stopPropagation();
+                setEffect(this.dataset.effect);
+            });
+        });
+
+        effectConfirmBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeEffectPanel();
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!effectPanel || !effectPanel.classList.contains('open')) return;
+            if (!effectPanel.contains(e.target) && !effectToggleBtn.contains(e.target)) {
+                closeEffectPanel();
+            }
+        });
+
+        // ============================================================
+        //  面板定位
+        // ============================================================
+        function updatePanelPosition() {
+            var rect = toggleWrapper.getBoundingClientRect();
+            var winW = window.innerWidth,
+                winH = window.innerHeight;
+            var btnW = 56,
+                btnH = 56;
+            var centerX = rect.left + btnW / 2,
+                centerY = rect.top + btnH / 2;
+            var leftDir = centerX > winW / 2,
+                topDir = centerY > winH / 2;
+            panel.style.left = panel.style.right = panel.style.top = panel.style.bottom = '';
+            if (leftDir) panel.style.right = (winW - rect.left + gap) + 'px';
+            else panel.style.left = (rect.left + btnW + gap) + 'px';
+            if (topDir) panel.style.bottom = (winH - rect.top + gap) + 'px';
+            else panel.style.top = (rect.top + btnH + gap) + 'px';
+        }
+
+        // 拖拽
+        var isDragging = false,
+            dragOffX = 0,
+            dragOffY = 0,
+            moved = false;
+
+        function startDrag(e) {
+            var clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            var clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            if (clientX === undefined) return;
+            var rect = toggleWrapper.getBoundingClientRect();
+            dragOffX = clientX - rect.left;
+            dragOffY = clientY - rect.top;
+            isDragging = true;
+            moved = false;
+            toggleWrapper.style.cursor = 'grabbing';
+        }
+
+        function moveDrag(e) {
+            if (!isDragging) return;
+            var clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            var clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            if (clientX === undefined) return;
+            var winW = window.innerWidth,
+                winH = window.innerHeight;
+            var w = 56,
+                h = 56;
+            var newX = clientX - dragOffX,
+                newY = clientY - dragOffY;
+            newX = Math.max(0, Math.min(winW - w, newX));
+            newY = Math.max(0, Math.min(winH - h, newY));
+            toggleWrapper.style.left = newX + 'px';
+            toggleWrapper.style.top = newY + 'px';
+            toggleWrapper.style.right = 'auto';
+            toggleWrapper.style.bottom = 'auto';
+            moved = true;
+            if (panel.classList.contains('open')) updatePanelPosition();
+            if (effectPanelOpen) openEffectPanel();
+            e.preventDefault();
+        }
+
+        function endDrag(e) {
+            if (isDragging) {
+                isDragging = false;
+                toggleWrapper.style.cursor = 'grab';
+                if (moved && panel.classList.contains('open')) updatePanelPosition();
+                if (moved && effectPanelOpen) openEffectPanel();
+            }
+        }
+
+        toggleWrapper.addEventListener('mousedown', startDrag);
+        document.addEventListener('mousemove', moveDrag);
+        document.addEventListener('mouseup', endDrag);
+        toggleWrapper.addEventListener('touchstart', startDrag, { passive: true });
+        document.addEventListener('touchmove', moveDrag, { passive: false });
+        document.addEventListener('touchend', endDrag);
+
+        window.addEventListener('resize', function() {
+            if (panel.classList.contains('open')) updatePanelPosition();
+            if (effectPanelOpen) openEffectPanel();
+        });
+
+        // ============================================================
+        //  ★★★ 播放控制（真实音频）★★★
+        // ============================================================
+        function togglePlay() {
+            if (isPlaying) {
+                // 暂停
+                audio.pause();
+                isPlaying = false;
+                toggleWrapper.classList.remove('playing');
+                playBtn.className = 'play-btn playing';
+                playBtn.textContent = '▶';
+                playStatus.textContent = '⏸ 暂停';
+                stopProgress();
+                stopSpectrum();
+            } else {
+                // 播放
+                audio.play().then(function() {
+                    isPlaying = true;
+                    toggleWrapper.classList.add('playing');
+                    playBtn.className = 'play-btn paused';
+                    playBtn.textContent = '';
+                    playStatus.textContent = '▶ 播放中';
+                    startProgress();
+                    startSpectrum();
+                }).catch(function(err) {
+                    console.warn('播放失败:', err);
+                    // 如果播放失败，回退状态
+                    isPlaying = false;
+                    playBtn.className = 'play-btn playing';
+                    playBtn.textContent = '▶';
+                });
+            }
+        }
+
+        // 进度更新（由音频驱动）
+        audio.addEventListener('timeupdate', function() {
+            if (isPlaying && audio.duration) {
+                progress = audio.currentTime;
+                duration = audio.duration || 180;
+                updateProgress();
+                if (audio.currentTime >= audio.duration) {
+                    // 自动下一首
+                    if (currentMode === 'single') {
+                        audio.currentTime = 0;
+                        audio.play();
+                    } else {
+                        // 顺序或随机
+                        var wasPlaying = true;
+                        if (wasPlaying) {
+                            // 暂停当前，切换歌曲，自动播放
+                            audio.pause();
+                            nextSong();
+                            audio.play().catch(function(e) { console.warn('自动播放失败:', e); });
+                        }
+                    }
+                }
+            }
+        });
+
+        // 手动更新总时长
+        audio.addEventListener('loadedmetadata', function() {
+            if (audio.duration) {
+                duration = audio.duration;
+                totalTimeEl.textContent = formatTime(duration);
+            }
+        });
+
+        // 音频加载失败处理
+        audio.addEventListener('error', function() {
+            console.warn('音频加载失败，使用默认时长');
+            duration = 180;
+            totalTimeEl.textContent = formatTime(duration);
+        });
+
+        // ============================================================
+        //  播放进度控制
+        // ============================================================
+        function startProgress() {
+            // 不再需要定时器，由 audio 的 timeupdate 驱动
+            // 但为了频谱动画，需要保留定时器
+            // 频谱动画由 startSpectrum 负责
+        }
+
+        function stopProgress() {
+            // 频谱动画由 stopSpectrum 负责
+        }
+
+        playBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            togglePlay();
+        });
+
+        // ============================================================
+        //  播放模式
+        // ============================================================
+        document.querySelectorAll('.mode-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('.mode-btn').forEach(function(b) { b.classList.remove('active'); });
+                this.classList.add('active');
+                currentMode = this.dataset.mode;
+                var modeNames = { single: '单曲', order: '顺序', random: '随机' };
+                modeDisplay.textContent = modeNames[currentMode] || '顺序';
+            });
+        });
+
+        // ============================================================
+        //  上一首/下一首
+        // ============================================================
+        function nextSong() {
+            var wasPlaying = isPlaying;
+            if (wasPlaying) {
+                audio.pause();
+                isPlaying = false;
+                toggleWrapper.classList.remove('playing');
+                playBtn.className = 'play-btn playing';
+                playBtn.textContent = '▶';
+                playStatus.textContent = '⏸ 暂停';
+                stopSpectrum();
+            }
+            if (currentMode === 'single') {
+                // 单曲循环：重新播放当前歌曲
+                audio.currentTime = 0;
+                if (wasPlaying) {
+                    audio.play().then(function() {
+                        isPlaying = true;
+                        toggleWrapper.classList.add('playing');
+                        playBtn.className = 'play-btn paused';
+                        playBtn.textContent = '';
+                        playStatus.textContent = '▶ 播放中';
+                        startSpectrum();
+                    }).catch(function() {});
+                }
+                return;
+            }
+            if (currentMode === 'random') {
+                var newIndex;
+                do {
+                    newIndex = Math.floor(Math.random() * songs.length);
+                } while (newIndex === currentSongIndex && songs.length > 1);
+                currentSongIndex = newIndex;
+            } else {
+                currentSongIndex = (currentSongIndex + 1) % songs.length;
+            }
+            initSong(currentSongIndex);
+            if (wasPlaying) {
+                audio.play().then(function() {
+                    isPlaying = true;
+                    toggleWrapper.classList.add('playing');
+                    playBtn.className = 'play-btn paused';
+                    playBtn.textContent = '';
+                    playStatus.textContent = '▶ 播放中';
+                    startSpectrum();
+                }).catch(function() {});
+            }
+        }
+
+        function prevSong() {
+            var wasPlaying = isPlaying;
+            if (wasPlaying) {
+                audio.pause();
+                isPlaying = false;
+                toggleWrapper.classList.remove('playing');
+                playBtn.className = 'play-btn playing';
+                playBtn.textContent = '▶';
+                playStatus.textContent = '⏸ 暂停';
+                stopSpectrum();
+            }
+            if (currentMode === 'single') {
+                audio.currentTime = 0;
+                if (wasPlaying) {
+                    audio.play().then(function() {
+                        isPlaying = true;
+                        toggleWrapper.classList.add('playing');
+                        playBtn.className = 'play-btn paused';
+                        playBtn.textContent = '';
+                        playStatus.textContent = '▶ 播放中';
+                        startSpectrum();
+                    }).catch(function() {});
+                }
+                return;
+            }
+            if (currentMode === 'random') {
+                var newIndex;
+                do {
+                    newIndex = Math.floor(Math.random() * songs.length);
+                } while (newIndex === currentSongIndex && songs.length > 1);
+                currentSongIndex = newIndex;
+            } else {
+                currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            }
+            initSong(currentSongIndex);
+            if (wasPlaying) {
+                audio.play().then(function() {
+                    isPlaying = true;
+                    toggleWrapper.classList.add('playing');
+                    playBtn.className = 'play-btn paused';
+                    playBtn.textContent = '';
+                    playStatus.textContent = '▶ 播放中';
+                    startSpectrum();
+                }).catch(function() {});
+            }
+        }
+
+        prevBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            prevSong();
+        });
+
+        nextBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            nextSong();
+        });
+
+        // 进度条点击
+        progressWrap.addEventListener('click', function(e) {
+            var rect = this.getBoundingClientRect();
+            var pos = (e.clientX - rect.left) / rect.width;
+            if (audio.duration) {
+                audio.currentTime = pos * audio.duration;
+                progress = audio.currentTime;
+                updateProgress();
+            } else {
+                progress = Math.max(0, Math.min(pos * duration, duration));
+                updateProgress();
+            }
+        });
+
+        // ============================================================
+        //  生成效果按钮
+        // ============================================================
+        function renderEffectButtons() {
+            effectGrid.innerHTML = '';
+            effects.forEach(function(e) {
+                var btn = document.createElement('button');
+                btn.className = 'effect-btn' + (e.id === currentEffect ? ' active' : '');
+                btn.dataset.effect = e.id;
+                btn.textContent = e.label;
+                btn.addEventListener('click', function(ev) {
+                    ev.stopPropagation();
+                    setEffect(this.dataset.effect);
+                });
+                effectGrid.appendChild(btn);
+            });
+        }
+
+        // ============================================================
+        //  启动
+        // ============================================================
+        renderEffectButtons();
+        renderSpectrum(currentEffect);
+        // 初始化第一首歌
+        initSong(0);
+        // 初始状态：显示三角号（播放）
+        playBtn.className = 'play-btn playing';
+        playBtn.textContent = '▶';
+        setTimeout(function() {
+            updatePanelPosition();
+            console.log('✅ 频谱增强版 | 真实音频测试 | 三角号30px | 初始状态为播放');
+        }, 100);
+    </script>
+</body>
+</html>
