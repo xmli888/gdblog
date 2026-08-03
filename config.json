@@ -9,18 +9,17 @@
   ],
   "tags": [
     "墨韵",
+    "古宅",
+    "红木",
     "诗词",
-    "阅读",
-    "感悟",
-    "语录",
-    "随记"
+    "阅读"
   ],
   "about": "墨韵轩，一处藏于青砖屋檐下的精神角落。",
   "siteSettings": {
     "logo": "墨",
     "title": "墨韵轩",
     "subtitle": "— 青砖檐下 · 笔墨春秋 · 静观自得 —",
-    "authorName": "墨轩主:强哥",
+    "authorName": "墨轩主",
     "authorDesc": "闲来读书，兴至写文。\n以文会友，以友辅仁。"
   },
   "fonts": [
@@ -53,33 +52,37 @@
       "source": "system"
     },
     {
-      "name": "行简",
+      "name": "禹卫书法行书",
       "source": "custom",
       "path": "myzt/禹卫书法行书简体.ttf"
     }
   ],
-  "defaultFont": "行简",
+  "defaultFont": "宋体",
   "fontSwitchEnabled": true,
   "musicList": [
     {
-      "name": "乌龙山",
-      "url": "myyy/wlsjfj.mp3"
+      "name": "乌龙山1",
+      "url": "wlsjfj.mp3"
     },
     {
-      "name": "山隐居",
-      "url": "myyy/bj.mp3"
+      "name": "古典1",
+      "url": "bj.mp3"
+    },
+    {
+      "name": "春天的草1",
+      "url": "ctsc.mp3"
     }
   ],
   "musicEnabled": true,
-  "musicAutoPlay": true,
-  "musicDefault": "乌龙山",
+  "musicAutoPlay": false,
+  "musicDefault": "古典",
   "lastBackupTime": "",
   "autoLoadComments": true,
   "giscus": {
-    "repo": "xmli888/gdblog",
-    "repoId": "R_kgDOTWTb0g",
+    "repo": "",
+    "repoId": "",
     "category": "General",
-    "categoryId": "DIC_kwDOTWTb0s4DBh5Y"
+    "categoryId": ""
   },
   "security": {
     "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn3GujvExMjKhKErfk8yI\nfQIdZ5WTZ8krD4Q0m/b7cbOSaqwnwMMepsSDw2SonkAEEyOCVnKhX1NXoeX56yRJ\n7hdoe82RGDLZ3UDUGpdknUSCDeAjblsfzawbEMpNObo/e4TcSh8UKKBtKOdVXGHw\nHzfh6l8PByjsgvd7oi/jXPJ5iKC6PMeiiGKhK6VqAs7AexMviKtICi8ZOZseepSR\nolZEVm7zMathz/Mu0XOtSGztEopDeQjsFjIW3nhJnPYiJV+/BCmvn4WuJ9PQM1nW\nsjsd/6WGFE/kMuP1wZytb3m7vJLYuxhmOP5uKuwEFm4pa84FwosBInd5nOAtfweL\nHQIDAQAB\n-----END PUBLIC KEY-----",
