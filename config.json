@@ -62,20 +62,20 @@
   "musicList": [
     {
       "name": "乌龙山1",
-      "url": "wlsjfj.mp3"
+      "url": "myyy/wlsjfj.mp3"
     },
     {
       "name": "古典1",
-      "url": "bj.mp3"
+      "url": "myyy/bj.mp3"
     },
     {
       "name": "春天的草1",
-      "url": "ctsc.mp3"
+      "url": "myyy/ctdc.mp3"
     }
   ],
   "musicEnabled": true,
   "musicAutoPlay": false,
-  "musicDefault": "古典",
+  "musicDefault": "乌龙山1",
   "lastBackupTime": "",
   "autoLoadComments": true,
   "giscus": {
