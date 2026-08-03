@@ -60,13 +60,22 @@
   "defaultFont": "宋体",
   "fontSwitchEnabled": true,
   "musicList": [
-    { "name": "乌龙山1", "url": "myyy/wlsjfj.mp3" },
-    { "name": "古典1", "url": "myyy/bj.mp3" },
-    { "name": "春天的草1", "url": "myyy/ctdc.mp3" }
+    {
+      "name": "乌龙山1",
+      "url": "myyy/wlsjfj.mp3"
+    },
+    {
+      "name": "古典1",
+      "url": "myyy/bj.mp3"
+    },
+    {
+      "name": "春天的草1",
+      "url": "myyy/ctdc.mp3"
+    }
   ],
   "musicEnabled": true,
   "musicAutoPlay": false,
-  "musicDefault": "古典1",
+  "musicDefault": "乌龙山1",
   "lastBackupTime": "",
   "autoLoadComments": true,
   "giscus": {
