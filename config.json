@@ -73,13 +73,13 @@
       "url": "myyy/ctdc.mp3"
     },
     {
-      "name": "水姻缘",
-      "url": "myyy/syy.mp3"
+      "name": "迟来的爱-电子琴版",
+      "url": "myyy/迟来的爱-电子琴版.mp3"
     }
   ],
   "musicEnabled": true,
   "musicAutoPlay": false,
-  "musicDefault": "乌龙山1",
+  "musicDefault": "古典1",
   "lastBackupTime": "",
   "autoLoadComments": true,
   "giscus": {
