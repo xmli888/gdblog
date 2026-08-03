@@ -169,24 +169,42 @@
             display: flex;
             gap: 4px;
         }
-        .file-browser .file-list .file-item .file-actions button {
-            padding: 2px 8px;
-            font-size: 11px;
-            border: 1px solid #ddd0c0;
-            border-radius: 4px;
-            background: transparent;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .file-browser .file-list .file-item .file-actions .btn-select:hover {
+        /* ★★★ 彩色按钮样式 ★★★ */
+        .file-browser .file-list .file-item .file-actions .btn-select {
             background: #2a7a4a;
             color: #fff;
-            border-color: #2a7a4a;
+            border: none;
+            padding: 2px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
         }
-        .file-browser .file-list .file-item .file-actions .btn-del-file:hover {
+        .file-browser .file-list .file-item .file-actions .btn-select:hover {
+            background: #1a5a3a;
+        }
+        .file-browser .file-list .file-item .file-actions .btn-del-file {
             background: #8b2500;
             color: #fff;
-            border-color: #8b2500;
+            border: none;
+            padding: 2px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .file-browser .file-list .file-item .file-actions .btn-del-file:hover {
+            background: #6b1a00;
+        }
+        .file-browser .file-list .file-item .file-actions .btn-enter-dir {
+            background: #6b7b8b;
+            color: #fff;
+            border: none;
+            padding: 2px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .file-browser .file-list .file-item .file-actions .btn-enter-dir:hover {
+            background: #5a6a7a;
         }
         .file-browser .file-list .file-item.folder {
             color: #4d281b;
@@ -445,13 +463,13 @@
                     html += '<span class="file-size">' + sizeText + '</span>';
                     html += '<div class="file-actions">';
                     if (isDir) {
-                        html += '<button class="btn btn-secondary btn-sm" onclick="enterDir(\'' + item.path + '\')">进入</button>';
+                        html += '<button class="btn-enter-dir" onclick="enterDir(\'' + item.path + '\')">进入</button>';
                     } else {
                         var isAudio = /\.(mp3|wav|flac|aac|ogg|m4a|wma)$/i.test(name);
                         if (isAudio) {
-                            html += '<button class="btn btn-success btn-sm btn-select" onclick="selectMusicFile(\'' + item.path + '\', \'' + name + '\')">选择</button>';
+                            html += '<button class="btn-select" onclick="selectMusicFile(\'' + item.path + '\', \'' + name + '\')">选择</button>';
                         }
-                        html += '<button class="btn btn-danger btn-sm btn-del-file" onclick="deleteFile(\'' + item.path + '\')">删除</button>';
+                        html += '<button class="btn-del-file" onclick="deleteFile(\'' + item.path + '\')">删除</button>';
                     }
                     html += '</div>';
                     html += '</div>';
@@ -459,7 +477,7 @@
             }
             html += '</div>';
 
-            // ★★★ 上传区域：显示当前目标目录 ★★★
+            // 上传区域
             var uploadPath = currentDir || '根目录';
             html += '<div class="upload-area">';
             html += '<span class="upload-label">📤 上传到：<strong>' + uploadPath + '</strong></span>';
@@ -495,40 +513,39 @@
         }
 
         // ============================================================
-        //  选择音乐文件 → 添加到音乐列表并设为默认
+        //  ★★★ 核心修改：选择文件只填文本框，不上传 ★★★
         // ============================================================
         function selectMusicFile(path, name) {
-            var songName = name.replace(/\.[^.]+$/, '');
-
-            if (musicList.some(function(s) { return s.name === songName; })) {
-                showToast('⚠️ 歌曲 "' + songName + '" 已存在', 'error');
-                return;
+            // 只填文本框，不添加
+            var nameInput = document.getElementById('newMusicName');
+            var urlInput = document.getElementById('newMusicUrl');
+            if (nameInput) {
+                // 去掉扩展名作为默认歌名
+                var defaultName = name.replace(/\.[^.]+$/, '');
+                nameInput.value = defaultName;
+                nameInput.focus();
+            }
+            if (urlInput) {
+                urlInput.value = path;
             }
 
-            musicList.push({ name: songName, url: path });
-            musicDefault = songName;
-
-            saveConfigData().then(function() {
-                renderMusicAdmin();
-                populateMusicDefaultSelect();
-                var items = document.querySelectorAll('.file-item');
-                items.forEach(function(el) { el.classList.remove('selected'); });
-                var itemEls = document.querySelectorAll('.file-item');
-                for (var i = 0; i < itemEls.length; i++) {
-                    var btn = itemEls[i].querySelector('.btn-select');
-                    if (btn && btn.getAttribute('onclick').indexOf(path) !== -1) {
-                        itemEls[i].classList.add('selected');
-                        break;
-                    }
+            // 高亮选中的文件
+            var items = document.querySelectorAll('.file-item');
+            items.forEach(function(el) { el.classList.remove('selected'); });
+            var itemEls = document.querySelectorAll('.file-item');
+            for (var i = 0; i < itemEls.length; i++) {
+                var btn = itemEls[i].querySelector('.btn-select');
+                if (btn && btn.getAttribute('onclick') && btn.getAttribute('onclick').indexOf(path) !== -1) {
+                    itemEls[i].classList.add('selected');
+                    break;
                 }
-                showToast('✅ 已选择并设为默认：' + songName, 'success');
-            }).catch(function(err) {
-                showToast('❌ 保存失败: ' + err.message, 'error');
-            });
+            }
+
+            showToast('📝 已填入歌名和路径，点击「添加」保存', 'info');
         }
 
         // ============================================================
-        //  ★★★ 核心修改：上传文件 → 自动添加到音乐列表并设为默认 ★★★
+        //  上传文件：上传到当前目录，并自动添加到音乐列表
         // ============================================================
         function uploadFile(event) {
             var file = event.target.files[0];
@@ -537,7 +554,6 @@
             var progressEl = document.getElementById('uploadProgress');
             var uploadPath = currentDir || '/';
 
-            // 显示上传状态
             if (progressEl) progressEl.textContent = '⏳ 正在上传到 ' + uploadPath + '...';
 
             var reader = new FileReader();
@@ -545,7 +561,6 @@
                 var base64Content = btoa(e.target.result);
                 var targetPath = currentDir ? currentDir + '/' + file.name : file.name;
 
-                // 检查文件是否已存在
                 fetchRepoContents(currentDir).then(function(items) {
                     var exists = items.some(function(item) {
                         return item.name === file.name && item.type !== 'dir';
@@ -557,28 +572,25 @@
                             return;
                         }
                     }
-                    // 上传文件
                     return saveFile(targetPath, base64Content, '上传音乐文件: ' + file.name);
                 }).then(function() {
                     if (progressEl) progressEl.textContent = '✅ 已上传到：' + targetPath;
 
-                    // ★★★ 关键：上传成功后自动添加到音乐列表 ★★★
+                    // 自动添加到音乐列表
                     var songName = file.name.replace(/\.[^.]+$/, '');
-                    if (!musicList.some(function(s) { return s.name === songName; })) {
+                    // 检查是否已存在同名歌曲
+                    var exists = musicList.some(function(s) { return s.name === songName; });
+                    if (!exists) {
                         musicList.push({ name: songName, url: targetPath });
-                        // 如果没有默认歌曲，自动设为默认
                         if (!musicDefault || musicDefault === '') {
                             musicDefault = songName;
                         }
-                        // 保存配置
                         return saveConfigData();
                     } else {
-                        // 歌曲已存在，只提示不上架
                         showToast('⚠️ 歌曲 "' + songName + '" 已存在，文件已上传但未添加到列表', 'warning');
                         return Promise.resolve();
                     }
                 }).then(function() {
-                    // 刷新音乐列表和文件列表
                     renderMusicAdmin();
                     populateMusicDefaultSelect();
                     renderFileBrowser();
@@ -592,12 +604,13 @@
         }
 
         // ============================================================
-        //  删除文件
+        //  ★★★ 核心修改：删除文件联动移除音乐列表 ★★★
         // ============================================================
         function deleteFile(path) {
             var fileName = path.split('/').pop();
             if (!confirm('确定删除文件 "' + fileName + '" 吗？\n此操作不可撤销！')) return;
 
+            // ★ 先从音乐列表移除
             var updatedMusicList = musicList.filter(function(item) {
                 return item.url !== path;
             });
@@ -607,9 +620,11 @@
                 if (musicDefault && !musicList.some(function(s) { return s.name === musicDefault; })) {
                     musicDefault = musicList.length > 0 ? musicList[0].name : '';
                 }
+                // 保存配置（先保存，即使删除文件失败，列表也已更新）
                 saveConfigData().catch(function() {});
             }
 
+            // 从 GitHub 删除文件
             var url = 'https://api.github.com/repos/' + config.user + '/' + config.repo + '/contents/' + path;
             fetch(url, {
                 headers: {
@@ -636,11 +651,18 @@
             }).then(function(res) {
                 if (!res.ok) return res.json().then(function(err) { throw new Error(err.message || '删除失败'); });
                 showToast('✅ 文件已删除: ' + fileName, 'success');
+                // 刷新文件列表和音乐列表
                 renderFileBrowser();
                 renderMusicAdmin();
                 populateMusicDefaultSelect();
             }).catch(function(err) {
                 showToast('❌ 删除失败: ' + err.message, 'error');
+                // 如果删除文件失败，但 musicList 已更新，需要回滚？
+                // 简单处理：重新加载数据恢复
+                loadAllData().then(function() {
+                    renderMusicAdmin();
+                    populateMusicDefaultSelect();
+                });
             });
         }
 
@@ -720,7 +742,7 @@
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">📂 分类管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;"><input type="text" id="newCategoryName" placeholder="新分类名称" style="flex:1;min-height:38px;" /><button class="btn btn-primary" onclick="addCategory()" style="min-height:38px;">添加</button></div><div class="admin-list" id="categoryAdminList"></div></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🏷️ 标签管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;"><input type="text" id="newTagName" placeholder="新标签名称" style="flex:1;min-height:38px;" /><button class="btn btn-primary" onclick="addTag()" style="min-height:38px;">添加</button></div><div class="admin-list" id="tagAdminList"></div></div></div></div>' +
                 '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🔤 字体管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 系统字体（楷体、宋体等）由操作系统提供，无需上传文件。<br/>自定义字体需要上传字体文件（.ttf/.woff/.woff2）并填写正确的路径。</div><div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px;"><div style="flex:2; min-width:150px;"><label style="font-weight:bold; display:block; font-size:13px; margin-bottom:2px;">字体名称</label><input type="text" id="newFontName" placeholder="如：禹卫书法行书" style="width:100%;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:14px;min-height:38px;" /></div><div style="flex:3; min-width:200px;"><label style="font-weight:bold; display:block; font-size:13px; margin-bottom:2px;">字体文件路径</label><input type="text" id="newFontPath" placeholder="如：myzt/禹卫书法行书.ttf" style="width:100%;padding:8px 10px;border:1px solid #ddd0c0;border-radius:4px;font-size:14px;min-height:38px;" /></div><div style="flex:0 0 auto; align-self:flex-end;"><button class="btn btn-primary" onclick="addFont()" style="min-height:38px;padding:0 24px;">添加</button></div></div><div class="font-controls"><div class="default-selector"><label style="font-weight:bold; font-size:13px;">默认字体</label><select id="defaultFontSelect" onchange="setDefaultFontFromSelect()"></select></div><div><button class="btn btn-secondary" onclick="resetDefaultFont()" style="min-height:38px;">重置默认</button><button class="btn btn-secondary" onclick="resetFontList()" style="min-height:38px;margin-left:8px;">恢复默认列表</button></div></div><div style="display:flex; gap:10px; align-items:center; margin:12px 0;"><label style="font-weight:bold; font-size:13px;">前台字体切换</label><input type="checkbox" id="fontSwitchCheck" onchange="saveFontSettings()" /><span style="font-size:13px; color:#8a7a6a;">开启后用户可自定义字体</span></div><div class="admin-list" id="fontAdminList"></div></div></div></div>' +
-                '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🎵 音乐管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 支持本地音乐路径或网络音乐链接。<br/>📁 进入目录后上传，上传成功后自动添加到音乐列表并设为默认。</div>' +
+                '<div class="panel"><div class="panel-header" onclick="togglePanel(this)">🎵 音乐管理 <span class="arrow">▼</span></div><div class="panel-body"><div class="admin-form"><div class="help-text">💡 支持本地音乐路径或网络音乐链接。<br/>📁 进入目录后上传，上传成功后自动添加到音乐列表并设为默认。<br/>📝 点击「选择」按钮填入歌名和路径，可自定义后再点击「添加」保存。</div>' +
                 '<div id="fileBrowserContainer"></div>' +
                 '<div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:8px;"><input type="text" id="newMusicName" placeholder="歌曲名" style="flex:1;min-height:38px;" /><input type="text" id="newMusicUrl" placeholder="路径 / URL" style="flex:2;min-height:38px;" /><button class="btn btn-primary" onclick="addMusic()" style="min-height:38px;">添加</button></div>' +
                 '<div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:10px;"><label><input type="checkbox" id="musicEnabledCheck" onchange="saveMusicSettings()" /> 显示播放器</label><label><input type="checkbox" id="musicAutoPlayCheck" onchange="saveMusicSettings()" /> 自动播放</label><label>默认歌曲 <select id="musicDefaultSelect" style="min-height:38px;padding:6px 10px;"></select></label></div>' +
