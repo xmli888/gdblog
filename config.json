@@ -60,26 +60,11 @@
   "defaultFont": "宋体",
   "fontSwitchEnabled": true,
   "musicList": [
-    {
-      "name": "乌龙山1",
-      "url": "myyy/wlsjfj.mp3"
-    },
-    {
-      "name": "古典1",
-      "url": "myyy/bj.mp3"
-    },
-    {
-      "name": "春天的草1",
-      "url": "myyy/ctdc.mp3"
-    },
-    {
-      "name": "迟来的爱-电子琴版",
-      "url": "myyy/迟来的爱-电子琴版.mp3"
-    },
-    {
-      "name": "水姻缘",
-      "url": "myyy/syy.mp3"
-    }
+    { "name": "乌龙山1", "url": "myyy/wlsjfj.mp3" },
+    { "name": "古典1", "url": "myyy/bj.mp3" },
+    { "name": "春天的草1", "url": "myyy/ctdc.mp3" },
+    { "name": "迟来的爱-电子琴版", "url": "myyy/迟来的爱-电子琴版.mp3"},
+    { "name": "水姻缘", "url": "myyy/syy.mp3" }
   ],
   "musicEnabled": true,
   "musicAutoPlay": false,
